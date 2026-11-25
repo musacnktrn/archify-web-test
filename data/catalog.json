@@ -7,7 +7,8 @@
       "city": "İstanbul, Ankara ve İzmir",
       "category": "Buluşma",
       "summary": "Topluluk kahvaltıları İstanbul, Ankara ve İzmir’de yapıldı. Buluşmalar için kayıt toplandı.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     },
     {
       "slug": "ktu-kulube-atolyesi",
@@ -15,8 +16,18 @@
       "year": null,
       "city": "Trabzon",
       "category": "Atölye",
-      "summary": "Sokak hayvanları için kulübe tasarımı ve üretimi yapıldı. Trabzon’daki atölye Karadeniz Teknik Üniversitesinde düzenlendi.",
-      "gallery": []
+      "summary": "Karadeniz Teknik Üniversitesindeki atölye, sokak hayvanları için kulübe tasarlama ve üretme sürecini bir araya getirdi.",
+      "gallery": [
+        {
+          "src": "assets/images/archive-r11/ktu-kulube-atolyesi-salon-toplu-1600.webp",
+          "alt": "KTÜ Kulübe Atölyesi sonunda salon sahnesindeki toplu görünüm."
+        },
+        {
+          "src": "assets/images/archive-r11/ktu-kulube-atolyesi-fakulte-onu-1600.webp",
+          "alt": "KTÜ Kulübe Atölyesi topluluğu Mimarlık Fakültesi girişinin önünde."
+        }
+      ],
+      "venue": "Karadeniz Teknik Üniversitesi"
     },
     {
       "slug": "istanbul-mimarlik-zirvesi-2023",
@@ -33,8 +44,29 @@
         {
           "src": "assets/images/ux/istanbul-zirve-2023-amfi-1600.webp",
           "alt": "İstanbul Mimarlık Zirvesi 2023: amfinin arkasından sahne ve salon."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-konusmaci-sahne-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mikrofonla yapılan konuşma."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-genis-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinin geniş açıdan görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-panel-oturumu-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mimarlık üzerine panel oturumu."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-bulusmasi-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde toplu buluşma."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-salon-oturum-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 salonunda dinleyicilerin arkasından konuşma sahnesi."
         }
-      ]
+      ],
+      "venue": "İTÜ Maçka Kampüsü, Mustafa Kemal Amfisi"
     },
     {
       "slug": "izmir-sempozyumu-2023",
@@ -42,13 +74,30 @@
       "year": 2023,
       "city": "İzmir",
       "category": "Sempozyum",
-      "summary": "Yarının Temeli sempozyumu İzmir’de yapıldı. Tek günlük buluşmada sempozyum ve fuaye birlikte yer aldı.",
+      "summary": "Yarının Temeli sempozyumu, 11 Mayıs 2023’te İzmir İktisat Kongresi Salonu’nda mimarlık topluluğunu bir araya getirdi. Tek günlük program, konuşmalarla fuaye buluşmalarını yan yana taşıdı.",
       "gallery": [
         {
           "src": "assets/images/ux/izmir-sempozyumu-2023-salon-1600.webp",
           "alt": "İzmir Sempozyumu 2023: üst sıradan salonun ve sahnenin genel görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-salon-toplu-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 salonunda sahneden görülen topluluk."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-amfi-genel-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 amfisinin üst sıradan genel görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sahne-paylasimi-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 sahnesinde Archify ekranı önündeki buluşma."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sunum-sahne-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 salonunda sunum ekranı ve konuşma sahnesi."
         }
-      ]
+      ],
+      "venue": "İzmir İktisat Kongresi Salonu"
     },
     {
       "slug": "archfest-2023",
@@ -56,7 +105,7 @@
       "year": 2023,
       "city": "İzmir",
       "category": "Festival",
-      "summary": "İzmir’de mimarlığı açık havaya taşıyan buluşma. Festivalin ilk edisyonunda kamp yaşamı ve mimarlık aynı programda yer aldı.",
+      "summary": "ARCHFEST’in ilk edisyonu, 15–17 Eylül 2023’te İzmir Menderes’teki Kalemlik Orman Kampı’nda gerçekleşti. Mimarlık topluluğu üç gün boyunca kamp ve açık hava festivalinde buluştu.",
       "gallery": [
         {
           "src": "assets/images/ux/archfest-2023-gece-sahne-1600.webp",
@@ -65,8 +114,21 @@
         {
           "src": "assets/images/ux/archfest-2023-acik-sahne-1600.webp",
           "alt": "ARCHFEST 2023: dinleyicilerin arkasından açık hava sahnesi."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-atolye-cizimleri-1600.webp",
+          "alt": "ARCHFEST 2023 açık hava atölyesinde ağaca asılan tasarım çizimleri."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-atolye-alani-1600.webp",
+          "alt": "ARCHFEST 2023 ağaçların altında gerçekleşen tasarım atölyesi."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-acik-hava-bulusmasi-1600.webp",
+          "alt": "ARCHFEST 2023 açık hava konuşma alanında geniş topluluk görünümü."
         }
-      ]
+      ],
+      "venue": "Kalemlik Orman Kampı, Menderes, İzmir"
     },
     {
       "slug": "izmir-vizyon-2024",
@@ -79,8 +141,29 @@
         {
           "src": "assets/images/ux/izmir-vizyon-2024-sahne-1600.webp",
           "alt": "İzmir Vizyon 2024: salonun arkasından konuşma sahnesi."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-genel-1600.webp",
+          "alt": "İzmir Vizyon 2024 salonunda geniş topluluk görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-oturum-arkadan-1600.webp",
+          "alt": "İzmir Vizyon 2024 oturumunda dinleyicilerin arkasından sahne görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-ust-kot-1600.webp",
+          "alt": "İzmir Vizyon 2024 salonunun üst kotundan oturum görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-mimarlik-merkezi-1600.webp",
+          "alt": "İzmir Vizyon 2024 sırasında Mimarlık Merkezi’nin merdivenli fuayesi ve bayraklar."
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-fuaye-genel-1600.webp",
+          "alt": "İzmir Vizyon 2024 buluşmasında Mimarlık Merkezi fuayesinin geniş görünümü."
         }
-      ]
+      ],
+      "venue": "İzmir Mimarlık Merkezi"
     },
     {
       "slug": "harmony-2024",
@@ -88,8 +171,26 @@
       "year": 2024,
       "city": "İzmir",
       "category": "Buluşma",
-      "summary": "Harmony, Cut Paper kulübü ortaklığıyla İzmir’de yapıldı. Tek günlük program konuşmacı oturumlarından oluştu.",
-      "gallery": []
+      "summary": "Archify ve Cut Paper kulübünün Harmony buluşması, 23 Mart 2024’te İzmir Ekonomi Üniversitesinde gerçekleşti.",
+      "gallery": [
+        {
+          "src": "assets/images/archive-r11/harmony-2024-soylesi-sahne-1600.webp",
+          "alt": "Harmony 2024 salonunda sahnedeki söyleşinin genel görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-duygu-diyagrami-1600.webp",
+          "alt": "Harmony 2024 buluşmasında renkli iplerle hazırlanmış duygu diyagramı."
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-konusma-sahne-1600.webp",
+          "alt": "Harmony 2024 sahnesinde sunum ekranı ve Archify bayrağı önündeki konuşma."
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-salon-genel-1600.webp",
+          "alt": "Harmony 2024 salonunda sahne tarafından görülen dinleyiciler ve mekân."
+        }
+      ],
+      "venue": "İzmir Ekonomi Üniversitesi"
     },
     {
       "slug": "archfest-2024",
@@ -98,7 +199,37 @@
       "city": "İzmir",
       "category": "Festival",
       "summary": "Foça’da üç gün. Acar Camping’de seminerler, atölyeler, müzik ve kamp deneyimi etrafında bir araya gelen mimarlık topluluğu.",
-      "gallery": []
+      "gallery": [
+        {
+          "src": "assets/images/archive-r11/archfest-2024-festival-mekani-1600.webp",
+          "alt": "ARCHFEST 2024 ağaçlar arasındaki festival alanı ve geçiş yolları."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-aksam-sahne-1600.webp",
+          "alt": "ARCHFEST 2024 akşam programında açık hava sahnesindeki konuşma."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-muzik-sahnesi-1600.webp",
+          "alt": "ARCHFEST 2024 açık hava müzik sahnesinde DJ performansı."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-konusma-sahnesi-1600.webp",
+          "alt": "ARCHFEST 2024 açık hava sahnesinde gün içi konuşma."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-acik-hava-hareket-1600.webp",
+          "alt": "ARCHFEST 2024 sahil alanında açık hava hareket çalışması."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-uretim-masasi-1600.webp",
+          "alt": "ARCHFEST 2024 atölye masasında malzemelerle birlikte üretim."
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-sahneden-genel-1600.webp",
+          "alt": "ARCHFEST 2024 sahnesinden açık hava dinleyici alanının görünümü."
+        }
+      ],
+      "venue": "Acar Camping, Foça"
     },
     {
       "slug": "istanbul-mimarlik-zirvesi-2025",
@@ -111,8 +242,21 @@
         {
           "src": "assets/images/ux/istanbul-zirve-2025-avlu-1600.webp",
           "alt": "İstanbul Mimarlık Zirvesi 2025: yukarıdan avludaki atölye masaları."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-cizim-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 avlusunda çizim çalışması."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-oyun-masasi-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 avlusunda sayı kartlarıyla etkileşim masası."
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-salon-isik-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 salonunun sahne yanından geniş görünümü."
         }
-      ]
+      ],
+      "venue": "İstinye Üniversitesi Vadi Ana Kampüsü, Kongre Merkezi"
     },
     {
       "slug": "deprem-ozel-sempozyumu-2025",
@@ -121,7 +265,21 @@
       "city": "İstanbul",
       "category": "Sempozyum",
       "summary": "Mimarlık, mühendislik, şehircilik ve deprem bilimi üzerine ortak bir düşünme alanı. İSÜ Mimarlık Kulübü ile İstinye Üniversitesi’nde.",
-      "gallery": []
+      "gallery": [
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kursu-konusma-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 kürsüsünde konuşma."
+        },
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kongre-girisi-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 sırasında kongre merkezi girişinin görünümü."
+        },
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-oturum-genel-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 salonunda sahne ve sunumun geniş görünümü."
+        }
+      ],
+      "venue": "İstinye Üniversitesi Topkapı Yerleşkesi, Kongre Merkezi"
     },
     {
       "slug": "kastamonu-entegre-teknik-gezi",
@@ -130,7 +288,8 @@
       "city": "İstanbul",
       "category": "Teknik gezi",
       "summary": "Kastamonu Entegre’nin Altunizade showroomuna teknik gezi yapıldı. Gezi İstanbul ekibinin etkinlik portföyünde yer aldı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "Kastamonu Entegre Altunizade Showroom"
     },
     {
       "slug": "stoneline-doganin-sanatina-yolculuk-2026",
@@ -139,7 +298,8 @@
       "city": "İstanbul",
       "category": "Teknik gezi",
       "summary": "Doğanın Sanatına Yolculuk buluşması Stoneline Showroom’da yapıldı. Programda sunum ve showroom gezisi yer aldı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "Stoneline Showroom"
     },
     {
       "slug": "women-of-architecture-2026",
@@ -148,7 +308,8 @@
       "city": "İstanbul",
       "category": "Zirve",
       "summary": "Kadın mimarların mesleki deneyimlerini ve tasarım yaklaşımlarını buluşturan 8 Mart programı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "İstinye Üniversitesi Topkapı Yerleşkesi, Kongre Merkezi"
     },
     {
       "slug": "izmir-mimarlik-zirvesi-2026",
@@ -157,7 +318,8 @@
       "city": "İzmir",
       "category": "Zirve",
       "summary": "İzmir Mimarlık Merkezi’nde iki gün: mimarlık konuşmaları, atölyeler ve yeni karşılaşmalar.",
-      "gallery": []
+      "gallery": [],
+      "venue": "İzmir Mimarlık Merkezi"
     },
     {
       "slug": "yapi-fuari-gezisi-2026",
@@ -166,7 +328,8 @@
       "city": "İstanbul",
       "category": "Teknik gezi",
       "summary": "Yapı Fuarı için İstanbul’da bir gezi düzenlendi. Fuar gezisi TÜYAP’ta yapıldı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "TÜYAP"
     },
     {
       "slug": "istanbul-mimarlik-zirvesi-2026",
@@ -175,7 +338,8 @@
       "city": "İstanbul",
       "category": "Zirve",
       "summary": "İTÜ Maçka Kampüsü’nde mimarlık ve tasarım üzerine iki günlük konuşma ve atölye programı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "İTÜ Maçka Kampüsü"
     },
     {
       "slug": "dokudan-tasarima-2026",
@@ -184,7 +348,8 @@
       "city": "İstanbul",
       "category": "Atölye",
       "summary": "Dokudan Tasarıma atölyesi QAT Project ofisinde yapıldı. Buluşmada atölye çalışması ve portfolyo yorumu yer aldı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "QAT Project ofisi"
     },
     {
       "slug": "urbanjobs-istanbul-bulusmasi-2026",
@@ -193,7 +358,8 @@
       "city": "İstanbul",
       "category": "Buluşma",
       "summary": "URBANJOBS ile Archify İstanbul buluşması Tersane İstanbul’da yapıldı. Söyleşi ve proje incelemesi aynı programda yer aldı.",
-      "gallery": []
+      "gallery": [],
+      "venue": "Tersane İstanbul"
     },
     {
       "slug": "baret-susleme-atolyesi",
@@ -202,7 +368,8 @@
       "city": null,
       "category": "Atölye",
       "summary": "İstinye Mimarlık Kulübü ile gerçekleştirilen Baret Süsleme Atölyesi.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     },
     {
       "slug": "buyuk-avrupa-turu-2024",
@@ -211,7 +378,8 @@
       "city": "Avrupa",
       "category": "Yurt dışı tur",
       "summary": "Archify topluluğunun Avrupa kentlerini birlikte keşfettiği 2024 yolculuğu.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     },
     {
       "slug": "buyuk-avrupa-turu-2025",
@@ -220,7 +388,13 @@
       "city": "Avrupa",
       "category": "Yurt dışı tur",
       "summary": "2025 Büyük Avrupa Turu, farklı kentleri ve mimari çevreleri birlikte deneyimlemek için düzenlendi.",
-      "gallery": []
+      "gallery": [
+        {
+          "src": "assets/images/archive-r11/buyuk-avrupa-turu-2025-paris-eyfel-1600.webp",
+          "alt": "Büyük Avrupa Turu 2025 Paris durağında Eyfel Kulesi önündeki geniş topluluk görünümü."
+        }
+      ],
+      "venue": null
     },
     {
       "slug": "italya-ispanya-turu-2025",
@@ -229,7 +403,8 @@
       "city": "İtalya ve İspanya",
       "category": "Yurt dışı tur",
       "summary": "Archify topluluğu, 2025 yazında İtalya ve İspanya rotasında buluştu.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     },
     {
       "slug": "buyuk-avrupa-turu-2026",
@@ -238,7 +413,8 @@
       "city": "Avrupa",
       "category": "Yurt dışı tur",
       "summary": "2026 Büyük Avrupa Turu; sokakları, meydanları ve farklı mimari çevreleri yerinde gözlemleme yolculuğuydu.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     },
     {
       "slug": "italya-ispanya-turu-2026",
@@ -247,8 +423,9 @@
       "city": "İtalya ve İspanya",
       "category": "Yurt dışı tur",
       "summary": "2026 yazının ikinci Archify yolculuğu, İtalya ve İspanya kentlerini aynı rotada bir araya getirdi.",
-      "gallery": []
+      "gallery": [],
+      "venue": null
     }
   ],
-  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938"
+  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938; [codex] archive-r11 · 01a20fe8-199e-7631-8910-07e7d27b753d"
 }

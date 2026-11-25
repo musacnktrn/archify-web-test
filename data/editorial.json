@@ -1,5 +1,5 @@
 {
-  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938",
+  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938; [codex] archive-r11 · 01a20fe8-199e-7631-8910-07e7d27b753d",
   "events": {
     "istanbul-mimarlik-zirvesi-2023": {
       "dateLabel": "29 ve 30 Nisan 2023",
@@ -14,7 +14,7 @@
         "title": "ARGEPLANO · Akademi, Archify ’23 Mimarlık Zirvesi",
         "url": "https://www.argeplano.com/akademi"
       },
-      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 8",
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
       "evidenceLabel": "Belge",
       "datePrecision": "day",
       "additionalSources": [
@@ -22,16 +22,153 @@
           "title": "Archify tanıtım kitapçığı · s. 8",
           "kind": "local"
         }
+      ],
+      "photoMetadata": [
+        {
+          "src": "assets/images/ux/istanbul-zirve-2023-sahne-detay-1600.webp",
+          "caption": "İstanbul Mimarlık Zirvesi 2023: boş sahnede Archify harfleri.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 8",
+          "thumbnailSrc": "assets/images/ux/istanbul-zirve-2023-sahne-detay-1600.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/ux/istanbul-zirve-2023-sahne-detay-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/ux/istanbul-zirve-2023-amfi-1600.webp",
+          "caption": "İstanbul Mimarlık Zirvesi 2023: amfinin arkasından sahne ve salon.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 8",
+          "thumbnailSrc": "assets/images/ux/istanbul-zirve-2023-amfi-1600.webp",
+          "width": 896,
+          "height": 672,
+          "variants": [
+            {
+              "src": "assets/images/ux/istanbul-zirve-2023-amfi-1600.webp",
+              "width": 896,
+              "height": 672
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-konusmaci-sahne-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mikrofonla yapılan konuşma.",
+          "caption": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mikrofonla yapılan konuşma.",
+          "sourceLabel": "Mimarlık Zirvesi’23 · seçilmiş etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-konusmaci-sahne-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-konusmaci-sahne-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-konusmaci-sahne-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-genis-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinin geniş açıdan görünümü.",
+          "caption": "İstanbul Mimarlık Zirvesi 2023 sahnesinin geniş açıdan görünümü.",
+          "sourceLabel": "Mimarlık Zirvesi’23 · seçilmiş etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-genis-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-genis-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-genis-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-panel-oturumu-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mimarlık üzerine panel oturumu.",
+          "caption": "İstanbul Mimarlık Zirvesi 2023 sahnesinde mimarlık üzerine panel oturumu.",
+          "sourceLabel": "Mimarlık Zirvesi’23 · seçilmiş etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-panel-oturumu-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-panel-oturumu-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-panel-oturumu-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-bulusmasi-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 sahnesinde toplu buluşma.",
+          "caption": "İstanbul Mimarlık Zirvesi 2023 sahnesinde toplu buluşma.",
+          "sourceLabel": "Mimarlık Zirvesi’23 · LinkedIn seçkisi",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-bulusmasi-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-bulusmasi-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-sahne-bulusmasi-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-salon-oturum-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 salonunda dinleyicilerin arkasından konuşma sahnesi.",
+          "caption": "İstanbul Mimarlık Zirvesi 2023 salonunda dinleyicilerin arkasından konuşma sahnesi.",
+          "sourceLabel": "Archify tanıtım kitapçığı · s. 8",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-salon-oturum-800.webp",
+          "width": 823,
+          "height": 617,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-salon-oturum-800.webp",
+              "width": 800,
+              "height": 600
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2023-salon-oturum-1600.webp",
+              "width": 823,
+              "height": 617
+            }
+          ]
+        }
       ]
     },
     "archfest-2023": {
       "dateLabel": "15, 16 ve 17 Eylül 2023",
-      "venue": null,
+      "venue": "Kalemlik Orman Kampı, Menderes, İzmir",
       "series": "ARCHFEST",
       "theme": "Birlikte düşünmek için başka bir yer.",
       "story": [
-        "ARCHFEST’in 2023 edisyonu İzmir’de gerçekleşti. Mimarlık topluluğu, festivalin ilk buluşmasında açık havada bir araya geldi.",
-        "ARCHFEST serisi, mimarlık üzerine buluşmayı kamp deneyimiyle yan yana getiriyor. Bu kayıt, serinin 2023 edisyonuna ait."
+        "ARCHFEST’in ilk edisyonu, 15–17 Eylül 2023’te İzmir Menderes’teki Kalemlik Orman Kampı’nda gerçekleşti. Mimarlık topluluğu üç gün boyunca kamp ve açık hava festivalinde buluştu.",
+        "Yayımlanan festival programında seminerler, atölyeler, sosyal etkinlikler ve turnuvaların yanında konserler ve DJ performansları yer aldı. Mimarlık üzerine paylaşım, kamp deneyimiyle birlikte kurgulandı."
       ],
       "source": {
         "title": "Kalemlik Orman Kampı · Etkinlikler",
@@ -43,9 +180,136 @@
         {
           "title": "Archify tanıtım kitapçığı · s. 10",
           "kind": "local"
+        },
+        {
+          "title": "ARCHFEST 2023 · yayımlanan festival programı",
+          "url": "https://www.biletimgo.com/etkinlik/archfest-4603"
         }
       ],
-      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 10"
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "program": [
+        "Seminerler ve atölyeler",
+        "Sosyal etkinlikler ve turnuvalar",
+        "Konserler ve DJ performansları"
+      ],
+      "photoMetadata": [
+        {
+          "src": "assets/images/ux/archfest-2023-gece-sahne-1600.webp",
+          "caption": "ARCHFEST 2023: gece ışıkları altında açık hava sahnesi.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 10",
+          "thumbnailSrc": "assets/images/ux/archfest-2023-gece-sahne-1600.webp",
+          "width": 516,
+          "height": 919,
+          "variants": [
+            {
+              "src": "assets/images/ux/archfest-2023-gece-sahne-1600.webp",
+              "width": 516,
+              "height": 919
+            }
+          ]
+        },
+        {
+          "src": "assets/images/ux/archfest-2023-acik-sahne-1600.webp",
+          "caption": "ARCHFEST 2023: dinleyicilerin arkasından açık hava sahnesi.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 10",
+          "thumbnailSrc": "assets/images/ux/archfest-2023-acik-sahne-1600.webp",
+          "width": 516,
+          "height": 919,
+          "variants": [
+            {
+              "src": "assets/images/ux/archfest-2023-acik-sahne-1600.webp",
+              "width": 516,
+              "height": 919
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-atolye-cizimleri-1600.webp",
+          "alt": "ARCHFEST 2023 açık hava atölyesinde ağaca asılan tasarım çizimleri.",
+          "caption": "ARCHFEST 2023 açık hava atölyesinde ağaca asılan tasarım çizimleri.",
+          "sourceLabel": "ARCHFEST’23 · workshop etkinlik arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2023-atolye-cizimleri-800.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2023-atolye-cizimleri-800.webp",
+              "width": 600,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2023-atolye-cizimleri-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-atolye-alani-1600.webp",
+          "alt": "ARCHFEST 2023 ağaçların altında gerçekleşen tasarım atölyesi.",
+          "caption": "ARCHFEST 2023 ağaçların altında gerçekleşen tasarım atölyesi.",
+          "sourceLabel": "ARCHFEST’23 · workshop etkinlik arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2023-atolye-alani-800.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2023-atolye-alani-800.webp",
+              "width": 600,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2023-atolye-alani-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2023-acik-hava-bulusmasi-1600.webp",
+          "alt": "ARCHFEST 2023 açık hava konuşma alanında geniş topluluk görünümü.",
+          "caption": "ARCHFEST 2023 açık hava konuşma alanında geniş topluluk görünümü.",
+          "sourceLabel": "ARCHFEST’23 · konuşmacı etkinlik arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2023-acik-hava-bulusmasi-800.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2023-acik-hava-bulusmasi-800.webp",
+              "width": 600,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2023-acik-hava-bulusmasi-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/archfest-2023-duyuru-1600.webp",
+          "alt": "ARCHFEST 2023 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2023-duyuru-800.webp",
+          "width": 1080,
+          "height": 1080,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2023-duyuru-800.webp",
+              "width": 800,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2023-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1080
+            }
+          ]
+        }
+      ]
     },
     "izmir-vizyon-2024": {
       "dateLabel": "2 Mart 2024",
@@ -72,7 +336,200 @@
       ],
       "evidenceLabel": "Belge ve beyan",
       "datePrecision": "day",
-      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 11"
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "publishedProgram": [
+        {
+          "label": "2 Mart 2024 · Cumartesi",
+          "items": [
+            {
+              "time": "10.00–10.35",
+              "title": "Açılış konuşmaları"
+            },
+            {
+              "time": "10.35–11.30",
+              "title": "Ezgi Gökçe · Sektörel Deneyimler"
+            },
+            {
+              "time": "11.40–12.30",
+              "title": "Aziz Burak Eroğlu · Sektörel Deneyimler"
+            },
+            {
+              "time": "12.30–13.30",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "13.30–14.25",
+              "title": "Ferhat Hacıalibeyoğlu, Deniz Dokgöz ve Orhan Ersan · Mimari Yarışmalar"
+            },
+            {
+              "time": "14.35–15.30",
+              "title": "Berk Ekici · Parametrik Tasarım ve Yapay Zeka Üzerine Bir Mimarın Akademik Kariyeri"
+            },
+            {
+              "time": "15.40–16.35",
+              "title": "Zeynep Özge Yalçın · Oyun Mimarisi: Oyun Tasarımında Mimari Düşünce"
+            },
+            {
+              "time": "16.35–17.00",
+              "title": "Kapanış konuşmaları"
+            },
+            {
+              "time": "19.00–23.00",
+              "title": "Samet Uyar · After Roof Party"
+            }
+          ]
+        }
+      ],
+      "programSource": {
+        "title": "İzmir Vizyon 2024",
+        "url": "https://www.biletimgo.com/etkinlik/archify-izmir-vizyon-6081"
+      },
+      "programNote": "Etkinlik öncesinde paylaşılan program akışı. Saatler ve başlıklar yayımlanan duyuruyu yansıtır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/ux/izmir-vizyon-2024-sahne-1600.webp",
+          "caption": "İzmir Vizyon 2024: salonun arkasından konuşma sahnesi.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 11",
+          "thumbnailSrc": "assets/images/ux/izmir-vizyon-2024-sahne-1600.webp",
+          "width": 1200,
+          "height": 800,
+          "variants": [
+            {
+              "src": "assets/images/ux/izmir-vizyon-2024-sahne-1600.webp",
+              "width": 1200,
+              "height": 800
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-genel-1600.webp",
+          "alt": "İzmir Vizyon 2024 salonunda geniş topluluk görünümü.",
+          "caption": "İzmir Vizyon 2024 salonunda geniş topluluk görünümü.",
+          "sourceLabel": "İzmir Vizyon · fuaye medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-salon-genel-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-genel-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-genel-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-oturum-arkadan-1600.webp",
+          "alt": "İzmir Vizyon 2024 oturumunda dinleyicilerin arkasından sahne görünümü.",
+          "caption": "İzmir Vizyon 2024 oturumunda dinleyicilerin arkasından sahne görünümü.",
+          "sourceLabel": "İzmir Vizyon · fuaye medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-oturum-arkadan-800.webp",
+          "width": 1067,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-oturum-arkadan-800.webp",
+              "width": 533,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-oturum-arkadan-1600.webp",
+              "width": 1067,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-ust-kot-1600.webp",
+          "alt": "İzmir Vizyon 2024 salonunun üst kotundan oturum görünümü.",
+          "caption": "İzmir Vizyon 2024 salonunun üst kotundan oturum görünümü.",
+          "sourceLabel": "İzmir Vizyon · fuaye medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-salon-ust-kot-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-ust-kot-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-salon-ust-kot-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-mimarlik-merkezi-1600.webp",
+          "alt": "İzmir Vizyon 2024 sırasında Mimarlık Merkezi’nin merdivenli fuayesi ve bayraklar.",
+          "caption": "İzmir Vizyon 2024 sırasında Mimarlık Merkezi’nin merdivenli fuayesi ve bayraklar.",
+          "sourceLabel": "İzmir Vizyon · fuaye medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-mimarlik-merkezi-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-mimarlik-merkezi-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-mimarlik-merkezi-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-fuaye-genel-1600.webp",
+          "alt": "İzmir Vizyon 2024 buluşmasında Mimarlık Merkezi fuayesinin geniş görünümü.",
+          "caption": "İzmir Vizyon 2024 buluşmasında Mimarlık Merkezi fuayesinin geniş görünümü.",
+          "sourceLabel": "Archify tanıtım kitapçığı · s. 11",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-fuaye-genel-800.webp",
+          "width": 1200,
+          "height": 800,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-fuaye-genel-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-fuaye-genel-1600.webp",
+              "width": 1200,
+              "height": 800
+            }
+          ]
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/izmir-vizyon-2024-duyuru-1600.webp",
+          "alt": "İzmir Vizyon 2024 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-vizyon-2024-duyuru-800.webp",
+          "width": 1080,
+          "height": 1080,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-duyuru-800.webp",
+              "width": 800,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-vizyon-2024-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1080
+            }
+          ]
+        }
+      ]
     },
     "archfest-2024": {
       "dateLabel": "6, 7 ve 8 Eylül 2024",
@@ -102,11 +559,166 @@
           "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
           "dateLabel": "6, 7 ve 8 Eylül 2024"
         }
+      ],
+      "program": [
+        "Seminerler ve atölyeler",
+        "Konserler ve DJ performansları",
+        "Sosyal etkinlikler ve turnuvalar"
+      ],
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/archive-r11/archfest-2024-festival-mekani-1600.webp",
+          "alt": "ARCHFEST 2024 ağaçlar arasındaki festival alanı ve geçiş yolları.",
+          "caption": "ARCHFEST 2024 ağaçlar arasındaki festival alanı ve geçiş yolları.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi 6 Eylül",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-festival-mekani-800.webp",
+          "width": 1060,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-festival-mekani-800.webp",
+              "width": 530,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-festival-mekani-1600.webp",
+              "width": 1060,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-aksam-sahne-1600.webp",
+          "alt": "ARCHFEST 2024 akşam programında açık hava sahnesindeki konuşma.",
+          "caption": "ARCHFEST 2024 akşam programında açık hava sahnesindeki konuşma.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi 6 Eylül",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-aksam-sahne-800.webp",
+          "width": 1060,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-aksam-sahne-800.webp",
+              "width": 530,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-aksam-sahne-1600.webp",
+              "width": 1060,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-muzik-sahnesi-1600.webp",
+          "alt": "ARCHFEST 2024 açık hava müzik sahnesinde DJ performansı.",
+          "caption": "ARCHFEST 2024 açık hava müzik sahnesinde DJ performansı.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi 8 Eylül",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-muzik-sahnesi-800.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-muzik-sahnesi-800.webp",
+              "width": 600,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-muzik-sahnesi-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-konusma-sahnesi-1600.webp",
+          "alt": "ARCHFEST 2024 açık hava sahnesinde gün içi konuşma.",
+          "caption": "ARCHFEST 2024 açık hava sahnesinde gün içi konuşma.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi 8 Eylül",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-konusma-sahnesi-800.webp",
+          "width": 1200,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-konusma-sahnesi-800.webp",
+              "width": 600,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-konusma-sahnesi-1600.webp",
+              "width": 1200,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-acik-hava-hareket-1600.webp",
+          "alt": "ARCHFEST 2024 sahil alanında açık hava hareket çalışması.",
+          "caption": "ARCHFEST 2024 sahil alanında açık hava hareket çalışması.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-acik-hava-hareket-800.webp",
+          "width": 1067,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-acik-hava-hareket-800.webp",
+              "width": 533,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-acik-hava-hareket-1600.webp",
+              "width": 1067,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-uretim-masasi-1600.webp",
+          "alt": "ARCHFEST 2024 atölye masasında malzemelerle birlikte üretim.",
+          "caption": "ARCHFEST 2024 atölye masasında malzemelerle birlikte üretim.",
+          "sourceLabel": "ARCHFEST’24 · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-uretim-masasi-800.webp",
+          "width": 1067,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-uretim-masasi-800.webp",
+              "width": 533,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-uretim-masasi-1600.webp",
+              "width": 1067,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/archfest-2024-sahneden-genel-1600.webp",
+          "alt": "ARCHFEST 2024 sahnesinden açık hava dinleyici alanının görünümü.",
+          "caption": "ARCHFEST 2024 sahnesinden açık hava dinleyici alanının görünümü.",
+          "sourceLabel": "Archify tanıtım kitapçığı · s. 13",
+          "thumbnailSrc": "assets/images/archive-r11/archfest-2024-sahneden-genel-800.webp",
+          "width": 749,
+          "height": 1124,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/archfest-2024-sahneden-genel-800.webp",
+              "width": 533,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/archfest-2024-sahneden-genel-1600.webp",
+              "width": 749,
+              "height": 1124
+            }
+          ]
+        }
       ]
     },
     "istanbul-mimarlik-zirvesi-2025": {
       "dateLabel": "3 ve 4 Mayıs 2025",
-      "venue": "İstinye Üniversitesi, Vadi Kampüsü",
+      "venue": "İstinye Üniversitesi Vadi Ana Kampüsü, Kongre Merkezi",
       "series": "Mimarlık Zirvesi",
       "theme": "Mimarlığın geleceğini birlikte konuşmak.",
       "story": [
@@ -123,6 +735,10 @@
         {
           "title": "Archify tanıtım kitapçığı · s. 14",
           "kind": "local"
+        },
+        {
+          "title": "İstanbul Mimarlık Zirvesi 2025 · yayımlanan program",
+          "url": "https://www.biletimgo.com/etkinlik/mimarlik-zirvesi25-14625"
         }
       ],
       "subprograms": [
@@ -133,7 +749,115 @@
           "dateLabel": "3 ve 4 Mayıs 2025"
         }
       ],
-      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 14"
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "program": [
+        "3 Mayıs Cumartesi · Altı konuşma oturumu",
+        "4 Mayıs Pazar · Beş konuşma oturumu ve atölyeler",
+        "Yayımlanan günlük program aralığı · 10.00–17.30"
+      ],
+      "photoMetadata": [
+        {
+          "src": "assets/images/ux/istanbul-zirve-2025-avlu-1600.webp",
+          "caption": "İstanbul Mimarlık Zirvesi 2025: yukarıdan avludaki atölye masaları.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 14",
+          "thumbnailSrc": "assets/images/ux/istanbul-zirve-2025-avlu-1600.webp",
+          "width": 1272,
+          "height": 716,
+          "variants": [
+            {
+              "src": "assets/images/ux/istanbul-zirve-2025-avlu-1600.webp",
+              "width": 1272,
+              "height": 716
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-cizim-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 avlusunda çizim çalışması.",
+          "caption": "İstanbul Mimarlık Zirvesi 2025 avlusunda çizim çalışması.",
+          "sourceLabel": "İstanbul Zirve’25 · İstinye Üniversitesi etkinlik fotoğrafları",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-cizim-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-cizim-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-cizim-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-oyun-masasi-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 avlusunda sayı kartlarıyla etkileşim masası.",
+          "caption": "İstanbul Mimarlık Zirvesi 2025 avlusunda sayı kartlarıyla etkileşim masası.",
+          "sourceLabel": "İstanbul Zirve’25 · İstinye Üniversitesi etkinlik fotoğrafları",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-oyun-masasi-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-oyun-masasi-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-avlu-oyun-masasi-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-salon-isik-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 salonunun sahne yanından geniş görünümü.",
+          "caption": "İstanbul Mimarlık Zirvesi 2025 salonunun sahne yanından geniş görünümü.",
+          "sourceLabel": "İstanbul Zirve’25 · İstinye Üniversitesi etkinlik fotoğrafları",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-salon-isik-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-salon-isik-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-salon-isik-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-duyuru-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-duyuru-800.webp",
+          "width": 640,
+          "height": 640,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-duyuru-800.webp",
+              "width": 640,
+              "height": 640
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2025-duyuru-1600.webp",
+              "width": 640,
+              "height": 640
+            }
+          ]
+        }
+      ]
     },
     "deprem-ozel-sempozyumu-2025": {
       "dateLabel": "22 Kasım 2025",
@@ -149,7 +873,108 @@
         "url": "https://www.istinye.edu.tr/tr/sks/duyurular/isu-mimarlik-kulubu-deprem-ozel-sempozyum"
       },
       "evidenceLabel": "Belge ve beyan",
-      "datePrecision": "day"
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Deprem Özel Sempozyumu 2025 · yayımlanan program",
+          "url": "https://www.biletimgo.com/etkinlik/archify-deprem-ozel-sempozyumu-20296"
+        }
+      ],
+      "program": [
+        "Afet sonrası mimarlık",
+        "Yapı güvenliği",
+        "Kentsel dayanıklılık",
+        "Uzman konuşmaları ve disiplinlerarası oturumlar"
+      ],
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kursu-konusma-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 kürsüsünde konuşma.",
+          "caption": "Deprem Özel Sempozyumu 2025 kürsüsünde konuşma.",
+          "sourceLabel": "Deprem Özel 2025 · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kursu-konusma-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kursu-konusma-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kursu-konusma-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kongre-girisi-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 sırasında kongre merkezi girişinin görünümü.",
+          "caption": "Deprem Özel Sempozyumu 2025 sırasında kongre merkezi girişinin görünümü.",
+          "sourceLabel": "Deprem Özel 2025 · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kongre-girisi-800.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kongre-girisi-800.webp",
+              "width": 800,
+              "height": 533
+            },
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-kongre-girisi-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-oturum-genel-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 salonunda sahne ve sunumun geniş görünümü.",
+          "caption": "Deprem Özel Sempozyumu 2025 salonunda sahne ve sunumun geniş görünümü.",
+          "sourceLabel": "Deprem Özel 2025 · 1. oturum medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-oturum-genel-800.webp",
+          "width": 1600,
+          "height": 1400,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-oturum-genel-800.webp",
+              "width": 800,
+              "height": 700
+            },
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-oturum-genel-1600.webp",
+              "width": 1600,
+              "height": 1400
+            }
+          ]
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-duyuru-1600.webp",
+          "alt": "Deprem Özel Sempozyumu 2025 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-duyuru-800.webp",
+          "width": 1080,
+          "height": 1350,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-duyuru-800.webp",
+              "width": 640,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/deprem-ozel-sempozyumu-2025-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1350
+            }
+          ]
+        }
+      ]
     },
     "women-of-architecture-2026": {
       "dateLabel": "8 Mart 2026",
@@ -169,7 +994,82 @@
         "url": "https://www.biletimgo.com/etkinlik/women-of-architecture-24678"
       },
       "evidenceLabel": "Belge ve beyan",
-      "datePrecision": "day"
+      "datePrecision": "day",
+      "publishedProgram": [
+        {
+          "label": "8 Mart 2026 · Pazar",
+          "items": [
+            {
+              "time": "11.00",
+              "title": "Açılış konuşması"
+            },
+            {
+              "time": "11.15–12.00",
+              "title": "Ece Doğan · Yüksek Mimar"
+            },
+            {
+              "time": "12.00–12.15",
+              "title": "Mola"
+            },
+            {
+              "time": "12.15–13.00",
+              "title": "Prof. Dr. İnanç Işıl Yıldırım"
+            },
+            {
+              "time": "13.00–13.45",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "13.45–14.30",
+              "title": "Merve Yavuz · Peyzaj Mimarı"
+            },
+            {
+              "time": "14.30–14.45",
+              "title": "Mola"
+            },
+            {
+              "time": "14.45–15.30",
+              "title": "Derya Toros · İç Mimar"
+            },
+            {
+              "time": "15.30–15.45",
+              "title": "Mola"
+            },
+            {
+              "time": "15.45–16.30",
+              "title": "Tuğba Altınoklu Sağlam ve Zülal Aktaş Çağlak"
+            }
+          ]
+        }
+      ],
+      "programSource": {
+        "title": "Women of Architecture 2026",
+        "url": "https://www.biletimgo.com/etkinlik/women-of-architecture-24678"
+      },
+      "programNote": "Etkinlik öncesinde paylaşılan program akışı. Saatler ve başlıklar yayımlanan duyuruyu yansıtır.",
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/women-of-architecture-2026-duyuru-1600.webp",
+          "alt": "Women of Architecture 2026 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/women-of-architecture-2026-duyuru-800.webp",
+          "width": 1080,
+          "height": 1350,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/women-of-architecture-2026-duyuru-800.webp",
+              "width": 640,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/women-of-architecture-2026-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1350
+            }
+          ]
+        }
+      ]
     },
     "izmir-mimarlik-zirvesi-2026": {
       "dateLabel": "25 ve 26 Nisan 2026",
@@ -178,7 +1078,7 @@
       "theme": "Yeni fikirler, İzmir’de aynı sahnede.",
       "story": [
         "Archify’nin Zirve serisi, 2026’da İzmir Mimarlık Merkezi’ne uzandı. İki günlük programda konuşmalar ve atölyeler birlikte yer aldı. Yayımlanan program, mimarlık ve tasarımın farklı pratiklerini aynı buluşmada ele aldı.",
-        "Bu kayıt, tarihi geçmiş buluşmanın yayımlanan programına dayanır. Başvuru dönemi sona ermiştir."
+        "Etkinlik sonrası Archify paylaşımı, konuşmaları ve birlikte üretime ayrılan atölyeleri belgeliyor. Aşağıda duyurulan program ile bu paylaşımda adı geçen atölyeler ayrı ayrı yer alıyor."
       ],
       "program": [
         "25 Nisan · Açılış ve konuşmalar",
@@ -190,12 +1090,157 @@
       },
       "evidenceLabel": "Belge",
       "datePrecision": "day",
-      "subprograms": [
+      "subprograms": [],
+      "publishedProgram": [
         {
-          "title": "İzmir Mimarlık Zirvesi 2026 Atölyeleri",
-          "category": "Atölye",
-          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
-          "dateLabel": "25 ve 26 Nisan 2026"
+          "label": "25 Nisan 2026 · Cumartesi",
+          "items": [
+            {
+              "time": "10.00",
+              "title": "Kapı açılışı"
+            },
+            {
+              "time": "11.00",
+              "title": "Açılış konuşması"
+            },
+            {
+              "time": "11.15–12.00",
+              "title": "Mert Tanrıkulu"
+            },
+            {
+              "time": "12.00–12.15",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "12.15–13.00",
+              "title": "Yuka Architecture"
+            },
+            {
+              "time": "13.00–13.15",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "13.15–14.00",
+              "title": "Mert Uslu"
+            },
+            {
+              "time": "14.00–14.45",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "14.45–15.30",
+              "title": "Berk Ekici"
+            },
+            {
+              "time": "15.30–15.45",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "15.45–16.30",
+              "title": "Noyan Vural"
+            },
+            {
+              "time": "16.30–16.45",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "16.45–17.30",
+              "title": "Melis Varkal Deligöz ve Gökhan Çelikağ"
+            }
+          ]
+        },
+        {
+          "label": "26 Nisan 2026 · Pazar",
+          "items": [
+            {
+              "time": "10.00",
+              "title": "Kapı açılışı"
+            },
+            {
+              "time": "11.00–11.45",
+              "title": "Başak Akkoyunlu"
+            },
+            {
+              "time": "11.45–12.00",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "12.00–12.45",
+              "title": "Özgür Okçu"
+            },
+            {
+              "time": "12.45–13.30",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "13.30–14.15",
+              "title": "Taze Mimarlar"
+            },
+            {
+              "time": "14.15–14.30",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "14.30–15.15",
+              "title": "Uğur Yıldırım"
+            },
+            {
+              "time": "15.15–15.30",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "15.30–18.00",
+              "title": "Atölye"
+            }
+          ]
+        }
+      ],
+      "programSource": {
+        "title": "İzmir Mimarlık Zirvesi 2026",
+        "url": "https://www.biletimgo.com/etkinlik/izmir-mimarlik-zirvesi26-26005"
+      },
+      "programNote": "Etkinlik öncesinde paylaşılan program akışı. Saatler ve başlıklar yayımlanan duyuruyu yansıtır.",
+      "workshops": [
+        "Ahşap Oyma",
+        "Eskiz",
+        "Origami",
+        "Epoksi Takı",
+        "Mimari Kolaj",
+        "Tuval",
+        "Re:Draw — Form Follows Feeling",
+        "Re:From — Kilin Mitolojik Dönüşümü"
+      ],
+      "workshopSource": {
+        "title": "Archify · etkinlik sonrası paylaşımlar",
+        "url": "https://tr.linkedin.com/company/archifycom"
+      },
+      "additionalSources": [
+        {
+          "title": "Archify · etkinlik sonrası paylaşımlar",
+          "url": "https://tr.linkedin.com/company/archifycom"
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/izmir-mimarlik-zirvesi-2026-duyuru-1600.webp",
+          "alt": "İzmir Mimarlık Zirvesi 2026 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-mimarlik-zirvesi-2026-duyuru-800.webp",
+          "width": 1080,
+          "height": 1350,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-mimarlik-zirvesi-2026-duyuru-800.webp",
+              "width": 640,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-mimarlik-zirvesi-2026-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1350
+            }
+          ]
         }
       ]
     },
@@ -206,7 +1251,7 @@
       "theme": "Mimarlığın farklı sesleri, ortak bir merak.",
       "story": [
         "İstanbul Mimarlık Zirvesi 2026, İTÜ Maçka Kampüsü için yayımlanan iki günlük programıyla farklı mesleki yaklaşımları buluşturdu. Konuşmaların yanında atölyeler ve oturum arası karşılaşmalar için alan açıldı.",
-        "Bu kayıt, tarihi geçmiş buluşmanın yayımlanan programına dayanır. Başvuru dönemi sona ermiştir."
+        "Etkinlik sonrası Archify paylaşımı, konuşmaları ve birlikte üretime ayrılan atölyeleri belgeliyor. Aşağıda duyurulan program ile bu paylaşımda adı geçen atölyeler ayrı ayrı yer alıyor."
       ],
       "program": [
         "9 Mayıs · Açılış ve altı konuşma oturumu",
@@ -218,12 +1263,154 @@
       },
       "evidenceLabel": "Belge",
       "datePrecision": "day",
-      "subprograms": [
+      "subprograms": [],
+      "publishedProgram": [
         {
-          "title": "İstanbul Mimarlık Zirvesi 2026 Atölyeleri",
-          "category": "Atölye",
-          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
-          "dateLabel": "9 ve 10 Mayıs 2026"
+          "label": "9 Mayıs 2026 · Cumartesi",
+          "items": [
+            {
+              "time": "10.00",
+              "title": "Kapı açılışı"
+            },
+            {
+              "time": "11.00",
+              "title": "Açılış konuşması"
+            },
+            {
+              "time": "11.15–12.00",
+              "title": "Mert Tanrıkulu"
+            },
+            {
+              "time": "12.00–12.15",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "12.15–13.00",
+              "title": "Habif Mimarlık · Hakan Habif ve Çağrı Kaan Çetin"
+            },
+            {
+              "time": "13.00–13.45",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "13.45–14.30",
+              "title": "Gasarch · Ömer Yeşildal"
+            },
+            {
+              "time": "14.30–14.45",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "14.45–15.30",
+              "title": "Erhan Sağır ve Hasan Burak Akyıldız"
+            },
+            {
+              "time": "15.30–15.45",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "15.45–16.30",
+              "title": "DATA Studio · Batu Kepekçioğlu ve Ayşe Dede"
+            },
+            {
+              "time": "16.45–17.30",
+              "title": "Burak Pelenk"
+            }
+          ]
+        },
+        {
+          "label": "10 Mayıs 2026 · Pazar",
+          "items": [
+            {
+              "time": "10.00",
+              "title": "Kapı açılışı"
+            },
+            {
+              "time": "11.00–11.45",
+              "title": "SO Mimarlık · Sevince Bayrak ve Oral Göktaş"
+            },
+            {
+              "time": "11.45–12.00",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "12.00–12.45",
+              "title": "Murat Dede"
+            },
+            {
+              "time": "12.45–13.30",
+              "title": "Öğle arası"
+            },
+            {
+              "time": "13.30–14.15",
+              "title": "Bünyamin Atan"
+            },
+            {
+              "time": "14.15–14.30",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "14.30–15.15",
+              "title": "Burcu Arkunt"
+            },
+            {
+              "time": "15.15–15.30",
+              "title": "Kahve molası ve tanışma"
+            },
+            {
+              "time": "15.30–18.00",
+              "title": "Atölye"
+            }
+          ]
+        }
+      ],
+      "programSource": {
+        "title": "İstanbul Mimarlık Zirvesi 2026",
+        "url": "https://www.biletimgo.com/etkinlik/istanbul-mimarlik-zirvesi26-26498"
+      },
+      "programNote": "Etkinlik öncesinde paylaşılan program akışı. Saatler ve başlıklar yayımlanan duyuruyu yansıtır.",
+      "workshops": [
+        "Kent İmgesine Müdahaleler / Dijital İllüstrasyon",
+        "Mimari Marker Eskiz",
+        "Linol Baskı",
+        "Sulu Boya Eskiz",
+        "Mimari Eskiz",
+        "Çatı Strüktürü Maket",
+        "Kolaj",
+        "Ayna Boyama",
+        "Revit / 3ds Max Diyagram"
+      ],
+      "workshopSource": {
+        "title": "Archify · etkinlik sonrası paylaşımlar",
+        "url": "https://tr.linkedin.com/company/archifycom"
+      },
+      "additionalSources": [
+        {
+          "title": "Archify · etkinlik sonrası paylaşımlar",
+          "url": "https://tr.linkedin.com/company/archifycom"
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2026-duyuru-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2026 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2026-duyuru-800.webp",
+          "width": 1080,
+          "height": 1350,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2026-duyuru-800.webp",
+              "width": 640,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/istanbul-mimarlik-zirvesi-2026-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1350
+            }
+          ]
         }
       ]
     },
@@ -246,7 +1433,8 @@
       "venue": "Karadeniz Teknik Üniversitesi",
       "theme": "KTÜ Kulübe Atölyesi",
       "story": [
-        "Sokak hayvanları için kulübe tasarımı ve üretimi yapıldı. Trabzon’daki atölye Karadeniz Teknik Üniversitesinde düzenlendi."
+        "Karadeniz Teknik Üniversitesindeki atölye, sokak hayvanları için kulübe tasarlama ve üretme sürecini bir araya getirdi.",
+        "İlk gün tasarım ve kritik çalışmalarına ayrıldı. İkinci gün seçilen tasarımlar üretildi. Atölyenin kesin tarihi kaynakta belirtilmiyor."
       ],
       "source": {
         "title": "Archify etkinlik portföyü",
@@ -259,6 +1447,51 @@
           "title": "Archify tanıtım kitapçığı · s. 7",
           "kind": "local"
         }
+      ],
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/archive-r11/ktu-kulube-atolyesi-salon-toplu-1600.webp",
+          "alt": "KTÜ Kulübe Atölyesi sonunda salon sahnesindeki toplu görünüm.",
+          "caption": "KTÜ Kulübe Atölyesi sonunda salon sahnesindeki toplu görünüm.",
+          "sourceLabel": "KTÜ Kulübe Workshop · medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/ktu-kulube-atolyesi-salon-toplu-800.webp",
+          "width": 1600,
+          "height": 903,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/ktu-kulube-atolyesi-salon-toplu-800.webp",
+              "width": 800,
+              "height": 451
+            },
+            {
+              "src": "assets/images/archive-r11/ktu-kulube-atolyesi-salon-toplu-1600.webp",
+              "width": 1600,
+              "height": 903
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/ktu-kulube-atolyesi-fakulte-onu-1600.webp",
+          "alt": "KTÜ Kulübe Atölyesi topluluğu Mimarlık Fakültesi girişinin önünde.",
+          "caption": "KTÜ Kulübe Atölyesi topluluğu Mimarlık Fakültesi girişinin önünde.",
+          "sourceLabel": "KTÜ Kulübe Workshop · medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/ktu-kulube-atolyesi-fakulte-onu-800.webp",
+          "width": 1600,
+          "height": 1200,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/ktu-kulube-atolyesi-fakulte-onu-800.webp",
+              "width": 800,
+              "height": 600
+            },
+            {
+              "src": "assets/images/archive-r11/ktu-kulube-atolyesi-fakulte-onu-1600.webp",
+              "width": 1600,
+              "height": 1200
+            }
+          ]
+        }
       ]
     },
     "izmir-sempozyumu-2023": {
@@ -266,7 +1499,8 @@
       "venue": "İzmir İktisat Kongresi Salonu",
       "theme": "İzmir Sempozyumu: Yarının Temeli",
       "story": [
-        "Yarının Temeli sempozyumu İzmir’de yapıldı. Tek günlük buluşmada sempozyum ve fuaye birlikte yer aldı."
+        "Yarının Temeli sempozyumu, 11 Mayıs 2023’te İzmir İktisat Kongresi Salonu’nda mimarlık topluluğunu bir araya getirdi. Tek günlük program, konuşmalarla fuaye buluşmalarını yan yana taşıdı.",
+        "Yaratıcılık ve yenilik, sürdürülebilirlik, toplumsal sorumluluk, teknoloji ve iş birliği sempozyumun ele aldığı başlıklardı."
       ],
       "source": {
         "title": "Archify etkinlik portföyü",
@@ -280,14 +1514,116 @@
           "kind": "local"
         }
       ],
-      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 9"
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/ux/izmir-sempozyumu-2023-salon-1600.webp",
+          "caption": "İzmir Sempozyumu 2023: üst sıradan salonun ve sahnenin genel görünümü.",
+          "sourceLabel": "Archify tanıtım kitapçığından seçki · s. 9",
+          "thumbnailSrc": "assets/images/ux/izmir-sempozyumu-2023-salon-1600.webp",
+          "width": 1600,
+          "height": 1067,
+          "variants": [
+            {
+              "src": "assets/images/ux/izmir-sempozyumu-2023-salon-1600.webp",
+              "width": 1600,
+              "height": 1067
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-salon-toplu-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 salonunda sahneden görülen topluluk.",
+          "caption": "İzmir Sempozyumu 2023 salonunda sahneden görülen topluluk.",
+          "sourceLabel": "İzmir Sempozyumu · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-sempozyumu-2023-salon-toplu-800.webp",
+          "width": 1600,
+          "height": 1069,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-salon-toplu-800.webp",
+              "width": 800,
+              "height": 535
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-salon-toplu-1600.webp",
+              "width": 1600,
+              "height": 1069
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-amfi-genel-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 amfisinin üst sıradan genel görünümü.",
+          "caption": "İzmir Sempozyumu 2023 amfisinin üst sıradan genel görünümü.",
+          "sourceLabel": "İzmir Sempozyumu · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-sempozyumu-2023-amfi-genel-800.webp",
+          "width": 1600,
+          "height": 1069,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-amfi-genel-800.webp",
+              "width": 800,
+              "height": 535
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-amfi-genel-1600.webp",
+              "width": 1600,
+              "height": 1069
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sahne-paylasimi-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 sahnesinde Archify ekranı önündeki buluşma.",
+          "caption": "İzmir Sempozyumu 2023 sahnesinde Archify ekranı önündeki buluşma.",
+          "sourceLabel": "İzmir Sempozyumu · etkinlik medya arşivi",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-sempozyumu-2023-sahne-paylasimi-800.webp",
+          "width": 1067,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sahne-paylasimi-800.webp",
+              "width": 533,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sahne-paylasimi-1600.webp",
+              "width": 1067,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sunum-sahne-1600.webp",
+          "alt": "İzmir Sempozyumu 2023 salonunda sunum ekranı ve konuşma sahnesi.",
+          "caption": "İzmir Sempozyumu 2023 salonunda sunum ekranı ve konuşma sahnesi.",
+          "sourceLabel": "Archify tanıtım kitapçığı · s. 9",
+          "thumbnailSrc": "assets/images/archive-r11/izmir-sempozyumu-2023-sunum-sahne-800.webp",
+          "width": 647,
+          "height": 432,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sunum-sahne-800.webp",
+              "width": 647,
+              "height": 432
+            },
+            {
+              "src": "assets/images/archive-r11/izmir-sempozyumu-2023-sunum-sahne-1600.webp",
+              "width": 647,
+              "height": 432
+            }
+          ]
+        }
+      ]
     },
     "harmony-2024": {
       "dateLabel": "23 Mart 2024",
       "venue": "İzmir Ekonomi Üniversitesi",
       "theme": "ARCHIFY x CUTPAPER HARMONY",
       "story": [
-        "Harmony, Cut Paper kulübü ortaklığıyla İzmir’de yapıldı. Tek günlük program konuşmacı oturumlarından oluştu."
+        "Archify ve Cut Paper kulübünün Harmony buluşması, 23 Mart 2024’te İzmir Ekonomi Üniversitesinde gerçekleşti.",
+        "Tek günlük konuşma programı, mimarlık topluluğunu üniversite ortamında bir araya getirdi. Kamuya açık etkinlik duyurusu programın başlangıcını 10.00 olarak yayımladı."
       ],
       "source": {
         "title": "Archify · Harmony buluşmasının ardından",
@@ -299,6 +1635,120 @@
         {
           "title": "Archify tanıtım kitapçığı · s. 12",
           "kind": "local"
+        },
+        {
+          "title": "Harmony · 23 Mart 2024 tarihli etkinlik duyurusu",
+          "url": "https://www.biletimgo.com/etkinlik/archify-x-cutpaper-quotharmonyquot-6223"
+        }
+      ],
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/archive-r11/harmony-2024-soylesi-sahne-1600.webp",
+          "alt": "Harmony 2024 salonunda sahnedeki söyleşinin genel görünümü.",
+          "caption": "Harmony 2024 salonunda sahnedeki söyleşinin genel görünümü.",
+          "sourceLabel": "Harmony – Cut Paper · fotoğraflar",
+          "thumbnailSrc": "assets/images/archive-r11/harmony-2024-soylesi-sahne-800.webp",
+          "width": 900,
+          "height": 1600,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/harmony-2024-soylesi-sahne-800.webp",
+              "width": 450,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/harmony-2024-soylesi-sahne-1600.webp",
+              "width": 900,
+              "height": 1600
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-duygu-diyagrami-1600.webp",
+          "alt": "Harmony 2024 buluşmasında renkli iplerle hazırlanmış duygu diyagramı.",
+          "caption": "Harmony 2024 buluşmasında renkli iplerle hazırlanmış duygu diyagramı.",
+          "sourceLabel": "Harmony – Cut Paper · fotoğraflar",
+          "thumbnailSrc": "assets/images/archive-r11/harmony-2024-duygu-diyagrami-800.webp",
+          "width": 1600,
+          "height": 1200,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/harmony-2024-duygu-diyagrami-800.webp",
+              "width": 800,
+              "height": 600
+            },
+            {
+              "src": "assets/images/archive-r11/harmony-2024-duygu-diyagrami-1600.webp",
+              "width": 1600,
+              "height": 1200
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-konusma-sahne-1600.webp",
+          "alt": "Harmony 2024 sahnesinde sunum ekranı ve Archify bayrağı önündeki konuşma.",
+          "caption": "Harmony 2024 sahnesinde sunum ekranı ve Archify bayrağı önündeki konuşma.",
+          "sourceLabel": "Harmony – Cut Paper · fotoğraflar",
+          "thumbnailSrc": "assets/images/archive-r11/harmony-2024-konusma-sahne-800.webp",
+          "width": 1600,
+          "height": 900,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/harmony-2024-konusma-sahne-800.webp",
+              "width": 800,
+              "height": 450
+            },
+            {
+              "src": "assets/images/archive-r11/harmony-2024-konusma-sahne-1600.webp",
+              "width": 1600,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "src": "assets/images/archive-r11/harmony-2024-salon-genel-1600.webp",
+          "alt": "Harmony 2024 salonunda sahne tarafından görülen dinleyiciler ve mekân.",
+          "caption": "Harmony 2024 salonunda sahne tarafından görülen dinleyiciler ve mekân.",
+          "sourceLabel": "Archify tanıtım kitapçığı · s. 12",
+          "thumbnailSrc": "assets/images/archive-r11/harmony-2024-salon-genel-800.webp",
+          "width": 922,
+          "height": 692,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/harmony-2024-salon-genel-800.webp",
+              "width": 800,
+              "height": 600
+            },
+            {
+              "src": "assets/images/archive-r11/harmony-2024-salon-genel-1600.webp",
+              "width": 922,
+              "height": 692
+            }
+          ]
+        }
+      ],
+      "posterMetadata": [
+        {
+          "src": "assets/images/archive-r11/harmony-2024-duyuru-1600.webp",
+          "alt": "Harmony 2024 yayımlanan etkinlik duyuru görseli.",
+          "caption": "Yayımlanan etkinlik duyuru görseli",
+          "sourceLabel": "BiletimGO · yayımlanan etkinlik duyurusu",
+          "thumbnailSrc": "assets/images/archive-r11/harmony-2024-duyuru-800.webp",
+          "width": 1080,
+          "height": 1080,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/harmony-2024-duyuru-800.webp",
+              "width": 800,
+              "height": 800
+            },
+            {
+              "src": "assets/images/archive-r11/harmony-2024-duyuru-1600.webp",
+              "width": 1080,
+              "height": 1080
+            }
+          ]
         }
       ]
     },
@@ -416,7 +1866,31 @@
         "title": "Archify tur arşivi ve gerçekleşmiş yolculuk kaydı",
         "kind": "local"
       },
-      "evidenceLabel": "Gerçekleşme kaydı"
+      "evidenceLabel": "Gerçekleşme kaydı",
+      "imageCredit": "Seçki: Archify etkinlik arşivi ve tanıtım yayınları. Her karenin kaynak bilgisi açıklamasında yer alır.",
+      "photoMetadata": [
+        {
+          "src": "assets/images/archive-r11/buyuk-avrupa-turu-2025-paris-eyfel-1600.webp",
+          "alt": "Büyük Avrupa Turu 2025 Paris durağında Eyfel Kulesi önündeki geniş topluluk görünümü.",
+          "caption": "Büyük Avrupa Turu 2025 Paris durağında Eyfel Kulesi önündeki geniş topluluk görünümü.",
+          "sourceLabel": "Büyük Avrupa Turu 2025 · Paris çekimleri, 30 Temmuz 2025",
+          "thumbnailSrc": "assets/images/archive-r11/buyuk-avrupa-turu-2025-paris-eyfel-800.webp",
+          "width": 1600,
+          "height": 1200,
+          "variants": [
+            {
+              "src": "assets/images/archive-r11/buyuk-avrupa-turu-2025-paris-eyfel-800.webp",
+              "width": 800,
+              "height": 600
+            },
+            {
+              "src": "assets/images/archive-r11/buyuk-avrupa-turu-2025-paris-eyfel-1600.webp",
+              "width": 1600,
+              "height": 1200
+            }
+          ]
+        }
+      ]
     },
     "italya-ispanya-turu-2025": {
       "dateLabel": "15–26 Ağustos 2025",

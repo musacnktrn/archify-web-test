@@ -43,7 +43,8 @@ export function registrationState(event, now = Date.now()) {
   return { open: true, label: 'Başvuru açık', detail: 'Başvurunu tamamla; son durum ve kapasite kayıt sırasında kontrol edilir.' };
 }
 export function archiveEvent(event) {
-  return { ...event, archived: true, status: 'closed', registrationOpen: false, startAt: null, endAt: null, venue: null, capacity: null };
+  // [codex] 01a20fd9 · K-550: a verified archive venue may be known without an invented UTC time.
+  return { ...event, archived: true, status: 'closed', registrationOpen: false, startAt: null, endAt: null, venue: typeof event.venue === 'string' && event.venue.trim() ? event.venue : null, capacity: null };
 }
 export function mergeEvents(archive, live) {
   const merged = new Map(archive.map(event => [event.slug, archiveEvent(event)]));

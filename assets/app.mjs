@@ -56,7 +56,7 @@ async function loadData() {
     if (!Array.isArray(data.events)) throw new Error('invalid_response');
     return { events: data.events.filter(e => e.status !== 'draft'), editorial, live: true };
   } catch {
-    return { events: catalog.events.map(archiveEvent), editorial, live: false };
+    return { events: catalog.events.map(event=>({...archiveEvent(event),gallery:[]})), editorial, live: false };
   }
 }
 function eventURL(event) { return 'etkinlik.html?slug=' + encodeURIComponent(event.slug); }
@@ -247,12 +247,52 @@ async function trackNavigation(slug) {
   try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key,'attempted'); } catch { /* Browser storage is optional. One call per page invocation. */ }
   try { await session(); await request('links/view',{navigationId,eventSlug:slug}); } catch { /* Read-only detail remains available; never manufacture a visit or retry automatically. */ }
 }
+// [codex] R11: publication decides which photographs exist; editorial metadata only describes an exact published src.
+export function archiveGallery(event, editorial = {}) {
+  const metadata = new Map((Array.isArray(editorial.photoMetadata) ? editorial.photoMetadata : []).filter(item => item && typeof item.src === 'string').map(item => [item.src,item]));
+  const seen = new Set();
+  const localImage = value => typeof value === 'string' && /^(?:assets|media)\//.test(value) ? safeURL(value,{image:true}) : '';
+  return (Array.isArray(event.gallery) ? event.gallery : []).flatMap(item => {
+    if (!item || !safeURL(item.src,{image:true}) || seen.has(item.src)) return [];
+    seen.add(item.src);
+    const meta = metadata.get(item.src) || {};
+    const text = value => typeof value === 'string' && value.trim() ? value.trim() : '';
+    const width = Number.isInteger(meta.width) && meta.width > 0 && meta.width <= 20000 ? meta.width : 1200;
+    const height = Number.isInteger(meta.height) && meta.height > 0 && meta.height <= 20000 ? meta.height : 800;
+    const variants = (Array.isArray(meta.variants) ? meta.variants : []).filter(v => v && localImage(v.src) && Number.isInteger(v.width) && v.width > 0 && v.width <= width);
+    return [{src:safeURL(item.src,{image:true}),alt:text(item.alt) || event.title || 'Etkinlik fotoğrafı',caption:text(meta.caption) || text(item.alt) || event.title || 'Etkinlik fotoğrafı',sourceLabel:text(meta.sourceLabel),sourceUrl:safeURL(meta.sourceUrl),thumbnailSrc:localImage(meta.thumbnailSrc) || safeURL(item.src,{image:true}),width,height,variants}];
+  });
+}
+function archivePhotoCaption(item) {
+  return `<span class="archive-photo-caption">${esc(item.caption)}</span>${item.sourceLabel ? `<span class="archive-photo-source">${item.sourceUrl ? `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(item.sourceLabel)}</a>` : esc(item.sourceLabel)}</span>` : ''}`;
+}
+function archivePhotoImage(item, {lead = false} = {}) {
+  const srcset = lead && item.variants.length > 1 ? ` srcset="${item.variants.map(v=>`${esc(v.src)} ${v.width}w`).join(', ')}" sizes="(max-width: 620px) 100vw, 90vw"` : '';
+  return `<img src="${esc(lead ? item.src : item.thumbnailSrc)}"${srcset} alt="${esc(item.alt)}" width="${item.width}" height="${item.height}"${lead ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+}
+function archivePhotoTile(item,index) {
+  return `<figure class="archive-photo-tile"><button class="gallery-thumb" type="button" data-gallery-index="${index}" aria-label="Fotoğraf ${index+1} / ${gallery.length}: ${esc(item.alt)}, galeride aç">${archivePhotoImage(item)}<span><b>${String(index+1).padStart(2,'0')}</b> Fotoğrafı büyüt <span aria-hidden="true">↗</span></span></button><figcaption>${archivePhotoCaption(item)}</figcaption></figure>`;
+}
+function bindGalleryButtons(root) {
+  root.querySelectorAll('[data-gallery-index]').forEach(button => button.addEventListener('click', () => openGallery(Number(button.dataset.galleryIndex),button)));
+}
+function archivePosters(edit) {
+  const metadata=Array.isArray(edit.posterMetadata)?edit.posterMetadata:[];
+  const posters=archiveGallery({title:'Etkinlik afişi',gallery:metadata.map(item=>({src:item.src,alt:item.alt||'Etkinlik afişi'}))},{photoMetadata:metadata});
+  if(!posters.length)return '';
+  return `<section class="section archive-posters" aria-labelledby="archive-posters-title" data-poster-count="${posters.length}"><div class="section-heading"><div><p class="eyebrow">Yayımlanan duyurular</p><h2 id="archive-posters-title">${posters.length===1?'Etkinlik afişi':'Etkinlik afişleri'}</h2></div></div><div class="archive-poster-grid">${posters.map(item=>`<figure class="archive-poster-item"><a href="${esc(item.src)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(item.alt)}, büyük boyutu yeni sekmede aç">${archivePhotoImage(item)}<span>Afişi büyük boyutta aç <span aria-hidden="true">↗</span></span></a><figcaption>${archivePhotoCaption(item)}</figcaption></figure>`).join('')}</div></section>`;
+}
+function archiveProgram(edit) {
+  const days = Array.isArray(edit.publishedProgram) ? edit.publishedProgram.filter(day=>day && typeof day.label==='string' && Array.isArray(day.items)) : [];
+  if(!days.length)return '';
+  return `<section class="archive-program" aria-labelledby="archive-program-title"><p class="eyebrow">Etkinlik duyurusundan</p><h3 id="archive-program-title">Yayımlanan program</h3><p class="archive-program-note">${esc(edit.programNote || 'Etkinlik öncesinde paylaşılan program akışı. Saatler ve başlıklar yayımlanan duyuruyu yansıtır.')}</p>${days.map(day=>`<div class="archive-program-day"><h4>${esc(day.label)}</h4><ol>${day.items.filter(item=>item&&typeof item.title==='string').map(item=>`<li>${item.time ? `<span class="archive-program-time">${esc(item.time)}</span>` : ''}<span>${esc(item.title)}</span></li>`).join('')}</ol></div>`).join('')}${edit.programSource ? sourceMarkup(edit.programSource,'Program kaynağı: ') : ''}</section>`;
+}
 async function renderDetail(data) {
   const slug = params.get('slug');
   let event = data.events.find(e => e.slug === slug);
   if (slug && !preview) {
     try { const response = await request('events/'+encodeURIComponent(slug)); event = response.event; }
-    catch(error) { if (error.status === 404 || error.status === 403) event = null; }
+    catch(error) { if (error.status === 404 || error.status === 403) event = null; else if (event) event = {...event,gallery:[]}; }
   }
   if (!event || event.status === 'draft') {
     $('#event-detail').innerHTML = '<section class="section page-intro"><p class="eyebrow">Etkinlik bulunamadı</p><h1>Başka bir<br><em>hikâyeye bakalım.</em></h1><p class="lead">Bu etkinlik yayımlanmamış, kaldırılmış veya bağlantısı eksik olabilir.</p><a class="button" href="arsiv.html">Arşive dön</a></section>'; return;
@@ -260,19 +300,29 @@ async function renderDetail(data) {
   document.title = event.title + ' · Archify'; $('#breadcrumb-current').textContent = event.title;
   const edit = data.editorial.events[event.slug] || {};
   const state = registrationState(event);
-  const image = photo(event);
   const date = friendlyDate(event.startAt) || edit.dateLabel || (event.year ? String(event.year) : event.archived ? 'Tarihi kesinleşmemiş arşiv kaydı' : 'Tarih duyurulacak');
   const venue = event.venue || edit.venue;
   const story = edit.story || [event.summary];
-  gallery = (event.gallery || []).filter(item => safeURL(item.src,{image:true}));
+  gallery = archiveGallery(event,edit);
+  const image = gallery[0];
   const sources = [edit.source,...(edit.additionalSources || [])].filter(s => s && typeof s.title==='string');
   const facts = [['Tarih',date],['Yer',venue || event.city],['Tür',event.category],['Kayıt dayanağı',edit.evidenceLabel]].filter(([,value])=>value);
-  const programs=[...(edit.program || []),...(edit.routeHighlights?.length ? ['Rotadan kentler: '+edit.routeHighlights.join(', ')] : [])];
+  const programs=edit.program || [];
   $('#event-detail').innerHTML = `<header class="section detail-header"><p class="eyebrow">${esc([event.category,event.archived ? 'Arşiv' : state.label].filter(Boolean).join(' · '))}</p><h1>${esc(event.title)}</h1><div class="detail-meta"><span>${esc(date)}</span>${event.city ? `<span>${esc(event.city)}</span>` : ''}</div></header>
-  <div class="detail-visual">${image ? `<img src="${esc(safeURL(image.src,{image:true}))}" alt="${esc(image.alt || event.title)}" width="1200" height="800">` : cover(event,data.editorial)}</div>
-  <div class="section detail-body ux-event-dossier"><div class="detail-story ux-event-story"><p class="eyebrow">${esc(edit.series || 'Etkinlik kaydı')}</p><h2>Bu buluşmada</h2><div class="prose">${story.filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('')}</div>${programs.length ? `<div class="detail-program"><h3>Programdan</h3><ul>${programs.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>` : ''}${edit.subprograms?.length ? `<div class="detail-program" id="atolyeler"><h3>Etkinlik içindeki atölyeler</h3>${edit.subprograms.map(item=>`<article><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><p class="card-meta">${esc(item.dateLabel)}</p></article>`).join('')}</div>` : ''}${sources.length ? `<div class="detail-source"><p class="eyebrow">Kaynaklar</p>${sources.map(item=>sourceMarkup(item)).join('')}</div>` : ''}</div><aside class="detail-aside"><dl class="ux-event-facts">${facts.map(([key,value])=>`<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl><p class="eyebrow">${esc(state.label)}</p><p>${esc(state.detail)}</p>${state.open ? `<a class="button" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Etkinliğe başvur</a>` : '<a class="button" href="topluluk.html">Yeni buluşmaları takip et</a>'}</aside></div>
-  ${gallery.length ? `<section class="section gallery-section ux-event-gallery"><div class="section-heading"><h2>Fotoğraf seçkisi</h2></div><div class="gallery-grid">${gallery.map((item,i) => `<figure><button class="gallery-thumb" type="button" data-gallery-index="${i}" aria-label="${esc(item.alt || event.title)}, galeride aç"><img src="${esc(safeURL(item.src,{image:true}))}" alt="${esc(item.alt || event.title)}" loading="lazy" width="1200" height="800"><span>Fotoğrafı büyüt</span></button><figcaption>${esc(item.alt || event.title)}</figcaption></figure>`).join('')}</div><p class="gallery-note">${esc(edit.imageCredit || 'Bu etkinliğe ait yayımlanan galeri seçkisi.')}</p></section>` : ''}`;
-  document.querySelectorAll('[data-gallery-index]').forEach(button => button.addEventListener('click', () => openGallery(Number(button.dataset.galleryIndex),button)));
+  ${image ? `<figure class="detail-visual archive-photo-lead"><button class="archive-lead-open" type="button" data-gallery-index="0" aria-label="${esc(event.title)} fotoğraf galerisi, ${gallery.length} fotoğraf">${archivePhotoImage(image,{lead:true})}<span class="archive-photo-badge">${gallery.length} fotoğraf <span aria-hidden="true">↗</span></span></button><figcaption>${archivePhotoCaption(image)}</figcaption></figure>` : `<div class="detail-visual">${cover(event,data.editorial)}</div>`}
+  <div class="section detail-body ux-event-dossier"><div class="detail-story ux-event-story"><p class="eyebrow">${esc(edit.series || 'Etkinlik kaydı')}</p><h2>Bu buluşmada</h2><div class="prose">${story.filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('')}</div>${archiveProgram(edit)}${!edit.publishedProgram?.length && programs.length ? `<div class="detail-program"><h3>Programdan</h3><ul>${programs.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>` : ''}${edit.workshops?.length ? `<div class="detail-program archive-workshops" id="atolyeler"><h3>Atölyeler</h3><ul>${edit.workshops.map(title=>`<li>${esc(title)}</li>`).join('')}</ul>${sourceMarkup(edit.workshopSource,'Atölye kaynağı: ')}</div>` : ''}${!edit.workshops?.length && edit.subprograms?.length ? `<div class="detail-program" id="atolyeler"><h3>Etkinlik içindeki atölyeler</h3>${edit.subprograms.map(item=>`<article><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><p class="card-meta">${esc(item.dateLabel)}</p></article>`).join('')}</div>` : ''}${sources.length ? `<div class="detail-source"><p class="eyebrow">Kaynaklar</p>${sources.map(item=>sourceMarkup(item)).join('')}</div>` : ''}</div><aside class="detail-aside"><dl class="ux-event-facts">${facts.map(([key,value])=>`<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl><p class="eyebrow">${esc(state.label)}</p><p>${esc(state.detail)}</p>${state.open ? `<a class="button" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Etkinliğe başvur</a>` : '<a class="button" href="topluluk.html">Yeni buluşmaları takip et</a>'}</aside></div>
+  ${edit.routeHighlights?.length ? `<section class="section archive-route" aria-labelledby="archive-route-title"><div><p class="eyebrow">Yerinde keşif</p><h2 id="archive-route-title">Rotadan duraklar</h2><p>Program kaydında yer alan kentler.</p></div><ol>${edit.routeHighlights.map(city=>`<li>${esc(city)}</li>`).join('')}</ol></section>` : ''}
+  ${archivePosters(edit)}
+  ${gallery.length ? `<section class="section gallery-section ux-event-gallery archive-gallery" aria-labelledby="archive-gallery-title" data-gallery-total="${gallery.length}"><div class="section-heading"><div><p class="eyebrow">Buluşmadan kalanlar</p><h2 id="archive-gallery-title">Fotoğraf seçkisi</h2></div><p class="archive-gallery-count">${gallery.length} fotoğraf</p></div><div class="gallery-grid" id="archive-gallery-grid">${gallery.slice(0,6).map(archivePhotoTile).join('')}</div>${gallery.length > 6 ? `<div class="archive-gallery-more"><p id="archive-gallery-progress" role="status">${gallery.length} fotoğrafın 6 tanesi gösteriliyor.</p><button type="button" class="button" id="archive-gallery-more" aria-controls="archive-gallery-grid">Diğer fotoğrafları göster</button></div>` : ''}<p class="gallery-note">${esc(edit.imageCredit || 'Bu etkinliğe ait yayımlanan galeri seçkisi.')}</p></section>` : ''}`;
+  bindGalleryButtons($('#event-detail'));
+  let shownPhotos=Math.min(6,gallery.length);
+  $('#archive-gallery-more')?.addEventListener('click',()=>{
+    const end=Math.min(shownPhotos+6,gallery.length),grid=$('#archive-gallery-grid');
+    grid.insertAdjacentHTML('beforeend',gallery.slice(shownPhotos,end).map((item,index)=>archivePhotoTile(item,shownPhotos+index)).join(''));
+    grid.querySelectorAll('[data-gallery-index]').forEach(button=>{if(Number(button.dataset.galleryIndex)>=shownPhotos)button.addEventListener('click',()=>openGallery(Number(button.dataset.galleryIndex),button));});
+    shownPhotos=end;$('#archive-gallery-progress').textContent=`${gallery.length} fotoğrafın ${shownPhotos} tanesi gösteriliyor.`;
+    if(shownPhotos===gallery.length){$('#archive-gallery-more').disabled=true;$('#archive-gallery-more').textContent='Tüm fotoğraflar gösteriliyor';}
+  });
   const media=await loadMediaData();
   const related=media.videos.filter(video=>video.eventSlug===event.slug);
   if(related.length)$('#event-detail').insertAdjacentHTML('beforeend',`<section class="section detail-related"><div class="section-heading"><h2>Bu etkinliğin videoları</h2><a class="text-link" href="medya.html">Tüm içerikler</a></div><div class="video-grid">${related.map(videoCard).join('')}</div></section>`);
@@ -284,10 +334,18 @@ async function renderDetail(data) {
 function paintGallery() {
   const item = gallery[galleryIndex]; if (!item) return;
   $('#lightbox-image').src = safeURL(item.src,{image:true}); $('#lightbox-image').alt = item.alt || 'Etkinlik fotoğrafı';
-  $('#gallery-caption').textContent = `${galleryIndex+1} / ${gallery.length} · ${item.alt || 'Etkinlik fotoğrafı'}`;
+  $('#gallery-caption').textContent = `${galleryIndex+1} / ${gallery.length} · ${item.caption || item.alt || 'Etkinlik fotoğrafı'}${item.sourceLabel ? ' · '+item.sourceLabel : ''}`;
   $('#gallery-prev').disabled = gallery.length < 2; $('#gallery-next').disabled = gallery.length < 2;
+  const thumbnails=$('#gallery-thumbnails');
+  if(thumbnails){
+    const restoreThumbFocus=thumbnails.contains(document.activeElement);
+    const start=Math.max(0,Math.min(galleryIndex-3,gallery.length-7));
+    thumbnails.innerHTML=gallery.slice(start,start+7).map((photo,i)=>`<button type="button" data-lightbox-index="${start+i}" aria-label="Fotoğraf ${start+i+1} / ${gallery.length}" aria-pressed="${start+i===galleryIndex}"><img src="${esc(photo.thumbnailSrc)}" alt="" loading="lazy" width="96" height="64"><span>${start+i+1}</span></button>`).join('');
+    thumbnails.querySelectorAll('[data-lightbox-index]').forEach(button=>button.addEventListener('click',()=>{galleryIndex=Number(button.dataset.lightboxIndex);paintGallery();thumbnails.querySelectorAll('[data-lightbox-index]').forEach(next=>{if(Number(next.dataset.lightboxIndex)===galleryIndex)next.focus();});}));
+    if(restoreThumbFocus)thumbnails.querySelectorAll('[data-lightbox-index]').forEach(button=>{if(Number(button.dataset.lightboxIndex)===galleryIndex)button.focus();});
+  }
 }
-function openGallery(index,trigger) { galleryIndex = index; returnFocus = trigger; paintGallery(); $('#gallery-dialog').showModal(); document.body.classList.add('gallery-open'); $('.lightbox-close').focus(); }
+function openGallery(index,trigger) { if(!Number.isInteger(index)||!gallery[index])return; galleryIndex = index; returnFocus = trigger; paintGallery(); $('#gallery-dialog').showModal(); document.body.classList.add('gallery-open'); $('.lightbox-close').focus(); }
 function closeGallery() { $('#gallery-dialog').close(); }
 $('#gallery-dialog').addEventListener('close', () => { document.body.classList.remove('gallery-open'); returnFocus?.focus(); });
 $('.lightbox-close').addEventListener('click',closeGallery);
@@ -332,14 +390,14 @@ async function renderMedia(selector='#media-list'){
  $(selector).classList.add('ux-media-lead');$(selector).innerHTML=data.videos.length?data.videos.map(videoCard).join(''):`<div class="ux-note"><p>${data.unavailable?'Videolara şu anda ulaşılamıyor. Daha sonra yeniden deneyebilirsin.':'Bu alanda henüz yayımlanmış video bulunmuyor.'}</p><a class="text-link" href="https://www.youtube.com/@archifycom" target="_blank" rel="noopener noreferrer">Archify YouTube kanalını aç</a></div>`;setupVideoPlayers();
 }
 
-function categoryPlate(id){
+function categoryPlate(id,events){
  const photos={
   zirve:{stem:'istanbul-zirve-2025-avlu',small:800,width:1272,height:716,alt:'İstanbul Mimarlık Zirvesi 2025 avlusundaki atölye masalarının yukarıdan görünümü.',caption:'Arşivden referans: İstanbul Mimarlık Zirvesi 2025 · Archify tanıtım kitapçığı, s. 14.'},
   festival:{stem:'archfest-2023-acik-sahne',small:449,width:516,height:919,alt:'ARCHFEST 2023 açık hava sahnesi ve arkadan görülen dinleyiciler.',caption:'Arşivden referans: ARCHFEST 2023 · Archify tanıtım kitapçığı, s. 10.'},
   sempozyum:{stem:'izmir-sempozyumu-2023-salon',small:800,width:1600,height:1067,alt:'İzmir Sempozyumu 2023 salonunun üst sıradan genel görünümü.',caption:'Arşivden referans: İzmir Sempozyumu 2023 · Archify tanıtım kitapçığı, s. 9.'}
  };
  const photo=photos[id];
- if(photo){const stem='assets/images/ux/'+photo.stem;return `<figure class="ux-category-plate ux-category-plate--photo"><img src="${stem}-800.webp" srcset="${stem}-800.webp ${photo.small}w, ${stem}-1600.webp ${photo.width}w" sizes="(max-width: 760px) 92vw, 52vw" width="${photo.width}" height="${photo.height}" alt="${esc(photo.alt)}"><figcaption>${esc(photo.caption)}</figcaption></figure>`;}
+ if(photo){const stem='assets/images/ux/'+photo.stem;if(events.some(event=>(event.gallery||[]).some(image=>image.src===stem+'-1600.webp')))return `<figure class="ux-category-plate ux-category-plate--photo"><img src="${stem}-800.webp" srcset="${stem}-800.webp ${photo.small}w, ${stem}-1600.webp ${photo.width}w" sizes="(max-width: 760px) 92vw, 52vw" width="${photo.width}" height="${photo.height}" alt="${esc(photo.alt)}"><figcaption>${esc(photo.caption)}</figcaption></figure>`;}
  return '<div class="ux-category-plate ux-category-plate--diagram" aria-hidden="true"><span class="ux-category-mark ux-category-mark--one"></span><span class="ux-category-mark ux-category-mark--two"></span><span class="ux-category-mark ux-category-mark--three"></span></div>';
 }
 function renderCategory(data){
@@ -349,8 +407,8 @@ function renderCategory(data){
  document.title=spec.name+' · Archify';document.body.dataset.categoryPage=spec.id;
  const selected=data.events.filter(e=>spec.matches.includes(e.category)&&!['draft','cancelled'].includes(e.status)),past=selected.filter(e=>e.archived||(e.endAt&&Date.parse(e.endAt)<Date.now())).sort((a,b)=>(b.year||0)-(a.year||0)),upcoming=homeAvailableEvents(selected,Date.now());
  const series=data.editorial.series.filter(item=>spec.series.includes(item.slug));
- const workshopParents=spec.id==='atolye'?data.events.filter(e=>data.editorial.events[e.slug]?.subprograms?.length):[];
- $('#category-intro').innerHTML=`<div class="ux-masthead-copy"><p class="eyebrow">${esc(spec.kicker)}</p><h1>${esc(spec.name)}</h1>${categoryPlate(spec.id)}</div><div class="ux-masthead-aside"><p class="lead">${esc(spec.intro)}</p><ul class="category-topics">${spec.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><nav class="category-jump" aria-label="Kategori bölümleri">${upcoming.length?'<a href="#category-upcoming">Yaklaşan etkinlikler</a>':''}${past.length?'<a href="#kategori-arsiv">Geçmiş buluşmalar</a>':''}${series.length||workshopParents.length?'<a href="#kategori-seriler">İlgili programlar</a>':''}<a href="etkinlikler.html">Tüm kategoriler</a></nav></div>`;
+ const workshopParents=spec.id==='atolye'?data.events.filter(e=>data.editorial.events[e.slug]?.subprograms?.length||data.editorial.events[e.slug]?.workshops?.length):[];
+ $('#category-intro').innerHTML=`<div class="ux-masthead-copy"><p class="eyebrow">${esc(spec.kicker)}</p><h1>${esc(spec.name)}</h1>${categoryPlate(spec.id,selected)}</div><div class="ux-masthead-aside"><p class="lead">${esc(spec.intro)}</p><ul class="category-topics">${spec.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><nav class="category-jump" aria-label="Kategori bölümleri">${upcoming.length?'<a href="#category-upcoming">Yaklaşan etkinlikler</a>':''}${past.length?'<a href="#kategori-arsiv">Geçmiş buluşmalar</a>':''}${series.length||workshopParents.length?'<a href="#kategori-seriler">İlgili programlar</a>':''}<a href="etkinlikler.html">Tüm kategoriler</a></nav></div>`;
  setSection('#category-upcoming',upcoming.length?`<div class="editorial-grid">${upcoming.map(e=>card(e,data.editorial)).join('')}</div>`:(!past.length&&!series.length&&!workshopParents.length?`<div class="empty-state"><h2>${esc(spec.name)} için yeni programlar</h2><p>Bu kategoride yayımlanan bir kayıt henüz yok. Yeni buluşmalar için topluluğu takip edebilirsin.</p><a class="button" href="topluluk.html">Topluluğa katıl</a></div>`:''));
  const social=past.filter(e=>e.category!=='Teknik gezi'),technical=past.filter(e=>e.category==='Teknik gezi');
  setSection('#category-past',archiveRows(social,data.editorial)+(technical.length?`<section class="ux-technical-visits"><h2>Türkiye içi teknik geziler</h2>${archiveRows(technical,data.editorial)}</section>`:''));
