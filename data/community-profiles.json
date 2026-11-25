@@ -1,0 +1,1440 @@
+{
+  "version": "r12-1",
+  "statuses": [
+    {
+      "id": "student",
+      "label": "Öğrenci"
+    },
+    {
+      "id": "graduate",
+      "label": "Mezun"
+    },
+    {
+      "id": "professional",
+      "label": "Çalışan / Meslek mensubu"
+    },
+    {
+      "id": "other",
+      "label": "Diğer"
+    }
+  ],
+  "fields": [
+    {
+      "id": "architecture",
+      "label": "Mimarlık"
+    },
+    {
+      "id": "interior-architecture",
+      "label": "İç Mimarlık"
+    },
+    {
+      "id": "landscape-architecture",
+      "label": "Peyzaj Mimarlığı"
+    },
+    {
+      "id": "urban-planning",
+      "label": "Şehir ve Bölge Planlama"
+    },
+    {
+      "id": "other",
+      "label": "Diğer bölüm / meslek"
+    }
+  ],
+  "cities": [
+    {
+      "id": "adana",
+      "label": "Adana"
+    },
+    {
+      "id": "adiyaman",
+      "label": "Adıyaman"
+    },
+    {
+      "id": "afyonkarahisar",
+      "label": "Afyonkarahisar"
+    },
+    {
+      "id": "agri",
+      "label": "Ağrı"
+    },
+    {
+      "id": "aksaray",
+      "label": "Aksaray"
+    },
+    {
+      "id": "amasya",
+      "label": "Amasya"
+    },
+    {
+      "id": "ankara",
+      "label": "Ankara"
+    },
+    {
+      "id": "antalya",
+      "label": "Antalya"
+    },
+    {
+      "id": "ardahan",
+      "label": "Ardahan"
+    },
+    {
+      "id": "artvin",
+      "label": "Artvin"
+    },
+    {
+      "id": "aydin",
+      "label": "Aydın"
+    },
+    {
+      "id": "balikesir",
+      "label": "Balıkesir"
+    },
+    {
+      "id": "bartin",
+      "label": "Bartın"
+    },
+    {
+      "id": "batman",
+      "label": "Batman"
+    },
+    {
+      "id": "bayburt",
+      "label": "Bayburt"
+    },
+    {
+      "id": "bilecik",
+      "label": "Bilecik"
+    },
+    {
+      "id": "bingol",
+      "label": "Bingöl"
+    },
+    {
+      "id": "bitlis",
+      "label": "Bitlis"
+    },
+    {
+      "id": "bolu",
+      "label": "Bolu"
+    },
+    {
+      "id": "burdur",
+      "label": "Burdur"
+    },
+    {
+      "id": "bursa",
+      "label": "Bursa"
+    },
+    {
+      "id": "canakkale",
+      "label": "Çanakkale"
+    },
+    {
+      "id": "cankiri",
+      "label": "Çankırı"
+    },
+    {
+      "id": "corum",
+      "label": "Çorum"
+    },
+    {
+      "id": "denizli",
+      "label": "Denizli"
+    },
+    {
+      "id": "diyarbakir",
+      "label": "Diyarbakır"
+    },
+    {
+      "id": "duzce",
+      "label": "Düzce"
+    },
+    {
+      "id": "edirne",
+      "label": "Edirne"
+    },
+    {
+      "id": "elazig",
+      "label": "Elazığ"
+    },
+    {
+      "id": "erzincan",
+      "label": "Erzincan"
+    },
+    {
+      "id": "erzurum",
+      "label": "Erzurum"
+    },
+    {
+      "id": "eskisehir",
+      "label": "Eskişehir"
+    },
+    {
+      "id": "gaziantep",
+      "label": "Gaziantep"
+    },
+    {
+      "id": "giresun",
+      "label": "Giresun"
+    },
+    {
+      "id": "gumushane",
+      "label": "Gümüşhane"
+    },
+    {
+      "id": "hakkari",
+      "label": "Hakkâri"
+    },
+    {
+      "id": "hatay",
+      "label": "Hatay"
+    },
+    {
+      "id": "igdir",
+      "label": "Iğdır"
+    },
+    {
+      "id": "isparta",
+      "label": "Isparta"
+    },
+    {
+      "id": "istanbul",
+      "label": "İstanbul"
+    },
+    {
+      "id": "izmir",
+      "label": "İzmir"
+    },
+    {
+      "id": "kahramanmaras",
+      "label": "Kahramanmaraş"
+    },
+    {
+      "id": "karabuk",
+      "label": "Karabük"
+    },
+    {
+      "id": "karaman",
+      "label": "Karaman"
+    },
+    {
+      "id": "kars",
+      "label": "Kars"
+    },
+    {
+      "id": "kastamonu",
+      "label": "Kastamonu"
+    },
+    {
+      "id": "kayseri",
+      "label": "Kayseri"
+    },
+    {
+      "id": "kirikkale",
+      "label": "Kırıkkale"
+    },
+    {
+      "id": "kirklareli",
+      "label": "Kırklareli"
+    },
+    {
+      "id": "kirsehir",
+      "label": "Kırşehir"
+    },
+    {
+      "id": "kilis",
+      "label": "Kilis"
+    },
+    {
+      "id": "kocaeli",
+      "label": "Kocaeli"
+    },
+    {
+      "id": "konya",
+      "label": "Konya"
+    },
+    {
+      "id": "kutahya",
+      "label": "Kütahya"
+    },
+    {
+      "id": "malatya",
+      "label": "Malatya"
+    },
+    {
+      "id": "manisa",
+      "label": "Manisa"
+    },
+    {
+      "id": "mardin",
+      "label": "Mardin"
+    },
+    {
+      "id": "mersin",
+      "label": "Mersin"
+    },
+    {
+      "id": "mugla",
+      "label": "Muğla"
+    },
+    {
+      "id": "mus",
+      "label": "Muş"
+    },
+    {
+      "id": "nevsehir",
+      "label": "Nevşehir"
+    },
+    {
+      "id": "nigde",
+      "label": "Niğde"
+    },
+    {
+      "id": "ordu",
+      "label": "Ordu"
+    },
+    {
+      "id": "osmaniye",
+      "label": "Osmaniye"
+    },
+    {
+      "id": "rize",
+      "label": "Rize"
+    },
+    {
+      "id": "sakarya",
+      "label": "Sakarya"
+    },
+    {
+      "id": "samsun",
+      "label": "Samsun"
+    },
+    {
+      "id": "siirt",
+      "label": "Siirt"
+    },
+    {
+      "id": "sinop",
+      "label": "Sinop"
+    },
+    {
+      "id": "sivas",
+      "label": "Sivas"
+    },
+    {
+      "id": "sanliurfa",
+      "label": "Şanlıurfa"
+    },
+    {
+      "id": "sirnak",
+      "label": "Şırnak"
+    },
+    {
+      "id": "tekirdag",
+      "label": "Tekirdağ"
+    },
+    {
+      "id": "tokat",
+      "label": "Tokat"
+    },
+    {
+      "id": "trabzon",
+      "label": "Trabzon"
+    },
+    {
+      "id": "tunceli",
+      "label": "Tunceli"
+    },
+    {
+      "id": "usak",
+      "label": "Uşak"
+    },
+    {
+      "id": "van",
+      "label": "Van"
+    },
+    {
+      "id": "yalova",
+      "label": "Yalova"
+    },
+    {
+      "id": "yozgat",
+      "label": "Yozgat"
+    },
+    {
+      "id": "zonguldak",
+      "label": "Zonguldak"
+    },
+    {
+      "id": "azerbaycan",
+      "label": "Azerbaycan"
+    },
+    {
+      "id": "kibris",
+      "label": "Kıbrıs"
+    },
+    {
+      "id": "dis-yurtdisi",
+      "label": "Diğer yurt dışı"
+    }
+  ],
+  "schools": [
+    {
+      "id": "abdullah-gul-universitesi",
+      "name": "Abdullah Gül Üniversitesi",
+      "cityId": "kayseri"
+    },
+    {
+      "id": "acibadem-mehmet-ali-aydinlar-universitesi",
+      "name": "Acıbadem Mehmet Ali Aydınlar Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "adana-alparslan-turkes-bilim-ve-teknoloji-universitesi",
+      "name": "Adana Alparslan Türkeş Bilim Ve Teknoloji Üniversitesi",
+      "cityId": "adana"
+    },
+    {
+      "id": "adiyaman-universitesi",
+      "name": "Adıyaman Üniversitesi",
+      "cityId": "adiyaman"
+    },
+    {
+      "id": "afyonkarahisar-saglik-bilimleri-universitesi",
+      "name": "Afyonkarahisar Sağlık Bilimleri Üniversitesi",
+      "cityId": "afyonkarahisar"
+    },
+    {
+      "id": "afyon-kocatepe-universitesi",
+      "name": "Afyon Kocatepe Üniversitesi",
+      "cityId": "afyonkarahisar"
+    },
+    {
+      "id": "agri-ibrahim-cecen-universitesi",
+      "name": "Ağrı İbrahim Çeçen Üniversitesi",
+      "cityId": "agri"
+    },
+    {
+      "id": "ahmet-yesevi-universitesi",
+      "name": "Ahmet Yesevi Üniversitesi",
+      "cityId": null
+    },
+    {
+      "id": "akdeniz-universitesi",
+      "name": "Akdeniz Üniversitesi",
+      "cityId": "antalya"
+    },
+    {
+      "id": "aksaray-universitesi",
+      "name": "Aksaray Üniversitesi",
+      "cityId": "aksaray"
+    },
+    {
+      "id": "alanya-alaaddin-keykubat-universitesi",
+      "name": "Alanya Alaaddin Keykubat Üniversitesi",
+      "cityId": "antalya"
+    },
+    {
+      "id": "alanya-universitesi",
+      "name": "Alanya Üniversitesi",
+      "cityId": "antalya"
+    },
+    {
+      "id": "altinbas-universitesi",
+      "name": "Altınbaş Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "amasya-universitesi",
+      "name": "Amasya Üniversitesi",
+      "cityId": "amasya"
+    },
+    {
+      "id": "anadolu-universitesi",
+      "name": "Anadolu Üniversitesi",
+      "cityId": "eskisehir"
+    },
+    {
+      "id": "ankara-bilim-universitesi",
+      "name": "Ankara Bilim Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-haci-bayram-veli-universitesi",
+      "name": "Ankara Hacı Bayram Veli Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-medipol-universitesi",
+      "name": "Ankara Medipol Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-muzik-ve-guzel-sanatlar-universitesi",
+      "name": "Ankara Müzik ve Güzel Sanatlar Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-sosyal-bilimler-universitesi",
+      "name": "Ankara Sosyal Bilimler Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-universitesi",
+      "name": "Ankara Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ankara-yildirim-beyazit-universitesi",
+      "name": "Ankara Yıldırım Beyazıt Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "antalya-belek-universitesi",
+      "name": "Antalya Belek Üniversitesi",
+      "cityId": "antalya"
+    },
+    {
+      "id": "antalya-bilim-universitesi",
+      "name": "Antalya Bilim Üniversitesi",
+      "cityId": "antalya"
+    },
+    {
+      "id": "ardahan-universitesi",
+      "name": "Ardahan Üniversitesi",
+      "cityId": "ardahan"
+    },
+    {
+      "id": "artvin-coruh-universitesi",
+      "name": "Artvin Çoruh Üniversitesi",
+      "cityId": "artvin"
+    },
+    {
+      "id": "atasehir-adiguzel-meslek-yuksekokulu",
+      "name": "Ataşehir Adıgüzel Meslek Yüksekokulu",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "ataturk-universitesi",
+      "name": "Atatürk Üniversitesi",
+      "cityId": "erzurum"
+    },
+    {
+      "id": "atilim-universitesi",
+      "name": "Atılım Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "avrasya-universitesi",
+      "name": "Avrasya Üniversitesi",
+      "cityId": "trabzon"
+    },
+    {
+      "id": "aydin-adnan-menderes-universitesi",
+      "name": "Aydın Adnan Menderes Üniversitesi",
+      "cityId": "aydin"
+    },
+    {
+      "id": "bahcesehir-universitesi",
+      "name": "Bahçeşehir Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "balikesir-universitesi",
+      "name": "Balıkesir Üniversitesi",
+      "cityId": "balikesir"
+    },
+    {
+      "id": "bandirma-onyedi-eylul-universitesi",
+      "name": "Bandırma Onyedi Eylül Üniversitesi",
+      "cityId": "balikesir"
+    },
+    {
+      "id": "bartin-universitesi",
+      "name": "Bartın Üniversitesi",
+      "cityId": "bartin"
+    },
+    {
+      "id": "baskent-universitesi",
+      "name": "Başkent Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "batman-universitesi",
+      "name": "Batman Üniversitesi",
+      "cityId": "batman"
+    },
+    {
+      "id": "bayburt-universitesi",
+      "name": "Bayburt Üniversitesi",
+      "cityId": "bayburt"
+    },
+    {
+      "id": "beykoz-universitesi",
+      "name": "Beykoz Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "bezmialem-vakif-universitesi",
+      "name": "Bezmialem Vakıf Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "bilecik-seyh-edebali-universitesi",
+      "name": "Bilecik Şeyh Edebali Üniversitesi",
+      "cityId": "bilecik"
+    },
+    {
+      "id": "bingol-universitesi",
+      "name": "Bingöl Üniversitesi",
+      "cityId": "bingol"
+    },
+    {
+      "id": "biruni-universitesi",
+      "name": "Biruni Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "bitlis-eren-universitesi",
+      "name": "Bitlis Eren Üniversitesi",
+      "cityId": "bitlis"
+    },
+    {
+      "id": "bogazici-universitesi",
+      "name": "Boğaziçi Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "bolu-abant-izzet-baysal-universitesi",
+      "name": "Bolu Abant İzzet Baysal Üniversitesi",
+      "cityId": "bolu"
+    },
+    {
+      "id": "burdur-mehmet-akif-ersoy-universitesi",
+      "name": "Burdur Mehmet Akif Ersoy Üniversitesi",
+      "cityId": "burdur"
+    },
+    {
+      "id": "bursa-teknik-universitesi",
+      "name": "Bursa Teknik Üniversitesi",
+      "cityId": "bursa"
+    },
+    {
+      "id": "bursa-uludag-universitesi",
+      "name": "Bursa Uludağ Üniversitesi",
+      "cityId": "bursa"
+    },
+    {
+      "id": "cag-universitesi",
+      "name": "Çağ Üniversitesi",
+      "cityId": "mersin"
+    },
+    {
+      "id": "canakkale-onsekiz-mart-universitesi",
+      "name": "Çanakkale Onsekiz Mart Üniversitesi",
+      "cityId": "canakkale"
+    },
+    {
+      "id": "cankaya-universitesi",
+      "name": "Çankaya Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "cankiri-karatekin-universitesi",
+      "name": "Çankırı Karatekin Üniversitesi",
+      "cityId": "cankiri"
+    },
+    {
+      "id": "cukurova-universitesi",
+      "name": "Çukurova Üniversitesi",
+      "cityId": "adana"
+    },
+    {
+      "id": "demiroglu-bilim-universitesi",
+      "name": "Demiroğlu Bilim Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "dicle-universitesi",
+      "name": "Dicle Üniversitesi",
+      "cityId": "diyarbakir"
+    },
+    {
+      "id": "dogus-universitesi",
+      "name": "Doğuş Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "dokuz-eylul-universitesi",
+      "name": "Dokuz Eylül Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "duzce-universitesi",
+      "name": "Düzce Üniversitesi",
+      "cityId": "duzce"
+    },
+    {
+      "id": "ege-universitesi",
+      "name": "Ege Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "erciyes-universitesi",
+      "name": "Erciyes Üniversitesi",
+      "cityId": "kayseri"
+    },
+    {
+      "id": "erzincan-binali-yildirim-universitesi",
+      "name": "Erzincan Binali Yıldırım Üniversitesi",
+      "cityId": "erzincan"
+    },
+    {
+      "id": "erzurum-teknik-universitesi",
+      "name": "Erzurum Teknik Üniversitesi",
+      "cityId": "erzurum"
+    },
+    {
+      "id": "eskisehir-osmangazi-universitesi",
+      "name": "Eskişehir Osmangazi Üniversitesi",
+      "cityId": "eskisehir"
+    },
+    {
+      "id": "eskisehir-teknik-universitesi",
+      "name": "Eskişehir Teknik Üniversitesi",
+      "cityId": "eskisehir"
+    },
+    {
+      "id": "fatih-sultan-mehmet-vakif-universitesi",
+      "name": "Fatih Sultan Mehmet Vakıf Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "fenerbahce-universitesi",
+      "name": "Fenerbahçe Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "firat-universitesi",
+      "name": "Fırat Üniversitesi",
+      "cityId": "elazig"
+    },
+    {
+      "id": "galatasaray-universitesi",
+      "name": "Galatasaray Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "gaziantep-islam-bilim-ve-teknoloji-universitesi",
+      "name": "Gaziantep İslam Bilim ve Teknoloji Üniversitesi",
+      "cityId": "gaziantep"
+    },
+    {
+      "id": "gaziantep-universitesi",
+      "name": "Gaziantep Üniversitesi",
+      "cityId": "gaziantep"
+    },
+    {
+      "id": "gazi-universitesi",
+      "name": "Gazi Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "gebze-teknik-universitesi",
+      "name": "Gebze Teknik Üniversitesi",
+      "cityId": "kocaeli"
+    },
+    {
+      "id": "giresun-universitesi",
+      "name": "Giresun Üniversitesi",
+      "cityId": "giresun"
+    },
+    {
+      "id": "gumushane-universitesi",
+      "name": "Gümüşhane Üniversitesi",
+      "cityId": "gumushane"
+    },
+    {
+      "id": "hacettepe-universitesi",
+      "name": "Hacettepe Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "hakkari-universitesi",
+      "name": "Hakkari Üniversitesi",
+      "cityId": "hakkari"
+    },
+    {
+      "id": "halic-universitesi",
+      "name": "Haliç Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "harran-universitesi",
+      "name": "Harran Üniversitesi",
+      "cityId": "sanliurfa"
+    },
+    {
+      "id": "hasan-kalyoncu-universitesi",
+      "name": "Hasan Kalyoncu Üniversitesi",
+      "cityId": "gaziantep"
+    },
+    {
+      "id": "hatay-mustafa-kemal-universitesi",
+      "name": "Hatay Mustafa Kemal Üniversitesi",
+      "cityId": "hatay"
+    },
+    {
+      "id": "hitit-universitesi",
+      "name": "Hitit Üniversitesi",
+      "cityId": "corum"
+    },
+    {
+      "id": "igdir-universitesi",
+      "name": "Iğdır Üniversitesi",
+      "cityId": "igdir"
+    },
+    {
+      "id": "isparta-uygulamali-bilimler-universitesi",
+      "name": "Isparta Uygulamalı Bilimler Üniversitesi",
+      "cityId": "isparta"
+    },
+    {
+      "id": "isik-universitesi",
+      "name": "Işık Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "ibn-haldun-universitesi",
+      "name": "İbn Haldun Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "ihsan-dogramaci-bilkent-universitesi",
+      "name": "İhsan Doğramacı Bilkent Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "inonu-universitesi",
+      "name": "İnönü Üniversitesi",
+      "cityId": "malatya"
+    },
+    {
+      "id": "iskenderun-teknik-universitesi",
+      "name": "İskenderun Teknik Üniversitesi",
+      "cityId": "hatay"
+    },
+    {
+      "id": "istanbul-29-mayis-universitesi",
+      "name": "İstanbul 29 Mayıs Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-arel-universitesi",
+      "name": "İstanbul Arel Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-atlas-universitesi",
+      "name": "İstanbul Atlas Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-aydin-universitesi",
+      "name": "İstanbul Aydın Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-beykent-universitesi",
+      "name": "İstanbul Beykent Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-bilgi-universitesi",
+      "name": "İstanbul Bilgi Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-esenyurt-universitesi",
+      "name": "İstanbul Esenyurt Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-galata-universitesi",
+      "name": "İstanbul Galata Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-gedik-universitesi",
+      "name": "İstanbul Gedik Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-gelisim-universitesi",
+      "name": "İstanbul Gelişim Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-kent-universitesi",
+      "name": "İstanbul Kent Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-kultur-universitesi",
+      "name": "İstanbul Kültür Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-medeniyet-universitesi",
+      "name": "İstanbul Medeniyet Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-medipol-universitesi",
+      "name": "İstanbul Medipol Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-nisantasi-universitesi",
+      "name": "İstanbul Nişantaşı Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-okan-universitesi",
+      "name": "İstanbul Okan Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-rumeli-universitesi",
+      "name": "İstanbul Rumeli Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-sabahattin-zaim-universitesi",
+      "name": "İstanbul Sabahattin Zaim Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-saglik-ve-sosyal-bilimler-meslek-yuksekokulu",
+      "name": "İstanbul Sağlık ve Sosyal Bilimler Meslek Yüksekokulu",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-saglik-ve-teknoloji-universitesi",
+      "name": "İstanbul Sağlık ve Teknoloji Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-sisli-meslek-yuksekokulu",
+      "name": "İstanbul Şişli Meslek Yüksekokulu",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-teknik-universitesi",
+      "name": "İstanbul Teknik Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-ticaret-universitesi",
+      "name": "İstanbul Ticaret Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-topkapi-universitesi",
+      "name": "İstanbul Topkapı Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-universitesi",
+      "name": "İstanbul Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-universitesi-cerrahpasa",
+      "name": "İstanbul Üniversitesi-Cerrahpaşa",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istanbul-yeni-yuzyil-universitesi",
+      "name": "İstanbul Yeni Yüzyıl Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "istinye-universitesi",
+      "name": "İstinye Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "izmir-bakircay-universitesi",
+      "name": "İzmir Bakırçay Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-demokrasi-universitesi",
+      "name": "İzmir Demokrasi Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-ekonomi-universitesi",
+      "name": "İzmir Ekonomi Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-katip-celebi-universitesi",
+      "name": "İzmir Katip Çelebi Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-konak-meslek-yuksekokulu",
+      "name": "İzmir Konak Meslek Yüksekokulu",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-tinaztepe-universitesi",
+      "name": "İzmir Tınaztepe Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "izmir-yuksek-teknoloji-enstitusu",
+      "name": "İzmir Yüksek Teknoloji Enstitüsü",
+      "cityId": "izmir"
+    },
+    {
+      "id": "kadir-has-universitesi",
+      "name": "Kadir Has Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "kafkas-universitesi",
+      "name": "Kafkas Üniversitesi",
+      "cityId": "kars"
+    },
+    {
+      "id": "kahramanmaras-istiklal-universitesi",
+      "name": "Kahramanmaraş İstiklal Üniversitesi",
+      "cityId": "kahramanmaras"
+    },
+    {
+      "id": "kahramanmaras-sutcu-imam-universitesi",
+      "name": "Kahramanmaraş Sütçü İmam Üniversitesi",
+      "cityId": "kahramanmaras"
+    },
+    {
+      "id": "kapadokya-universitesi",
+      "name": "Kapadokya Üniversitesi",
+      "cityId": "nevsehir"
+    },
+    {
+      "id": "karabuk-universitesi",
+      "name": "Karabük Üniversitesi",
+      "cityId": "karabuk"
+    },
+    {
+      "id": "karadeniz-teknik-universitesi",
+      "name": "Karadeniz Teknik Üniversitesi",
+      "cityId": "trabzon"
+    },
+    {
+      "id": "karamanoglu-mehmetbey-universitesi",
+      "name": "Karamanoğlu Mehmetbey Üniversitesi",
+      "cityId": "karaman"
+    },
+    {
+      "id": "kastamonu-universitesi",
+      "name": "Kastamonu Üniversitesi",
+      "cityId": "kastamonu"
+    },
+    {
+      "id": "kayseri-universitesi",
+      "name": "Kayseri Üniversitesi",
+      "cityId": "kayseri"
+    },
+    {
+      "id": "kirikkale-universitesi",
+      "name": "Kırıkkale Üniversitesi",
+      "cityId": "kirikkale"
+    },
+    {
+      "id": "kirklareli-universitesi",
+      "name": "Kırklareli Üniversitesi",
+      "cityId": "kirklareli"
+    },
+    {
+      "id": "kirsehir-ahi-evran-universitesi",
+      "name": "Kırşehir Ahi Evran Üniversitesi",
+      "cityId": "kirsehir"
+    },
+    {
+      "id": "kilis-7-aralik-universitesi",
+      "name": "Kilis 7 Aralık Üniversitesi",
+      "cityId": "kilis"
+    },
+    {
+      "id": "kocaeli-saglik-ve-teknoloji-universitesi",
+      "name": "Kocaeli Sağlık ve Teknoloji Üniversitesi",
+      "cityId": "kocaeli"
+    },
+    {
+      "id": "kocaeli-universitesi",
+      "name": "Kocaeli Üniversitesi",
+      "cityId": "kocaeli"
+    },
+    {
+      "id": "koc-universitesi",
+      "name": "Koç Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "konya-gida-ve-tarim-universitesi",
+      "name": "Konya Gıda ve Tarım Üniversitesi",
+      "cityId": "konya"
+    },
+    {
+      "id": "konya-teknik-universitesi",
+      "name": "Konya Teknik Üniversitesi",
+      "cityId": "konya"
+    },
+    {
+      "id": "kto-karatay-universitesi",
+      "name": "KTO-Karatay Üniversitesi",
+      "cityId": "konya"
+    },
+    {
+      "id": "kutahya-dumlupinar-universitesi",
+      "name": "Kütahya Dumlupınar Üniversitesi",
+      "cityId": "kutahya"
+    },
+    {
+      "id": "kutahya-saglik-bilimleri-universitesi",
+      "name": "Kütahya Sağlık Bilimleri Üniversitesi",
+      "cityId": "kutahya"
+    },
+    {
+      "id": "lokman-hekim-universitesi",
+      "name": "Lokman Hekim Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "malatya-turgut-ozal-universitesi",
+      "name": "Malatya Turgut Özal Üniversitesi",
+      "cityId": "malatya"
+    },
+    {
+      "id": "maltepe-universitesi",
+      "name": "Maltepe Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "manisa-celal-bayar-universitesi",
+      "name": "Manisa Celal Bayar Üniversitesi",
+      "cityId": "manisa"
+    },
+    {
+      "id": "mardin-artuklu-universitesi",
+      "name": "Mardin Artuklu Üniversitesi",
+      "cityId": "mardin"
+    },
+    {
+      "id": "marmara-universitesi",
+      "name": "Marmara Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "mef-universitesi",
+      "name": "MEF Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "mersin-universitesi",
+      "name": "Mersin Üniversitesi",
+      "cityId": "mersin"
+    },
+    {
+      "id": "mimar-sinan-guzel-sanatlar-universitesi",
+      "name": "Mimar Sinan Güzel Sanatlar Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "mudanya-universitesi",
+      "name": "Mudanya Üniversitesi",
+      "cityId": "bursa"
+    },
+    {
+      "id": "mugla-sitki-kocman-universitesi",
+      "name": "Muğla Sıtkı Koçman Üniversitesi",
+      "cityId": "mugla"
+    },
+    {
+      "id": "munzur-universitesi",
+      "name": "Munzur Üniversitesi",
+      "cityId": "tunceli"
+    },
+    {
+      "id": "mus-alparslan-universitesi",
+      "name": "Muş Alparslan Üniversitesi",
+      "cityId": "mus"
+    },
+    {
+      "id": "necmettin-erbakan-universitesi",
+      "name": "Necmettin Erbakan Üniversitesi",
+      "cityId": "konya"
+    },
+    {
+      "id": "nevsehir-haci-bektas-veli-universitesi",
+      "name": "Nevşehir Hacı Bektaş Veli Üniversitesi",
+      "cityId": "nevsehir"
+    },
+    {
+      "id": "nigde-omer-halisdemir-universitesi",
+      "name": "Niğde Ömer Halisdemir Üniversitesi",
+      "cityId": "nigde"
+    },
+    {
+      "id": "nuh-naci-yazgan-universitesi",
+      "name": "Nuh Naci Yazgan Üniversitesi",
+      "cityId": "kayseri"
+    },
+    {
+      "id": "ondokuz-mayis-universitesi",
+      "name": "Ondokuz Mayıs Üniversitesi",
+      "cityId": "samsun"
+    },
+    {
+      "id": "ordu-universitesi",
+      "name": "Ordu Üniversitesi",
+      "cityId": "ordu"
+    },
+    {
+      "id": "orta-dogu-teknik-universitesi",
+      "name": "Orta Doğu Teknik Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "osmaniye-korkut-ata-universitesi",
+      "name": "Osmaniye Korkut Ata Üniversitesi",
+      "cityId": "osmaniye"
+    },
+    {
+      "id": "ostim-teknik-universitesi",
+      "name": "OSTİM Teknik Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "ozyegin-universitesi",
+      "name": "Özyeğin Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "pamukkale-universitesi",
+      "name": "Pamukkale Üniversitesi",
+      "cityId": "denizli"
+    },
+    {
+      "id": "piri-reis-universitesi",
+      "name": "Piri Reis Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "recep-tayyip-erdogan-universitesi",
+      "name": "Recep Tayyip Erdoğan Üniversitesi",
+      "cityId": "rize"
+    },
+    {
+      "id": "sabanci-universitesi",
+      "name": "Sabancı Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "saglik-bilimleri-universitesi",
+      "name": "Sağlık Bilimleri Üniversitesi",
+      "cityId": null
+    },
+    {
+      "id": "sakarya-uygulamali-bilimler-universitesi",
+      "name": "Sakarya Uygulamalı Bilimler Üniversitesi",
+      "cityId": "sakarya"
+    },
+    {
+      "id": "sakarya-universitesi",
+      "name": "Sakarya Üniversitesi",
+      "cityId": "sakarya"
+    },
+    {
+      "id": "samsun-universitesi",
+      "name": "Samsun Üniversitesi",
+      "cityId": "samsun"
+    },
+    {
+      "id": "selcuk-universitesi",
+      "name": "Selçuk Üniversitesi",
+      "cityId": "konya"
+    },
+    {
+      "id": "siirt-universitesi",
+      "name": "Siirt Üniversitesi",
+      "cityId": "siirt"
+    },
+    {
+      "id": "sinop-universitesi",
+      "name": "Sinop Üniversitesi",
+      "cityId": "sinop"
+    },
+    {
+      "id": "sivas-bilim-ve-teknoloji-universitesi",
+      "name": "Sivas Bilim Ve Teknoloji Üniversitesi",
+      "cityId": "sivas"
+    },
+    {
+      "id": "sivas-cumhuriyet-universitesi",
+      "name": "Sivas Cumhuriyet Üniversitesi",
+      "cityId": "sivas"
+    },
+    {
+      "id": "suleyman-demirel-universitesi",
+      "name": "Süleyman Demirel Üniversitesi",
+      "cityId": "isparta"
+    },
+    {
+      "id": "sirnak-universitesi",
+      "name": "Şırnak Üniversitesi",
+      "cityId": "sirnak"
+    },
+    {
+      "id": "tarsus-universitesi",
+      "name": "Tarsus Üniversitesi",
+      "cityId": "mersin"
+    },
+    {
+      "id": "ted-universitesi",
+      "name": "TED Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "tekirdag-namik-kemal-universitesi",
+      "name": "Tekirdağ Namık Kemal Üniversitesi",
+      "cityId": "tekirdag"
+    },
+    {
+      "id": "tobb-ekonomi-ve-teknoloji-universitesi",
+      "name": "TOBB Ekonomi ve Teknoloji Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "tokat-gaziosmanpasa-universitesi",
+      "name": "Tokat Gaziosmanpaşa Üniversitesi",
+      "cityId": "tokat"
+    },
+    {
+      "id": "toros-universitesi",
+      "name": "Toros Üniversitesi",
+      "cityId": "mersin"
+    },
+    {
+      "id": "trabzon-universitesi",
+      "name": "Trabzon Üniversitesi",
+      "cityId": "trabzon"
+    },
+    {
+      "id": "trakya-universitesi",
+      "name": "Trakya Üniversitesi",
+      "cityId": "edirne"
+    },
+    {
+      "id": "turk-alman-universitesi",
+      "name": "Türk-Alman Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "turk-hava-kurumu-universitesi",
+      "name": "Türk Hava Kurumu Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "turkiye-uluslararasi-islam-bilim-ve-teknoloji-universitesi",
+      "name": "Türkiye Uluslararası İslam, Bilim ve Teknoloji Üniversitesi",
+      "cityId": null
+    },
+    {
+      "id": "turk-japon-bilim-ve-teknoloji-universitesi",
+      "name": "Türk-Japon Bilim ve Teknoloji Üniversitesi",
+      "cityId": null
+    },
+    {
+      "id": "ufuk-universitesi",
+      "name": "Ufuk Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "usak-universitesi",
+      "name": "Uşak Üniversitesi",
+      "cityId": "usak"
+    },
+    {
+      "id": "uskudar-universitesi",
+      "name": "Üsküdar Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "van-yuzuncu-yil-universitesi",
+      "name": "Van Yüzüncü Yıl Üniversitesi",
+      "cityId": "van"
+    },
+    {
+      "id": "yalova-universitesi",
+      "name": "Yalova Üniversitesi",
+      "cityId": "yalova"
+    },
+    {
+      "id": "yasar-universitesi",
+      "name": "Yaşar Üniversitesi",
+      "cityId": "izmir"
+    },
+    {
+      "id": "yeditepe-universitesi",
+      "name": "Yeditepe Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "yildiz-teknik-universitesi",
+      "name": "Yıldız Teknik Üniversitesi",
+      "cityId": "istanbul"
+    },
+    {
+      "id": "yozgat-bozok-universitesi",
+      "name": "Yozgat Bozok Üniversitesi",
+      "cityId": "yozgat"
+    },
+    {
+      "id": "yuksek-ihtisas-universitesi",
+      "name": "Yüksek İhtisas Üniversitesi",
+      "cityId": "ankara"
+    },
+    {
+      "id": "zonguldak-bulent-ecevit-universitesi",
+      "name": "Zonguldak Bülent Ecevit Üniversitesi",
+      "cityId": "zonguldak"
+    }
+  ],
+  "regionCities": {
+    "karadeniz": [
+      "amasya",
+      "artvin",
+      "bartin",
+      "bayburt",
+      "bolu",
+      "corum",
+      "duzce",
+      "giresun",
+      "gumushane",
+      "karabuk",
+      "kastamonu",
+      "ordu",
+      "rize",
+      "samsun",
+      "sinop",
+      "tokat",
+      "trabzon",
+      "zonguldak"
+    ]
+  }
+}

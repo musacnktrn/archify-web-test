@@ -1,8 +1,10 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · public visitor implementation
 // [codex] UX revision · 01a20fe8-62df-78c3-a20e-1c904d040938 · archify-web-ozgun-ux-01a20fd9
 import { escapeHTML as esc, safeURL, filterEvents, registrationState, archiveEvent, apiURL, errorMessage, normalizePhone, groupEventsByYear, sourceMarkup } from './core.mjs';
-import { CATEGORY_PAGES, GROUP_TYPES, categoryPage, communityTargets, additionalGroups, directInvite } from './information.mjs';
+import { CATEGORY_PAGES, GROUP_TYPES, categoryPage } from './information.mjs';
 import { setupNavigation } from './navigation.mjs';
+import { setupAnalytics, analyticsRequestHeaders } from './analytics.mjs';
+import { setupCommunityEligibility } from './community-eligibility.mjs';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const page = document.body.dataset.page;
@@ -10,6 +12,7 @@ const preview = document.querySelector('meta[name="deployment"]')?.content !== '
 const base = new URL('./', location.href);
 const params = new URLSearchParams(location.search);
 let csrfToken;
+let analytics=null;
 let gallery = [];
 let galleryIndex = 0;
 let returnFocus = null;
@@ -23,12 +26,15 @@ async function request(route, body) {
   try {
     const response = await fetch(apiURL(route, base), {
       method: body ? 'POST' : 'GET', credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
-      headers: body ? { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken || '' } : { 'Accept': 'application/json' },
+      ...(route==='analytics/collect'?{keepalive:true}:{}),
+      headers: body ? { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken || '',...(['applications','team-applications','community-applications'].includes(route)?analyticsRequestHeaders():{}) } : { 'Accept': 'application/json' },
       ...(body ? { body: JSON.stringify(body) } : {})
     });
     let data;
     try { data = await response.json(); } catch { throw Object.assign(new Error('network'), { code: 'network', status: response.status >= 500 ? response.status : 0 }); }
     if (!response.ok) throw Object.assign(new Error(data.error || 'service_unavailable'), { code: data.error, status: response.status });
+    if(route==='events'&&Array.isArray(data.events))analytics?.allowEvents(data.events);
+    if(route.startsWith('events/')&&data.event)analytics?.allowEvents([data.event]);
     return data;
   } catch (error) {
     if (error.status !== undefined) throw error;
@@ -415,23 +421,28 @@ function renderCategory(data){
  setSection('#category-series',seriesRows(series)+(workshopParents.length?`<div class="ux-parent-programs"><h2>Zirve ve festival atölyeleri</h2><p>Bu atölyeler, ana etkinliklerin programı içinde gerçekleşti.</p>${workshopParents.map(e=>`<p><a class="text-link" href="${eventURL(e)}#atolyeler">${esc(e.title)} atölyeleri</a></p>`).join('')}</div>`:''));
 }
 async function renderCommunity(){
- const catalog=await staticJSON('data/community.json');let published=[];
- if(!preview){try{const response=await request('groups');published=Array.isArray(response.groups)?response.groups:[];}catch{/* Local applications remain discoverable; form separately verifies service availability. */}}
- const groups=communityTargets(catalog.groups,published),extras=additionalGroups(catalog.groups,published);
+ const catalog=await staticJSON('data/community.json');
+ const groups=catalog.groups;
  const cities=[...new Set(groups.map(g=>g.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
- $('#group-city').innerHTML+=$('#group-city').innerHTML.includes('İstanbul')?'':cities.map(city=>`<option>${esc(city)}</option>`).join('');
- $('#group-category').value=params.get('tur')||'';$('#group-city').value=params.get('sehir')||'';
+ if($('#group-city'))$('#group-city').innerHTML+=$('#group-city').innerHTML.includes('İstanbul')?'':cities.map(city=>`<option>${esc(city)}</option>`).join('');
+ if($('#group-category'))$('#group-category').value=params.get('tur')||'';
+ if($('#group-city'))$('#group-city').value=params.get('sehir')||'';
  function draw(){
-  const type=$('#group-category').value,city=$('#group-city').value;
+  if(!$('#group-list'))return;
+  const type=$('#group-category')?.value||'',city=$('#group-city')?.value||'';
   const selected=groups.filter(g=>(!type||g.category===type)&&(!city||g.city===city));
-  $('#group-count').textContent=selected.length ? (type||city ? 'Seçimine uygun topluluklar' : 'İlgi alanına göre toplulukları keşfet') : 'Seçimine uygun topluluk bulunamadı';
+  if($('#group-count'))$('#group-count').textContent=selected.length?'Toplulukları keşfet; uygun grupları profilinle belirle.':'Bu filtrede topluluk bulunamadı';
   const descriptions={'Duyuru':'Yeni programları ve Archify duyurularını takip et.','Meslek':'Aynı mesleki merakı paylaşanlarla buluş.','Şehir / Bölge':'Yakınındaki mimarlık ve tasarım çevresiyle tanış.','Uluslararası':'Farklı ülkelerden topluluklarla bağlantı kur.'};
-  $('#group-list').innerHTML=GROUP_TYPES.map(category=>{const entries=selected.filter(g=>g.category===category);return entries.length?`<section class="ux-community-group" data-group-category="${esc(category)}"><header><h2>${esc(category)}</h2><p>${esc(descriptions[category])}</p></header><div class="ux-community-grid">${entries.map(g=>`<article class="group-row ux-group-card" id="grup-${esc(g.id)}" data-group-id="${esc(g.id)}"><div><p class="group-kicker">${esc(g.city || g.category)}</p><h3>${esc(g.name)}</h3><p>${esc(g.description)}</p></div><div><a class="button button-secondary" href="${esc(g.href)}" ${g.direct?'target="_blank" rel="noopener noreferrer"':''}>${g.direct?'Gruba katıl':'Gruba başvur'}<span class="visually-hidden">: ${esc(g.name)}</span></a><p class="group-link-note">${g.direct?'WhatsApp’ta yayımlanan katılım bağlantısı.':'Kısa başvurunu Archify ekibine ilet.'}</p></div></article>`).join('')}</div></section>`:'';}).join('')||'<div class="empty-state"><h3>Bu seçimde topluluk bulunamadı.</h3><p>İlgi alanını veya şehir seçimini değiştirerek yeniden bakabilirsin.</p></div>';
-  if(!type&&!city&&extras.length)$('#group-list').insertAdjacentHTML('beforeend','<h2>Diğer yayımlanan topluluklar</h2>'+extras.map(g=>`<article class="group-row"><div><h3>${esc(g.name)}</h3><p>${esc([g.category,g.city].filter(Boolean).join(' · '))}</p></div><a class="button button-secondary" href="${esc(directInvite(g.joinUrl))}" target="_blank" rel="noopener noreferrer">Gruba katıl</a></article>`).join(''));
+  $('#group-list').innerHTML=GROUP_TYPES.map(category=>{const entries=selected.filter(g=>g.category===category);return entries.length?`<section class="ux-community-group" data-group-category="${esc(category)}"><header><h2>${esc(category)}</h2><p>${esc(descriptions[category])}</p></header><div class="ux-community-grid">${entries.map(g=>`<article class="group-row ux-group-card" id="grup-${esc(g.id)}" data-group-id="${esc(g.id)}"><div><p class="group-kicker">${esc(g.city||g.category)}</p><h3>${esc(g.name)}</h3><p>${esc(g.description)}</p></div><div><a class="button button-secondary" href="grup-basvuru.html?grup=${encodeURIComponent(g.id)}" data-analytics-target="community-apply">Uygunluğumu kontrol et<span class="visually-hidden">: ${esc(g.name)}</span></a><p class="group-link-note">Başvuru öncesinde durumuna, alanına ve şehrine uygunluk kontrol edilir.</p></div></article>`).join('')}</div></section>`:'';}).join('')||'<div class="empty-state"><h3>Bu seçimde topluluk bulunamadı.</h3><p>İlgi alanını veya şehir seçimini değiştirerek yeniden bakabilirsin.</p></div>';
  }
- $('#group-filters').addEventListener('change',()=>{draw();const next=new URL(location.href);for(const [key,value]of [['tur',$('#group-category').value],['sehir',$('#group-city').value]])value?next.searchParams.set(key,value):next.searchParams.delete(key);history.replaceState(null,'',next);});
- $('#group-filters').addEventListener('submit',e=>e.preventDefault());draw();
+ $('#group-filters')?.addEventListener('change',()=>{draw();const next=new URL(location.href);for(const [key,value]of [['tur',$('#group-category')?.value],['sehir',$('#group-city')?.value]])value?next.searchParams.set(key,value):next.searchParams.delete(key);history.replaceState(null,'',next);});
+ $('#group-filters')?.addEventListener('submit',e=>e.preventDefault());draw();
  if(/^#grup-[a-z-]+$/.test(location.hash))$(location.hash)?.scrollIntoView?.({block:'start'});
+ await setupCommunityFlow(catalog);
+}
+async function setupCommunityFlow(catalog){
+ const [profiles,communities]=await Promise.all([staticJSON('data/community-profiles.json'),catalog?Promise.resolve(catalog):staticJSON('data/community.json')]);
+ await setupCommunityEligibility({document,preview,profiles,groups:communities.groups,request,session,params});
 }
 
 function renderSources(data) {
@@ -439,6 +450,7 @@ function renderSources(data) {
 }
 
 async function setupForm() {
+  if(['community','community-application'].includes(page))return; // Profile eligibility is the sole public community submission path.
   const form = $('#application-form'), fields = $('#application-fields'), status = $('#form-status'), retry = $('#retry-application');
   const isTeam = page === 'team-application', isCommunity=page==='community-application';
   const endpoint=isCommunity?'community-applications':isTeam?'team-applications':'applications';
@@ -521,10 +533,13 @@ async function setupForm() {
 }
 
 setupNavigation();
+analytics=setupAnalytics({document,window,location,preview,request,session});
+catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
 
 async function main(){
   if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([catalogPromise,editorialPromise]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
-  if(['application','team-application','community-application'].includes(page)){await setupForm();return;}
+  if(['application','team-application'].includes(page)){await setupForm();return;}
+  if(page==='community-application'){await setupCommunityFlow();return;}
   if(page==='community'){await renderCommunity();return;}
   if(page==='media'){await renderMedia();return;}
   if(!['home','archive','events','series','detail','sources','category'].includes(page))return;
@@ -534,7 +549,7 @@ async function main(){
 }
 // Avoid unhandled fetch failures on pages that do not need the catalogue.
 catalogPromise.catch(()=>{});editorialPromise.catch(()=>{});
-main().catch(()=>{
+main().finally(()=>analytics.pageView()).catch(()=>{
   const host=$('#home-events')||$('#event-list')||$('#upcoming-events')||$('#series-list')||$('#event-detail')||$('#source-list')||$('#group-list')||$('#media-list')||$('#category-upcoming');
   if(host)host.innerHTML='<div class="empty-state"><h2>Bağlantıya kısa bir ara.</h2><p>İçerik şu anda yüklenemedi. Sayfayı yenileyebilir veya iletişim sayfasından devam edebilirsin.</p><a class="button" href="iletisim.html">İletişim</a></div>';
 });

@@ -1,0 +1,18 @@
+/* [codex] R12 candidate and employer pages, extending Açık Kesit. */
+.career-paths{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.career-paths article{border:1px solid var(--line,#cfd2c6);padding:clamp(24px,4vw,64px);display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.career-paths article .button{margin-top:auto}.career-paths p{line-height:1.6}
+.career-mark{width:min(100%,340px);aspect-ratio:1.8;position:relative;overflow:hidden;margin-bottom:28px;background:#e8eadf}
+.career-mark span{position:absolute;display:block;width:45%;height:115%;border:1px solid #30352d;transform:rotate(-40deg);top:-5%;left:25%}
+.career-mark span:nth-child(2){transform:rotate(40deg);left:30%}.career-mark span:nth-child(3){background:#CCE333;border:none;width:14%;height:95%;transform:rotate(40deg);left:41%}
+.career-process{display:grid;gap:0}.career-process article{display:grid;grid-template-columns:40px 1fr;gap:8px;border-top:1px solid var(--line,#d2d5cd);padding:20px 0}.career-process article p{grid-column:2}
+.career-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 20px}.career-grid>label,.career-grid>input,.career-grid>select{grid-column:1/-1}
+.career-form-step{font-size:1.2rem;font-weight:650;border-top:1px solid var(--line,#d1d5c9);padding-top:25px;margin-top:30px}
+.career-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0;border:1px solid var(--line,#d1d5c9);padding:14px;min-width:0}
+.career-options legend{font-weight:600;padding:0 8px}.career-options .check{margin:0;padding:8px;border:1px solid var(--line,#d1d5c9);align-items:center;min-width:0}
+.career-options .check span{overflow-wrap:anywhere}.career-note{font-size:.9rem;color:var(--muted,#62665d)}
+.community-profile .career-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.community-profile .career-grid label,.community-profile .career-grid select{display:block;width:100%}
+.community-profile #community-recommendations{margin-top:24px;gap:16px}
+@media(max-width:760px){.career-paths{grid-template-columns:1fr}.career-options{grid-template-columns:repeat(2,minmax(0,1fr))}.community-profile .career-grid{grid-template-columns:1fr}}
+@media(max-width:390px){.career-options{grid-template-columns:1fr}}
