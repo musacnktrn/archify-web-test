@@ -1,6 +1,7 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · public visitor implementation
+// [codex] UX revision · 01a20fe8-62df-78c3-a20e-1c904d040938 · archify-web-ozgun-ux-01a20fd9
 
-export const CATEGORIES = ['Zirve', 'Festival', 'Buluşma', 'Sempozyum'];
+export const CATEGORIES = ['Zirve', 'Festival', 'Buluşma', 'Sempozyum', 'Atölye', 'Teknik gezi', 'Yurt dışı tur'];
 export function normalizeSearch(value = '') {
   return String(value).toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i').trim();
 }
@@ -72,4 +73,16 @@ export function errorMessage(code) {
     service_unavailable: 'Başvuru bağlantısı şu an kullanılamıyor. Biraz sonra tekrar deneyebilirsin.'
   };
   return messages[code] || 'İşlem tamamlanamadı. Bilgilerini kontrol edip aynı başvuruyu tekrar deneyebilirsin.';
+}
+
+// Archive grouping leaves unknown dates explicit; source metadata never grants registration.
+export function groupEventsByYear(events) {
+  const groups=new Map();
+  for(const event of events){const year=Number.isInteger(event.year)?event.year:null;if(!groups.has(year))groups.set(year,[]);groups.get(year).push(event);}
+  return [...groups].sort(([a],[b])=>(b??0)-(a??0)).map(([year,items])=>({year,label:year?String(year):'Tarihi belirsiz',events:items}));
+}
+export function sourceMarkup(source,prefix='') {
+  if(!source||typeof source.title!=='string'||!source.title.trim())return '';
+  const label=escapeHTML(prefix+source.title),url=safeURL(source.url);
+  return url?`<a class="source-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<span class="source-link ux-source-text">${label}</span>`;
 }

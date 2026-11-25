@@ -1,6 +1,24 @@
 {
   "events": [
     {
+      "slug": "kahvalti-bulusmalari-2022",
+      "title": "Kahvaltı Buluşmaları",
+      "year": 2022,
+      "city": "İstanbul, Ankara ve İzmir",
+      "category": "Buluşma",
+      "summary": "Topluluk kahvaltıları İstanbul, Ankara ve İzmir’de yapıldı. Buluşmalar için kayıt toplandı.",
+      "gallery": []
+    },
+    {
+      "slug": "ktu-kulube-atolyesi",
+      "title": "KTÜ Kulübe Atölyesi",
+      "year": null,
+      "city": "Trabzon",
+      "category": "Atölye",
+      "summary": "Sokak hayvanları için kulübe tasarımı ve üretimi yapıldı. Trabzon’daki atölye Karadeniz Teknik Üniversitesinde düzenlendi.",
+      "gallery": []
+    },
+    {
       "slug": "istanbul-mimarlik-zirvesi-2023",
       "title": "İstanbul Mimarlık Zirvesi 2023",
       "year": 2023,
@@ -9,8 +27,26 @@
       "summary": "İTÜ’de iki gün boyunca mimarlık üzerine konuşmalar, üretim ve yeni karşılaşmalar. Mimarlık Zirvesi’nin ilk İstanbul buluşması.",
       "gallery": [
         {
-          "src": "assets/images/istanbul-zirve-2023-1600.webp",
-          "alt": "İstanbul Mimarlık Zirvesi 2023 için hazırlanan İTÜ sahnesindeki Archify harfleri."
+          "src": "assets/images/ux/istanbul-zirve-2023-sahne-detay-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023: boş sahnede Archify harfleri."
+        },
+        {
+          "src": "assets/images/ux/istanbul-zirve-2023-amfi-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023: amfinin arkasından sahne ve salon."
+        }
+      ]
+    },
+    {
+      "slug": "izmir-sempozyumu-2023",
+      "title": "İzmir Sempozyumu: Yarının Temeli",
+      "year": 2023,
+      "city": "İzmir",
+      "category": "Sempozyum",
+      "summary": "Yarının Temeli sempozyumu İzmir’de yapıldı. Tek günlük buluşmada sempozyum ve fuaye birlikte yer aldı.",
+      "gallery": [
+        {
+          "src": "assets/images/ux/izmir-sempozyumu-2023-salon-1600.webp",
+          "alt": "İzmir Sempozyumu 2023: üst sıradan salonun ve sahnenin genel görünümü."
         }
       ]
     },
@@ -21,7 +57,16 @@
       "city": "İzmir",
       "category": "Festival",
       "summary": "İzmir’de mimarlığı açık havaya taşıyan buluşma. Festivalin ilk edisyonunda kamp yaşamı ve mimarlık aynı programda yer aldı.",
-      "gallery": []
+      "gallery": [
+        {
+          "src": "assets/images/ux/archfest-2023-gece-sahne-1600.webp",
+          "alt": "ARCHFEST 2023: gece ışıkları altında açık hava sahnesi."
+        },
+        {
+          "src": "assets/images/ux/archfest-2023-acik-sahne-1600.webp",
+          "alt": "ARCHFEST 2023: dinleyicilerin arkasından açık hava sahnesi."
+        }
+      ]
     },
     {
       "slug": "izmir-vizyon-2024",
@@ -30,6 +75,20 @@
       "city": "İzmir",
       "category": "Buluşma",
       "summary": "İzmir Mimarlık Merkezi’nde mimarlık, iç mimarlık ve tasarım öğrencileriyle meslek pratiğinden isimlerin buluştuğu bir gün.",
+      "gallery": [
+        {
+          "src": "assets/images/ux/izmir-vizyon-2024-sahne-1600.webp",
+          "alt": "İzmir Vizyon 2024: salonun arkasından konuşma sahnesi."
+        }
+      ]
+    },
+    {
+      "slug": "harmony-2024",
+      "title": "ARCHIFY x CUTPAPER HARMONY",
+      "year": 2024,
+      "city": "İzmir",
+      "category": "Buluşma",
+      "summary": "Harmony, Cut Paper kulübü ortaklığıyla İzmir’de yapıldı. Tek günlük program konuşmacı oturumlarından oluştu.",
       "gallery": []
     },
     {
@@ -48,7 +107,12 @@
       "city": "İstanbul",
       "category": "Zirve",
       "summary": "İstinye Üniversitesi’nde mimarlığın toplumsal sorumluluğuna, tasarıma ve üretime açılan iki günlük buluşma.",
-      "gallery": []
+      "gallery": [
+        {
+          "src": "assets/images/ux/istanbul-zirve-2025-avlu-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2025: yukarıdan avludaki atölye masaları."
+        }
+      ]
     },
     {
       "slug": "deprem-ozel-sempozyumu-2025",
@@ -57,6 +121,24 @@
       "city": "İstanbul",
       "category": "Sempozyum",
       "summary": "Mimarlık, mühendislik, şehircilik ve deprem bilimi üzerine ortak bir düşünme alanı. İSÜ Mimarlık Kulübü ile İstinye Üniversitesi’nde.",
+      "gallery": []
+    },
+    {
+      "slug": "kastamonu-entegre-teknik-gezi",
+      "title": "Kastamonu Entegre Teknik Gezisi",
+      "year": null,
+      "city": "İstanbul",
+      "category": "Teknik gezi",
+      "summary": "Kastamonu Entegre’nin Altunizade showroomuna teknik gezi yapıldı. Gezi İstanbul ekibinin etkinlik portföyünde yer aldı.",
+      "gallery": []
+    },
+    {
+      "slug": "stoneline-doganin-sanatina-yolculuk-2026",
+      "title": "Doğanın Sanatına Yolculuk",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Teknik gezi",
+      "summary": "Doğanın Sanatına Yolculuk buluşması Stoneline Showroom’da yapıldı. Programda sunum ve showroom gezisi yer aldı.",
       "gallery": []
     },
     {
@@ -78,6 +160,15 @@
       "gallery": []
     },
     {
+      "slug": "yapi-fuari-gezisi-2026",
+      "title": "Yapı Fuarı Gezisi",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Teknik gezi",
+      "summary": "Yapı Fuarı için İstanbul’da bir gezi düzenlendi. Fuar gezisi TÜYAP’ta yapıldı.",
+      "gallery": []
+    },
+    {
       "slug": "istanbul-mimarlik-zirvesi-2026",
       "title": "İstanbul Mimarlık Zirvesi 2026",
       "year": 2026,
@@ -85,6 +176,79 @@
       "category": "Zirve",
       "summary": "İTÜ Maçka Kampüsü’nde mimarlık ve tasarım üzerine iki günlük konuşma ve atölye programı.",
       "gallery": []
+    },
+    {
+      "slug": "dokudan-tasarima-2026",
+      "title": "Dokudan Tasarıma: Mekanın Malzeme Dili",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Atölye",
+      "summary": "Dokudan Tasarıma atölyesi QAT Project ofisinde yapıldı. Buluşmada atölye çalışması ve portfolyo yorumu yer aldı.",
+      "gallery": []
+    },
+    {
+      "slug": "urbanjobs-istanbul-bulusmasi-2026",
+      "title": "URBANJOBS ve Archify İstanbul Buluşması",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Buluşma",
+      "summary": "URBANJOBS ile Archify İstanbul buluşması Tersane İstanbul’da yapıldı. Söyleşi ve proje incelemesi aynı programda yer aldı.",
+      "gallery": []
+    },
+    {
+      "slug": "baret-susleme-atolyesi",
+      "title": "Baret Süsleme Atölyesi",
+      "year": null,
+      "city": null,
+      "category": "Atölye",
+      "summary": "İstinye Mimarlık Kulübü ile gerçekleştirilen Baret Süsleme Atölyesi.",
+      "gallery": []
+    },
+    {
+      "slug": "buyuk-avrupa-turu-2024",
+      "title": "Büyük Avrupa Turu 2024",
+      "year": 2024,
+      "city": "Avrupa",
+      "category": "Yurt dışı tur",
+      "summary": "Archify topluluğunun Avrupa kentlerini birlikte keşfettiği 2024 yolculuğu.",
+      "gallery": []
+    },
+    {
+      "slug": "buyuk-avrupa-turu-2025",
+      "title": "Büyük Avrupa Turu 2025",
+      "year": 2025,
+      "city": "Avrupa",
+      "category": "Yurt dışı tur",
+      "summary": "2025 Büyük Avrupa Turu, farklı kentleri ve mimari çevreleri birlikte deneyimlemek için düzenlendi.",
+      "gallery": []
+    },
+    {
+      "slug": "italya-ispanya-turu-2025",
+      "title": "İtalya ve İspanya Turu 2025",
+      "year": 2025,
+      "city": "İtalya ve İspanya",
+      "category": "Yurt dışı tur",
+      "summary": "Archify topluluğu, 2025 yazında İtalya ve İspanya rotasında buluştu.",
+      "gallery": []
+    },
+    {
+      "slug": "buyuk-avrupa-turu-2026",
+      "title": "Büyük Avrupa Turu 2026",
+      "year": 2026,
+      "city": "Avrupa",
+      "category": "Yurt dışı tur",
+      "summary": "2026 Büyük Avrupa Turu; sokakları, meydanları ve farklı mimari çevreleri yerinde gözlemleme yolculuğuydu.",
+      "gallery": []
+    },
+    {
+      "slug": "italya-ispanya-turu-2026",
+      "title": "İtalya ve İspanya Turu 2026",
+      "year": 2026,
+      "city": "İtalya ve İspanya",
+      "category": "Yurt dışı tur",
+      "summary": "2026 yazının ikinci Archify yolculuğu, İtalya ve İspanya kentlerini aynı rotada bir araya getirdi.",
+      "gallery": []
     }
-  ]
+  ],
+  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938"
 }

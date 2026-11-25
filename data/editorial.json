@@ -1,5 +1,5 @@
 {
-  "_producer": "codex / 01a20fe8-199e-7631-8910-07e7d27b753d",
+  "_producer": "codex / 01a20fe8-62df-78c3-a20e-1c904d040938",
   "events": {
     "istanbul-mimarlik-zirvesi-2023": {
       "dateLabel": "29 ve 30 Nisan 2023",
@@ -14,10 +14,18 @@
         "title": "ARGEPLANO · Akademi, Archify ’23 Mimarlık Zirvesi",
         "url": "https://www.argeplano.com/akademi"
       },
-      "imageCredit": "Archify Tanıtım Kitapçığı · İstanbul Mimarlık Zirvesi 2023 sahne detayı."
+      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 8",
+      "evidenceLabel": "Belge",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 8",
+          "kind": "local"
+        }
+      ]
     },
     "archfest-2023": {
-      "dateLabel": "2023",
+      "dateLabel": "15, 16 ve 17 Eylül 2023",
       "venue": null,
       "series": "ARCHFEST",
       "theme": "Birlikte düşünmek için başka bir yer.",
@@ -28,7 +36,16 @@
       "source": {
         "title": "Kalemlik Orman Kampı · Etkinlikler",
         "url": "https://kalemlikormankampi.com/tr/7/45/0/etkinlik.html"
-      }
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 10",
+          "kind": "local"
+        }
+      ],
+      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 10"
     },
     "izmir-vizyon-2024": {
       "dateLabel": "2 Mart 2024",
@@ -47,8 +64,15 @@
         {
           "title": "İzmir Vizyon · yayımlanan program",
           "url": "https://www.biletimgo.com/etkinlik/archify-izmir-vizyon-6081"
+        },
+        {
+          "title": "Archify tanıtım kitapçığı · s. 11",
+          "kind": "local"
         }
-      ]
+      ],
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day",
+      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 11"
     },
     "archfest-2024": {
       "dateLabel": "6, 7 ve 8 Eylül 2024",
@@ -62,7 +86,23 @@
       "source": {
         "title": "ARCHFEST ’24 · yayımlanan etkinlik programı",
         "url": "https://www.biletimgo.com/etkinlik/archfest24-7033"
-      }
+      },
+      "evidenceLabel": "Belge",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 13",
+          "kind": "local"
+        }
+      ],
+      "subprograms": [
+        {
+          "title": "ARCHFEST 2024 Atölyeleri",
+          "category": "Atölye",
+          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
+          "dateLabel": "6, 7 ve 8 Eylül 2024"
+        }
+      ]
     },
     "istanbul-mimarlik-zirvesi-2025": {
       "dateLabel": "3 ve 4 Mayıs 2025",
@@ -76,7 +116,24 @@
       "source": {
         "title": "İstinye Post · İstanbul Mimarlık Zirvesi 2025",
         "url": "https://post.istinye.edu.tr/en/rethinking-architecture-in-the-face-of-earthquakes-expert-talks-at-istinye-university.html"
-      }
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 14",
+          "kind": "local"
+        }
+      ],
+      "subprograms": [
+        {
+          "title": "İstanbul Mimarlık Zirvesi 2025 Atölyeleri",
+          "category": "Atölye",
+          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
+          "dateLabel": "3 ve 4 Mayıs 2025"
+        }
+      ],
+      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 14"
     },
     "deprem-ozel-sempozyumu-2025": {
       "dateLabel": "22 Kasım 2025",
@@ -90,7 +147,9 @@
       "source": {
         "title": "İstinye Üniversitesi · Deprem Özel Sempozyumu",
         "url": "https://www.istinye.edu.tr/tr/sks/duyurular/isu-mimarlik-kulubu-deprem-ozel-sempozyum"
-      }
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day"
     },
     "women-of-architecture-2026": {
       "dateLabel": "8 Mart 2026",
@@ -108,7 +167,9 @@
       "source": {
         "title": "Women of Architecture 2026 · yayımlanan etkinlik programı",
         "url": "https://www.biletimgo.com/etkinlik/women-of-architecture-24678"
-      }
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day"
     },
     "izmir-mimarlik-zirvesi-2026": {
       "dateLabel": "25 ve 26 Nisan 2026",
@@ -126,7 +187,17 @@
       "source": {
         "title": "İzmir Mimarlık Zirvesi 2026 · yayımlanan etkinlik programı",
         "url": "https://www.biletimgo.com/etkinlik/izmir-mimarlik-zirvesi26-26005"
-      }
+      },
+      "evidenceLabel": "Belge",
+      "datePrecision": "day",
+      "subprograms": [
+        {
+          "title": "İzmir Mimarlık Zirvesi 2026 Atölyeleri",
+          "category": "Atölye",
+          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
+          "dateLabel": "25 ve 26 Nisan 2026"
+        }
+      ]
     },
     "istanbul-mimarlik-zirvesi-2026": {
       "dateLabel": "9 ve 10 Mayıs 2026",
@@ -144,7 +215,265 @@
       "source": {
         "title": "İstanbul Mimarlık Zirvesi 2026 · yayımlanan etkinlik programı",
         "url": "https://www.biletimgo.com/etkinlik/istanbul-mimarlik-zirvesi26-26498"
-      }
+      },
+      "evidenceLabel": "Belge",
+      "datePrecision": "day",
+      "subprograms": [
+        {
+          "title": "İstanbul Mimarlık Zirvesi 2026 Atölyeleri",
+          "category": "Atölye",
+          "description": "Ana etkinliğin programında gerçekleşen atölye buluşmaları.",
+          "dateLabel": "9 ve 10 Mayıs 2026"
+        }
+      ]
+    },
+    "kahvalti-bulusmalari-2022": {
+      "dateLabel": "Ekim 2022",
+      "venue": null,
+      "theme": "Kahvaltı Buluşmaları",
+      "story": [
+        "Topluluk kahvaltıları İstanbul, Ankara ve İzmir’de yapıldı. Buluşmalar için kayıt toplandı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Belge",
+      "datePrecision": "month"
+    },
+    "ktu-kulube-atolyesi": {
+      "dateLabel": null,
+      "venue": "Karadeniz Teknik Üniversitesi",
+      "theme": "KTÜ Kulübe Atölyesi",
+      "story": [
+        "Sokak hayvanları için kulübe tasarımı ve üretimi yapıldı. Trabzon’daki atölye Karadeniz Teknik Üniversitesinde düzenlendi."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "unknown",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 7",
+          "kind": "local"
+        }
+      ]
+    },
+    "izmir-sempozyumu-2023": {
+      "dateLabel": "11 Mayıs 2023",
+      "venue": "İzmir İktisat Kongresi Salonu",
+      "theme": "İzmir Sempozyumu: Yarının Temeli",
+      "story": [
+        "Yarının Temeli sempozyumu İzmir’de yapıldı. Tek günlük buluşmada sempozyum ve fuaye birlikte yer aldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 9",
+          "kind": "local"
+        }
+      ],
+      "imageCredit": "Archify tanıtım kitapçığından seçki · s. 9"
+    },
+    "harmony-2024": {
+      "dateLabel": "23 Mart 2024",
+      "venue": "İzmir Ekonomi Üniversitesi",
+      "theme": "ARCHIFY x CUTPAPER HARMONY",
+      "story": [
+        "Harmony, Cut Paper kulübü ortaklığıyla İzmir’de yapıldı. Tek günlük program konuşmacı oturumlarından oluştu."
+      ],
+      "source": {
+        "title": "Archify · Harmony buluşmasının ardından",
+        "url": "https://tr.linkedin.com/posts/archifycom_harmony-archify-izmir-activity-7435023481941057537-Vg7n"
+      },
+      "evidenceLabel": "Belge ve beyan",
+      "datePrecision": "day",
+      "additionalSources": [
+        {
+          "title": "Archify tanıtım kitapçığı · s. 12",
+          "kind": "local"
+        }
+      ]
+    },
+    "kastamonu-entegre-teknik-gezi": {
+      "dateLabel": null,
+      "venue": "Kastamonu Entegre Altunizade Showroom",
+      "theme": "Kastamonu Entegre Teknik Gezisi",
+      "story": [
+        "Kastamonu Entegre’nin Altunizade showroomuna teknik gezi yapıldı. Gezi İstanbul ekibinin etkinlik portföyünde yer aldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "unknown"
+    },
+    "stoneline-doganin-sanatina-yolculuk-2026": {
+      "dateLabel": "21 Şubat 2026",
+      "venue": "Stoneline Showroom",
+      "theme": "Doğanın Sanatına Yolculuk",
+      "story": [
+        "Doğanın Sanatına Yolculuk buluşması Stoneline Showroom’da yapıldı. Programda sunum ve showroom gezisi yer aldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "day"
+    },
+    "yapi-fuari-gezisi-2026": {
+      "dateLabel": "29 Nisan 2026",
+      "venue": "TÜYAP",
+      "theme": "Yapı Fuarı Gezisi",
+      "story": [
+        "Yapı Fuarı için İstanbul’da bir gezi düzenlendi. Fuar gezisi TÜYAP’ta yapıldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "day"
+    },
+    "dokudan-tasarima-2026": {
+      "dateLabel": "2026",
+      "venue": "QAT Project ofisi",
+      "theme": "Dokudan Tasarıma: Mekanın Malzeme Dili",
+      "story": [
+        "Dokudan Tasarıma atölyesi QAT Project ofisinde yapıldı. Buluşmada atölye çalışması ve portfolyo yorumu yer aldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "year"
+    },
+    "urbanjobs-istanbul-bulusmasi-2026": {
+      "dateLabel": "13 Haziran 2026",
+      "venue": "Tersane İstanbul",
+      "theme": "URBANJOBS ve Archify İstanbul Buluşması",
+      "story": [
+        "URBANJOBS ile Archify İstanbul buluşması Tersane İstanbul’da yapıldı. Söyleşi ve proje incelemesi aynı programda yer aldı."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "day"
+    },
+    "baret-susleme-atolyesi": {
+      "dateLabel": null,
+      "venue": null,
+      "theme": "Baret Süsleme Atölyesi",
+      "story": [
+        "İstinye Mimarlık Kulübü ile gerçekleştirilen Baret Süsleme Atölyesi."
+      ],
+      "source": {
+        "title": "Archify etkinlik portföyü",
+        "kind": "local"
+      },
+      "evidenceLabel": "Beyan",
+      "datePrecision": "unknown"
+    },
+    "buyuk-avrupa-turu-2024": {
+      "dateLabel": "2024",
+      "datePrecision": "year",
+      "venue": null,
+      "series": "Yurt dışı turları",
+      "theme": "Büyük Avrupa Turu 2024",
+      "story": [
+        "Archify topluluğunun Avrupa kentlerini birlikte keşfettiği 2024 yolculuğu."
+      ],
+      "routeHighlights": [],
+      "source": {
+        "title": "Archify tur arşivi ve gerçekleşmiş yolculuk kaydı",
+        "kind": "local"
+      },
+      "evidenceLabel": "Gerçekleşme kaydı"
+    },
+    "buyuk-avrupa-turu-2025": {
+      "dateLabel": "24 Temmuz – 10 Ağustos 2025",
+      "datePrecision": "day",
+      "venue": null,
+      "series": "Yurt dışı turları",
+      "theme": "Büyük Avrupa Turu 2025",
+      "story": [
+        "2025 Büyük Avrupa Turu, farklı kentleri ve mimari çevreleri birlikte deneyimlemek için düzenlendi."
+      ],
+      "routeHighlights": [],
+      "source": {
+        "title": "Archify tur arşivi ve gerçekleşmiş yolculuk kaydı",
+        "kind": "local"
+      },
+      "evidenceLabel": "Gerçekleşme kaydı"
+    },
+    "italya-ispanya-turu-2025": {
+      "dateLabel": "15–26 Ağustos 2025",
+      "datePrecision": "day",
+      "venue": null,
+      "series": "Yurt dışı turları",
+      "theme": "İtalya ve İspanya Turu 2025",
+      "story": [
+        "Archify topluluğu, 2025 yazında İtalya ve İspanya rotasında buluştu."
+      ],
+      "routeHighlights": [],
+      "source": {
+        "title": "Archify tur arşivi ve gerçekleşmiş yolculuk kaydı",
+        "kind": "local"
+      },
+      "evidenceLabel": "Gerçekleşme kaydı"
+    },
+    "buyuk-avrupa-turu-2026": {
+      "dateLabel": "4–19 Ağustos 2026",
+      "datePrecision": "day",
+      "venue": null,
+      "series": "Yurt dışı turları",
+      "theme": "Büyük Avrupa Turu 2026",
+      "story": [
+        "2026 Büyük Avrupa Turu; sokakları, meydanları ve farklı mimari çevreleri yerinde gözlemleme yolculuğuydu."
+      ],
+      "routeHighlights": [
+        "Roma",
+        "Floransa",
+        "Venedik",
+        "Paris"
+      ],
+      "source": {
+        "title": "Archify 2026 tur programı ve saha kaydı",
+        "kind": "local"
+      },
+      "evidenceLabel": "Program ve gerçekleşme kaydı"
+    },
+    "italya-ispanya-turu-2026": {
+      "dateLabel": "20–31 Ağustos 2026",
+      "datePrecision": "day",
+      "venue": null,
+      "series": "Yurt dışı turları",
+      "theme": "İtalya ve İspanya Turu 2026",
+      "story": [
+        "2026 yazının ikinci Archify yolculuğu, İtalya ve İspanya kentlerini aynı rotada bir araya getirdi."
+      ],
+      "routeHighlights": [
+        "Roma",
+        "Pisa",
+        "Barselona"
+      ],
+      "source": {
+        "title": "Archify 2026 tur programı ve saha kaydı",
+        "kind": "local"
+      },
+      "evidenceLabel": "Program ve gerçekleşme kaydı"
     }
   },
   "series": [
@@ -195,6 +524,19 @@
       "intro": "Kadın mimarların deneyimlerini, üretimlerini ve mesleğe bakışlarını görünür kılan buluşma.",
       "slugs": [
         "women-of-architecture-2026"
+      ]
+    },
+    {
+      "slug": "yurt-disi-turlari",
+      "title": "Yurt dışı turları",
+      "category": "Yurt dışı tur",
+      "intro": "2024’ten bu yana Avrupa kentlerinde birlikte geçirilen yolculuklar.",
+      "slugs": [
+        "buyuk-avrupa-turu-2024",
+        "buyuk-avrupa-turu-2025",
+        "italya-ispanya-turu-2025",
+        "buyuk-avrupa-turu-2026",
+        "italya-ispanya-turu-2026"
       ]
     }
   ]
