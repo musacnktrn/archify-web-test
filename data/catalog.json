@@ -58,6 +58,33 @@
       "category": "Sempozyum",
       "summary": "Mimarlık, mühendislik, şehircilik ve deprem bilimi üzerine ortak bir düşünme alanı. İSÜ Mimarlık Kulübü ile İstinye Üniversitesi’nde.",
       "gallery": []
+    },
+    {
+      "slug": "women-of-architecture-2026",
+      "title": "Women of Architecture 2026",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Zirve",
+      "summary": "Kadın mimarların mesleki deneyimlerini ve tasarım yaklaşımlarını buluşturan 8 Mart programı.",
+      "gallery": []
+    },
+    {
+      "slug": "izmir-mimarlik-zirvesi-2026",
+      "title": "İzmir Mimarlık Zirvesi 2026",
+      "year": 2026,
+      "city": "İzmir",
+      "category": "Zirve",
+      "summary": "İzmir Mimarlık Merkezi’nde iki gün: mimarlık konuşmaları, atölyeler ve yeni karşılaşmalar.",
+      "gallery": []
+    },
+    {
+      "slug": "istanbul-mimarlik-zirvesi-2026",
+      "title": "İstanbul Mimarlık Zirvesi 2026",
+      "year": 2026,
+      "city": "İstanbul",
+      "category": "Zirve",
+      "summary": "İTÜ Maçka Kampüsü’nde mimarlık ve tasarım üzerine iki günlük konuşma ve atölye programı.",
+      "gallery": []
     }
   ]
 }

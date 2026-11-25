@@ -1,0 +1,102 @@
+{
+  "groups": [
+    {
+      "id": "duyuru",
+      "name": "Archify Duyuru Grubu",
+      "category": "Duyuru",
+      "city": null,
+      "description": "Yeni etkinlikleri, başvuru tarihlerini ve Archify’den haberleri takip etmek için ilk durak."
+    },
+    {
+      "id": "mimarlar",
+      "name": "Mimarlar Grubu",
+      "category": "Meslek",
+      "city": null,
+      "description": "Mimarlık pratiği, tasarım süreçleri ve mesleki deneyimler etrafında bir araya gel."
+    },
+    {
+      "id": "ic-mimarlar",
+      "name": "İç Mimarlar Grubu",
+      "category": "Meslek",
+      "city": null,
+      "description": "İç mekân, malzeme ve tasarım üzerine aynı merakı paylaşan insanlarla tanış."
+    },
+    {
+      "id": "peyzaj-mimarlar",
+      "name": "Peyzaj Mimarlar Grubu",
+      "category": "Meslek",
+      "city": null,
+      "description": "Peyzaj, kamusal alan ve doğayla kurduğumuz ilişki üzerine sohbetlere katıl."
+    },
+    {
+      "id": "sehir-bolge-planlama",
+      "name": "Şehir ve Bölge Planlama Grubu",
+      "category": "Meslek",
+      "city": null,
+      "description": "Kent, planlama ve birlikte yaşama kültürü üzerine farklı bakış açılarıyla karşılaş."
+    },
+    {
+      "id": "istanbul",
+      "name": "İstanbul Grubu",
+      "category": "Şehir / Bölge",
+      "city": "İstanbul",
+      "description": "İstanbul çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "ankara",
+      "name": "Ankara Grubu",
+      "category": "Şehir / Bölge",
+      "city": "Ankara",
+      "description": "Ankara çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "izmir",
+      "name": "İzmir Grubu",
+      "category": "Şehir / Bölge",
+      "city": "İzmir",
+      "description": "İzmir çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "bursa",
+      "name": "Bursa Grubu",
+      "category": "Şehir / Bölge",
+      "city": "Bursa",
+      "description": "Bursa çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "antalya",
+      "name": "Antalya Grubu",
+      "category": "Şehir / Bölge",
+      "city": "Antalya",
+      "description": "Antalya çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "karadeniz",
+      "name": "Karadeniz Grubu",
+      "category": "Şehir / Bölge",
+      "city": "Karadeniz",
+      "description": "Karadeniz çevresindeki mimarlık ve tasarım topluluğuyla bağlantı kur."
+    },
+    {
+      "id": "yurtdisi",
+      "name": "Genel Yurtdışı Grubu",
+      "category": "Uluslararası",
+      "city": null,
+      "description": "Farklı coğrafyalardan mimarlık ve tasarım meraklılarıyla deneyim paylaş."
+    },
+    {
+      "id": "azerbaycan",
+      "name": "Azerbaycan Grubu",
+      "category": "Uluslararası",
+      "city": "Azerbaycan",
+      "description": "Farklı coğrafyalardan mimarlık ve tasarım meraklılarıyla deneyim paylaş."
+    },
+    {
+      "id": "kibris",
+      "name": "Kıbrıs Grubu",
+      "category": "Uluslararası",
+      "city": "Kıbrıs",
+      "description": "Farklı coğrafyalardan mimarlık ve tasarım meraklılarıyla deneyim paylaş."
+    }
+  ]
+}

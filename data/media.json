@@ -1,0 +1,40 @@
+{
+  "_producer": "codex / 01a20fe8-199e-7631-8910-07e7d27b753d",
+  "channel": {
+    "name": "Archify",
+    "handle": "@archifycom",
+    "url": "https://www.youtube.com/@archifycom"
+  },
+  "videos": [
+    {
+      "id": "Zi7DA-7ozEA",
+      "title": "MİMARLIK BULAŞICI MI?",
+      "subtitle": "Talkarch · ZİRVE25",
+      "kind": "Söyleşi",
+      "description": "Mimarlık üzerine bir soruyla başlayan Talkarch buluşması. ZİRVE25’in sohbetini ekranda sürdür.",
+      "url": "https://www.youtube.com/watch?v=Zi7DA-7ozEA",
+      "eventSlug": "istanbul-mimarlik-zirvesi-2025"
+    },
+    {
+      "id": "okaeVZXCzGE",
+      "title": "İzmir Zirve26",
+      "subtitle": "ARCHIFY VLOG",
+      "kind": "Etkinlik günlüğü",
+      "description": "İzmir Mimarlık Zirvesi 2026’ya Archify’nin gözünden dönüp bak.",
+      "url": "https://www.youtube.com/watch?v=okaeVZXCzGE",
+      "eventSlug": "izmir-mimarlik-zirvesi-2026"
+    }
+  ],
+  "social": [
+    {
+      "name": "Instagram",
+      "label": "@archifycom",
+      "url": "https://www.instagram.com/archifycom/"
+    },
+    {
+      "name": "YouTube",
+      "label": "@archifycom",
+      "url": "https://www.youtube.com/@archifycom"
+    }
+  ]
+}

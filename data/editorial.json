@@ -14,12 +14,6 @@
         "title": "ARGEPLANO · Akademi, Archify ’23 Mimarlık Zirvesi",
         "url": "https://www.argeplano.com/akademi"
       },
-      "additionalSources": [
-        {
-          "title": "İTÜ Mimarlık · Zirve ’23 katılım duyurusu",
-          "url": "https://linktr.ee/mimarlikitu"
-        }
-      ],
       "imageCredit": "Archify Tanıtım Kitapçığı · İstanbul Mimarlık Zirvesi 2023 sahne detayı."
     },
     "archfest-2023": {
@@ -97,6 +91,60 @@
         "title": "İstinye Üniversitesi · Deprem Özel Sempozyumu",
         "url": "https://www.istinye.edu.tr/tr/sks/duyurular/isu-mimarlik-kulubu-deprem-ozel-sempozyum"
       }
+    },
+    "women-of-architecture-2026": {
+      "dateLabel": "8 Mart 2026",
+      "venue": "İstinye Üniversitesi Topkapı Yerleşkesi, Kongre Merkezi",
+      "series": "Women of Architecture",
+      "theme": "Mesleği, deneyimi ve geleceği birlikte konuşmak.",
+      "story": [
+        "Women of Architecture, İstinye Üniversitesi Topkapı Yerleşkesi’nde kadın mimarların üretimine ve deneyimlerine odaklanan bir programla duyuruldu. Gün boyunca meslek pratiği ve tasarım üzerine oturumlar yer aldı.",
+        "Bu kayıt, tarihi geçmiş buluşmanın yayımlanan programına dayanır. Başvuru dönemi sona ermiştir."
+      ],
+      "program": [
+        "8 Mart · Açılış ve mimarlık oturumları",
+        "Meslek pratiği ve tasarım deneyimleri üzerine paylaşımlar"
+      ],
+      "source": {
+        "title": "Women of Architecture 2026 · yayımlanan etkinlik programı",
+        "url": "https://www.biletimgo.com/etkinlik/women-of-architecture-24678"
+      }
+    },
+    "izmir-mimarlik-zirvesi-2026": {
+      "dateLabel": "25 ve 26 Nisan 2026",
+      "venue": "İzmir Mimarlık Merkezi",
+      "series": "Mimarlık Zirvesi",
+      "theme": "Yeni fikirler, İzmir’de aynı sahnede.",
+      "story": [
+        "Archify’nin Zirve serisi, 2026’da İzmir Mimarlık Merkezi’ne uzandı. İki günlük programda konuşmalar ve atölyeler birlikte yer aldı. Yayımlanan program, mimarlık ve tasarımın farklı pratiklerini aynı buluşmada ele aldı.",
+        "Bu kayıt, tarihi geçmiş buluşmanın yayımlanan programına dayanır. Başvuru dönemi sona ermiştir."
+      ],
+      "program": [
+        "25 Nisan · Açılış ve konuşmalar",
+        "26 Nisan · Oturumlar ve atölye programı"
+      ],
+      "source": {
+        "title": "İzmir Mimarlık Zirvesi 2026 · yayımlanan etkinlik programı",
+        "url": "https://www.biletimgo.com/etkinlik/izmir-mimarlik-zirvesi26-26005"
+      }
+    },
+    "istanbul-mimarlik-zirvesi-2026": {
+      "dateLabel": "9 ve 10 Mayıs 2026",
+      "venue": "İTÜ Maçka Kampüsü",
+      "series": "Mimarlık Zirvesi",
+      "theme": "Mimarlığın farklı sesleri, ortak bir merak.",
+      "story": [
+        "İstanbul Mimarlık Zirvesi 2026, İTÜ Maçka Kampüsü için yayımlanan iki günlük programıyla farklı mesleki yaklaşımları buluşturdu. Konuşmaların yanında atölyeler ve oturum arası karşılaşmalar için alan açıldı.",
+        "Bu kayıt, tarihi geçmiş buluşmanın yayımlanan programına dayanır. Başvuru dönemi sona ermiştir."
+      ],
+      "program": [
+        "9 Mayıs · Açılış ve altı konuşma oturumu",
+        "10 Mayıs · Konuşmalar ve öğleden sonra atölye"
+      ],
+      "source": {
+        "title": "İstanbul Mimarlık Zirvesi 2026 · yayımlanan etkinlik programı",
+        "url": "https://www.biletimgo.com/etkinlik/istanbul-mimarlik-zirvesi26-26498"
+      }
     }
   },
   "series": [
@@ -107,7 +155,9 @@
       "intro": "Meslek pratiğiyle yeni fikirlerin aynı sahnede buluştuğu seri. Konuşmalar, atölyeler ve fuayede devam eden sohbetler.",
       "slugs": [
         "istanbul-mimarlik-zirvesi-2023",
-        "istanbul-mimarlik-zirvesi-2025"
+        "istanbul-mimarlik-zirvesi-2025",
+        "izmir-mimarlik-zirvesi-2026",
+        "istanbul-mimarlik-zirvesi-2026"
       ]
     },
     {
@@ -136,6 +186,15 @@
       "intro": "Dayanıklı yapılar ve güvenli kentler için disiplinler arası bir düşünme alanı.",
       "slugs": [
         "deprem-ozel-sempozyumu-2025"
+      ]
+    },
+    {
+      "slug": "women-of-architecture",
+      "title": "Women of Architecture",
+      "category": "Zirve",
+      "intro": "Kadın mimarların deneyimlerini, üretimlerini ve mesleğe bakışlarını görünür kılan buluşma.",
+      "slugs": [
+        "women-of-architecture-2026"
       ]
     }
   ]

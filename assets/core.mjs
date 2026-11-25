@@ -1,5 +1,5 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · public visitor implementation
-export const OFFICIAL_DIRECTORY = 'https://linktr.ee/archifycom';
+
 export const CATEGORIES = ['Zirve', 'Festival', 'Buluşma', 'Sempozyum'];
 export function normalizeSearch(value = '') {
   return String(value).toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i').trim();
@@ -57,7 +57,7 @@ export function errorMessage(code) {
     event_full: 'Bu etkinliğin kontenjanı doldu. Yeni buluşmalar için topluluğu takip edebilirsin.', capacity_full: 'Bu etkinliğin kontenjanı doldu.',
     registration_closed: 'Etkinliğin başvurusu kapanmış. Etkinlik sayfasındaki güncel durumu kontrol et.', event_closed: 'Bu etkinlik şu anda başvuru almıyor.',
     event_archived: 'Bu etkinlik arşivde; başvuru alınmıyor.', event_cancelled: 'Bu etkinlik iptal edildi. Başvurun alınmadı.',
-    not_found: 'Etkinlik bulunamadı. Etkinlik listesine dönerek bağlantıyı yenileyebilirsin.', event_not_found: 'Etkinlik bulunamadı.',
+    not_found: 'Etkinlik bulunamadı. Etkinlik listesine dönerek bağlantıyı yenileyebilirsin.', invalid_group_id:'Topluluk seçimi geçersiz. Topluluk listesinden yeniden seçebilirsin.', event_not_found: 'Etkinlik bulunamadı.',
     invalid_phone: 'Türkiye cep telefonunu 05xx xxx xx xx biçiminde; yabancı numaranı + veya 00 ile başlayan ülke koduyla yaz.', invalid_email: 'Geçerli bir e posta adresi yaz.',
     invalid_input: 'Bilgilerini ve zorunlu alanları kontrol et.', validation_failed: 'Bilgilerini ve zorunlu alanları kontrol et.',
     terms_required: 'Başvuru ve gizlilik açıklamasını okuyup zorunlu onay alanını işaretle.', invalid_name: 'Adını ve soyadını kontrol et.',
