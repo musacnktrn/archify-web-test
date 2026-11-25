@@ -1,7 +1,7 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · public visitor implementation
 // [codex] UX revision · 01a20fe8-62df-78c3-a20e-1c904d040938 · archify-web-ozgun-ux-01a20fd9
 import { escapeHTML as esc, safeURL, filterEvents, registrationState, archiveEvent, apiURL, errorMessage, normalizePhone, groupEventsByYear, sourceMarkup } from './core.mjs';
-import { CATEGORY_PAGES, GROUP_TYPES, categoryPage, communityTargets, additionalGroups, directInvite, videoEmbedURL } from './information.mjs';
+import { CATEGORY_PAGES, GROUP_TYPES, categoryPage, communityTargets, additionalGroups, directInvite } from './information.mjs';
 import { setupNavigation } from './navigation.mjs';
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -89,13 +89,120 @@ function noEvents(live) {
   const title = live ? 'Yeni buluşmalar burada olacak.' : 'Yeni buluşmaları birlikte bekleyelim.';
   return `<div class="empty-state"><h3>${title}</h3><p>${!live && !preview ? 'Güncel takvime şu an ulaşamıyoruz. ' : ''}Duyurular için resmî Archify topluluğunu takip edebilir, bu sırada geçmiş buluşmaların hikâyelerini keşfedebilirsin.</p><div class="button-row"><a class="button" href="topluluk.html">Topluluğa katıl</a><a class="text-link" href="arsiv.html">Arşivi gez</a></div></div>`;
 }
-async function renderHome(data) {
-  const selected = ['istanbul-mimarlik-zirvesi-2026','buyuk-avrupa-turu-2026','istanbul-mimarlik-zirvesi-2023','archfest-2023'].map(slug => data.events.find(e => e.slug === slug)).filter(Boolean);
-  $('#home-events').innerHTML = selected.map(e => card(e, data.editorial)).join('') || noEvents(data.live);
-  await renderMedia('#home-media');
-  const open = data.events.filter(event => registrationState(event).open).sort((a,b) => (Date.parse(a.startAt) || Infinity) - (Date.parse(b.startAt) || Infinity))[0];
-  if (open && data.live) { const action = $('#hero-action'); action.href = eventURL(open); action.textContent = 'Etkinliğe başvur'; action.title = open.title; }
+// [codex] Scheduled homepage publication. Only the server can activate a slot.
+const HOME_ACTIONS=Object.freeze({archive:{href:'arsiv.html',label:'Arşivi gez'},events:{href:'etkinlikler.html',label:'Etkinlikleri keşfet'},community:{href:'topluluk.html',label:'Topluluğa katıl'}});
+const ORIGINAL_HERO=Object.freeze({headline:'Mimarlık için',emphasis:'ortak bir zemin.',lead:'Bir konuşmanın, bir atölyenin ya da yeni bir tanışıklığın açtığı yer. Archify’de fikirler insanlarla buluşur.',primaryAction:'archive'});
+function homeDate(value){return typeof value==='string'&&/(?:Z|[+-]\d{2}:\d{2})$/.test(value)&&Number.isFinite(Date.parse(value))?Date.parse(value):NaN;}
+function homeText(value,max,{empty=false}={}){return typeof value==='string'&&value.length<=max&&!/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value)&&(empty||value.trim().length>0);}
+function publicHomeEvent(event){return event&&typeof event==='object'&&typeof event.slug==='string'&&event.slug.length<=160&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(event.slug)&&homeText(event.title,300)&&homeText(event.summary||'',8000,{empty:true})&&['published','closed'].includes(event.status)&&event.archived===false;}
+export function homeHeroSettings(value){
+ const hero=value?.hero;if(!hero||!homeText(hero.headline,240)||!homeText(hero.emphasis,240,{empty:true})||!homeText(hero.lead,2000)||!Object.hasOwn(HOME_ACTIONS,hero.primaryAction))return {...ORIGINAL_HERO};
+ return {headline:hero.headline,emphasis:hero.emphasis,lead:hero.lead,primaryAction:hero.primaryAction};
 }
+export function homeFeatureState(value,now=homeDate(value?.serverNow)){
+ const feature=value?.feature,event=feature?.event;if(!Number.isFinite(now)||!publicHomeEvent(event))return null;
+ const starts=homeDate(feature.startsAt),ends=homeDate(feature.endsAt),eventStart=homeDate(event.startAt),eventEnd=homeDate(event.endAt);
+ if(![starts,ends,eventStart,eventEnd].every(Number.isFinite)||starts>=ends||eventStart>=eventEnd||ends>eventEnd||starts>now||ends<=now||eventEnd<=now)return null;
+ return {event,startsAt:feature.startsAt,endsAt:feature.endsAt};
+}
+export function homeAvailableEvents(events,now){
+ if(!Array.isArray(events)||!Number.isFinite(now))return [];
+ return events.filter(event=>{if(!publicHomeEvent(event))return false;const start=homeDate(event.startAt),end=event.endAt?homeDate(event.endAt):null;return Number.isFinite(start)&&(end===null?start>now:Number.isFinite(end)&&end>start&&end>now);});
+}
+export function homeUpcomingEvents(events,now){
+ if(!Array.isArray(events)||!Number.isFinite(now))return [];
+ return events.filter(event=>{if(!publicHomeEvent(event))return false;const start=homeDate(event.startAt),end=event.endAt?homeDate(event.endAt):null;return Number.isFinite(start)&&start>now&&(end===null||(Number.isFinite(end)&&end>start));}).sort((a,b)=>homeDate(a.startAt)-homeDate(b.startAt));
+}
+export function homeRefreshDelay(envelope,now){
+ const dates=[envelope?.nextTransitionAt,envelope?.feature?.endsAt,envelope?.feature?.event?.startAt,envelope?.feature?.event?.endAt].map(homeDate).filter(date=>Number.isFinite(date)&&date>now);
+ return Math.max(250,Math.min(60000,...dates.map(date=>Math.ceil(date-now))));
+}
+function homeRegistration(event,now){
+ const state=registrationState(event,now);
+ return homeDate(event.startAt)<=now?{open:false,label:'Etkinlik başladı',detail:'Güncel programı etkinlik detayında inceleyebilirsin.'}:state;
+}
+function homeEventDate(event){
+ const format=new Intl.DateTimeFormat('tr-TR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'});
+ const start=homeDate(event.startAt),end=homeDate(event.endAt);
+ if(!Number.isFinite(start))return 'Tarih duyurulacak';
+ return format.format(new Date(start))+(Number.isFinite(end)?' – '+format.format(new Date(end)):'');
+}
+function homePhoto(event){return (Array.isArray(event.gallery)?event.gallery:[]).find(item=>item&&typeof item.src==='string'&&/^(?:assets|media)\//.test(item.src)&&safeURL(item.src,{image:true}));}
+function spotlightTypography(event){
+ const stamp=new Intl.DateTimeFormat('tr-TR',{day:'numeric',month:'long',timeZone:'Europe/Istanbul'}).format(new Date(event.startAt));
+ return `<div class="spotlight-type-cover"><span class="spotlight-type-category">${esc(event.category||'Archify etkinliği')}</span><strong class="spotlight-type-date">${esc(stamp)}</strong><span class="spotlight-type-city">${esc(event.city||'Archify')}</span></div>`;
+}
+export function homeFeatureMarkup(feature,now){
+ const event=feature.event,state=homeRegistration(event,now),image=homePhoto(event),detail=eventURL(event);
+ return `<div class="spotlight-copy"><p class="spotlight-eyebrow"><span>Öne çıkan buluşma</span><span>${esc(event.category||'Archify etkinliği')}</span></p><h2 class="spotlight-title" id="spotlight-title">${esc(event.title)}</h2>${event.summary?`<p class="spotlight-summary">${esc(event.summary)}</p>`:''}<dl class="spotlight-facts"><div><dt>Tarih · Türkiye saati</dt><dd><time datetime="${esc(event.startAt)}">${esc(homeEventDate(event))}</time></dd></div><div><dt>Şehir</dt><dd>${esc(event.city||'Şehir duyurulacak')}</dd></div><div><dt>Mekân</dt><dd>${esc(event.venue||'Mekân duyurulacak')}</dd></div></dl><p class="spotlight-registration">${esc(state.label)}</p><div class="spotlight-actions">${state.open?`<a class="button" id="spotlight-apply" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Başvur</a>`:''}<a class="${state.open?'text-link':'button'}" id="spotlight-details" href="${detail}">Etkinlik detayları</a></div><a class="spotlight-more" id="spotlight-archify" href="#archify-normal">Archify’ı keşfet</a></div><figure class="spotlight-art${image?'':' spotlight-art--typographic'}"><div class="spotlight-visual" id="spotlight-visual">${image?`<img id="spotlight-image" src="${esc(safeURL(image.src,{image:true}))}" alt="${esc(image.alt||event.title)}" width="1200" height="1000" decoding="async">`:spotlightTypography(event)}</div><figcaption id="spotlight-caption">${image?'Etkinliğin yayımlanan görsel seçkisinden.':'Tipografik etkinlik kapağı · Fotoğraf değildir.'}</figcaption></figure>`;
+}
+function homeUpcomingMarkup(events,now){
+ return homeUpcomingEvents(events,now).slice(0,3).map(event=>{const state=homeRegistration(event,now);return `<article class="home-upcoming-card" data-upcoming-slug="${esc(event.slug)}"><p class="card-meta">${esc(event.category||'Archify etkinliği')}</p><time datetime="${esc(event.startAt)}">${esc(homeEventDate(event))}</time><h3><a href="${eventURL(event)}">${esc(event.title)}</a></h3><p class="home-upcoming-place">${esc([event.city,event.venue].filter(Boolean).join(' · ')||'Konum duyurulacak')}</p><p class="home-upcoming-state">${esc(state.label)}</p><div class="home-upcoming-links">${state.open?`<a class="button" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Başvur</a>`:''}<a class="text-link" href="${eventURL(event)}">Detaylar</a></div></article>`;}).join('');
+}
+function preserveHomeViewport(change){
+ const anchor=$('#kesfet'),scrolled=(window.scrollY||0)>100,before=scrolled?anchor?.getBoundingClientRect?.().top:null;
+ change();
+ if(Number.isFinite(before)){const after=anchor?.getBoundingClientRect?.().top,delta=after-before;if(Number.isFinite(delta)&&Math.abs(delta)>1)window.scrollBy?.({top:delta,left:0,behavior:'instant'});}
+}
+function setupHomeExperience(){
+ if(preview||page!=='home')return;
+ const host=$('#home-feature'),upcoming=$('#home-upcoming-section'),list=$('#home-upcoming-list');
+ if(!host||!upcoming||!list)return;
+ let timer=null,inFlight=false,refreshQueued=false,paused=false,envelope=null,serverAnchor=null,monoAnchor=0,events=[],featureKey='',upcomingKey='',heroKey='',portfolioRevision=0;
+ const monotonic=()=>globalThis.performance?.now?.()??Date.now();
+ const now=()=>serverAnchor===null?Date.now():serverAnchor+Math.max(0,monotonic()-monoAnchor);
+ function clearTimer(){if(timer!==null)clearTimeout(timer);timer=null;}
+ function paintFeature(){
+  const feature=homeFeatureState(envelope,now()),html=feature?homeFeatureMarkup(feature,now()):'';
+  if(html===featureKey)return;const focused=host.contains(document.activeElement)?document.activeElement?.getAttribute('id'):null;
+  preserveHomeViewport(()=>{host.innerHTML=html;host.hidden=!feature;host.setAttribute('data-state',feature?'active':'normal');});featureKey=html;
+  if(feature){$('#spotlight-image')?.addEventListener('error',()=>{if(!$('#spotlight-visual'))return;$('#spotlight-visual').innerHTML=spotlightTypography(feature.event);$('#spotlight-caption').textContent='Tipografik etkinlik kapağı · Fotoğraf yüklenemedi.';});}
+  if(focused){const target=feature?($('#'+focused)||$('#spotlight-details')):$('#hero-action');target?.focus({preventScroll:true});}
+ }
+ function paintUpcoming(){
+  const html=serverAnchor===null?'':homeUpcomingMarkup(events,now());if(html===upcomingKey)return;
+  const focused=list.contains(document.activeElement)?document.activeElement?.getAttribute('href'):null;
+  preserveHomeViewport(()=>{list.innerHTML=html;upcoming.hidden=!html;});upcomingKey=html;
+  if(focused){const target=[...list.querySelectorAll('a[href]')].find(a=>a.getAttribute('href')===focused)||$('#hero-action');target?.focus({preventScroll:true});}
+ }
+ function paintHero(payload){
+  const hero=homeHeroSettings(payload),key=JSON.stringify(hero);if(key===heroKey)return;
+  preserveHomeViewport(()=>{$('#hero-headline').textContent=hero.headline;$('#hero-emphasis').textContent=hero.emphasis;$('#hero-lead').textContent=hero.lead;const action=$('#hero-action');action.href=HOME_ACTIONS[hero.primaryAction].href;action.textContent=HOME_ACTIONS[hero.primaryAction].label;});heroKey=key;
+ }
+ function schedule(){clearTimer();if(paused||document.visibilityState==='hidden')return;timer=setTimeout(tick,homeRefreshDelay(envelope,now()));}
+ function tick(){timer=null;paintFeature();paintUpcoming();if(inFlight){refreshQueued=true;return;}void refresh();}
+ async function refresh(){
+  if(paused||document.visibilityState==='hidden')return;if(inFlight){refreshQueued=true;return;}inFlight=true;clearTimer();
+  const featureTask=request('home-feature').then(value=>{
+   const server=homeDate(value.serverNow);if(!Number.isFinite(server))throw new Error('invalid_server_clock');
+   serverAnchor=server;monoAnchor=monotonic();
+   // A future payload cannot activate later from a cached response; it must be published again by the server.
+   envelope={serverNow:value.serverNow,nextTransitionAt:value.nextTransitionAt,feature:homeFeatureState(value,server)};
+   paintFeature();paintUpcoming();schedule();
+  }).catch(()=>{envelope=null;paintFeature();schedule();});
+  const contentTask=request('site-content').then(paintHero).catch(()=>paintHero(null));
+  const eventTask=request('events').then(value=>{
+   if(!Array.isArray(value.events))throw new Error('invalid_events');
+   events=value.events;paintUpcoming();const revision=++portfolioRevision;
+   void editorialPromise.then(editorial=>{if(revision===portfolioRevision)renderHome({events,editorial,live:true});}).catch(()=>{if(revision===portfolioRevision)renderHome({events:[],editorial:{events:{}},live:false});});
+  }).catch(()=>{events=[];portfolioRevision++;paintUpcoming();renderHome({events:[],editorial:{events:{}},live:false});});
+  await Promise.allSettled([featureTask,contentTask,eventTask]);inFlight=false;
+  if(paused)return;if(refreshQueued){refreshQueued=false;void refresh();}else schedule();
+ }
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){clearTimer();return;}paintFeature();paintUpcoming();void refresh();});
+ window.addEventListener('pagehide',()=>{paused=true;clearTimer();});
+ window.addEventListener('pageshow',()=>{if(paused){paused=false;void refresh();}});
+ void refresh();
+}
+function renderHome(data) {
+  const selected = ['istanbul-mimarlik-zirvesi-2026','buyuk-avrupa-turu-2026','istanbul-mimarlik-zirvesi-2023','archfest-2023'].map(slug => data.events.find(e => e.slug === slug && !['draft','cancelled'].includes(e.status))).filter(Boolean);
+  const html=selected.map(e => card(e, data.editorial)).join('') || `<p class="ux-note">${data.live||preview?'Bu seçkide yayımlanmış etkinlik bulunmuyor.':'Etkinlik seçkisine şu anda ulaşılamıyor.'} <a href="arsiv.html">Arşivi incele</a>.</p>`;
+  const host=$('#home-events');if(host.innerHTML===html)return;
+  const focused=host.contains(document.activeElement)?document.activeElement?.getAttribute('href'):null;
+  host.innerHTML=html;
+  if(focused){const target=[...host.querySelectorAll('a[href]')].find(a=>a.getAttribute('href')===focused)||$('#hero-action');target?.focus({preventScroll:true});}
+}
+
 function renderArchive(data) {
   const events = data.events.filter(event => event.archived || (event.endAt && Date.parse(event.endAt) < Date.now()));
   const categories = [...new Set(events.map(e => e.category).filter(Boolean))].sort((a,b) => a.localeCompare(b,'tr'));
@@ -117,7 +224,7 @@ function renderArchive(data) {
   $('#event-filters').addEventListener('reset', () => setTimeout(() => draw(),0));
 }
 function renderEvents(data) {
-  const upcoming = data.events.filter(event => !event.archived && !(event.endAt && Date.parse(event.endAt) < Date.now()));
+  const upcoming = homeAvailableEvents(data.events,Date.now());
   $('#upcoming-events').innerHTML = upcoming.length ? `<div class="editorial-grid">${upcoming.map(e => card(e,data.editorial)).join('')}</div>` : noEvents(data.live);
   $('#series-list').innerHTML = seriesRows(data.editorial.series);
 }
@@ -166,7 +273,7 @@ async function renderDetail(data) {
   <div class="section detail-body ux-event-dossier"><div class="detail-story ux-event-story"><p class="eyebrow">${esc(edit.series || 'Etkinlik kaydı')}</p><h2>Bu buluşmada</h2><div class="prose">${story.filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('')}</div>${programs.length ? `<div class="detail-program"><h3>Programdan</h3><ul>${programs.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>` : ''}${edit.subprograms?.length ? `<div class="detail-program" id="atolyeler"><h3>Etkinlik içindeki atölyeler</h3>${edit.subprograms.map(item=>`<article><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><p class="card-meta">${esc(item.dateLabel)}</p></article>`).join('')}</div>` : ''}${sources.length ? `<div class="detail-source"><p class="eyebrow">Kaynaklar</p>${sources.map(item=>sourceMarkup(item)).join('')}</div>` : ''}</div><aside class="detail-aside"><dl class="ux-event-facts">${facts.map(([key,value])=>`<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl><p class="eyebrow">${esc(state.label)}</p><p>${esc(state.detail)}</p>${state.open ? `<a class="button" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Etkinliğe başvur</a>` : '<a class="button" href="topluluk.html">Yeni buluşmaları takip et</a>'}</aside></div>
   ${gallery.length ? `<section class="section gallery-section ux-event-gallery"><div class="section-heading"><h2>Fotoğraf seçkisi</h2></div><div class="gallery-grid">${gallery.map((item,i) => `<figure><button class="gallery-thumb" type="button" data-gallery-index="${i}" aria-label="${esc(item.alt || event.title)}, galeride aç"><img src="${esc(safeURL(item.src,{image:true}))}" alt="${esc(item.alt || event.title)}" loading="lazy" width="1200" height="800"><span>Fotoğrafı büyüt</span></button><figcaption>${esc(item.alt || event.title)}</figcaption></figure>`).join('')}</div><p class="gallery-note">${esc(edit.imageCredit || 'Bu etkinliğe ait yayımlanan galeri seçkisi.')}</p></section>` : ''}`;
   document.querySelectorAll('[data-gallery-index]').forEach(button => button.addEventListener('click', () => openGallery(Number(button.dataset.galleryIndex),button)));
-  const media=await staticJSON('data/media.json').catch(()=>({videos:[]}));
+  const media=await loadMediaData();
   const related=media.videos.filter(video=>video.eventSlug===event.slug);
   if(related.length)$('#event-detail').insertAdjacentHTML('beforeend',`<section class="section detail-related"><div class="section-heading"><h2>Bu etkinliğin videoları</h2><a class="text-link" href="medya.html">Tüm içerikler</a></div><div class="video-grid">${related.map(videoCard).join('')}</div></section>`);
   const relatedEvents=data.events.filter(other=>other.slug!==event.slug && (edit.series ? data.editorial.events[other.slug]?.series===edit.series : other.category===event.category)).slice(-3).reverse();
@@ -189,21 +296,42 @@ $('#gallery-next').addEventListener('click', () => { galleryIndex=(galleryIndex+
 $('#gallery-dialog').addEventListener('keydown',event => { if (gallery.length > 1 && ['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); galleryIndex=(galleryIndex+(event.key==='ArrowLeft'?-1:1)+gallery.length)%gallery.length; paintGallery(); } });
 $('#gallery-dialog').addEventListener('click',event => { if (event.target === $('#gallery-dialog')) { const rect = event.target.getBoundingClientRect(); if(event.clientX<rect.left || event.clientX>rect.right || event.clientY<rect.top || event.clientY>rect.bottom) closeGallery(); } });
 
+// The live publication catalogue is authoritative: a hidden video is never restored from static data.
+const MEDIA_FALLBACK=Object.freeze({channel:{name:'Archify',handle:'@archifycom',url:'https://www.youtube.com/@archifycom'},social:[{name:'Instagram',label:'@archifycom',url:'https://www.instagram.com/archifycom/'},{name:'YouTube',label:'@archifycom',url:'https://www.youtube.com/@archifycom'}]});
+let mediaPromise=null;
+const publishedVideoIds=new Set();
+export function normaliseMediaData(value){
+ if(!value||!Array.isArray(value.videos))throw new Error('invalid_media_catalog');
+ const ids=new Set(),videos=[];
+ for(const item of value.videos){
+  if(!item||typeof item.id!=='string'||!/^[A-Za-z0-9_-]{11}$/.test(item.id)||ids.has(item.id)||!homeText(item.title,500))continue;
+  let url;try{url=new URL(item.url);}catch{continue;}
+  if(url.origin!=='https://www.youtube.com'||url.pathname!=='/watch'||url.searchParams.get('v')!==item.id)continue;
+  ids.add(item.id);videos.push({id:item.id,title:item.title,subtitle:homeText(item.subtitle,500,{empty:true})?item.subtitle:'Archify yayını',kind:homeText(item.kind,100)?item.kind:'Video',description:homeText(item.description,4000,{empty:true})?item.description:'',url:'https://www.youtube.com/watch?v='+item.id,eventSlug:typeof item.eventSlug==='string'&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.eventSlug)&&item.eventSlug.length<=160?item.eventSlug:null});
+ }
+ return {channel:value.channel&&safeURL(value.channel.url)?value.channel:MEDIA_FALLBACK.channel,social:Array.isArray(value.social)?value.social:MEDIA_FALLBACK.social,videos,unavailable:false};
+}
+export function loadMediaData(){
+ if(!mediaPromise){mediaPromise=(preview?staticJSON('data/media.json'):request('site-media')).then(normaliseMediaData).then(data=>{publishedVideoIds.clear();for(const video of data.videos)publishedVideoIds.add(video.id);return data;}).catch(()=>{publishedVideoIds.clear();return {...MEDIA_FALLBACK,videos:[],unavailable:true};});}
+ return mediaPromise;
+}
+function mediaEmbedURL(id){return typeof id==='string'&&/^[A-Za-z0-9_-]{11}$/.test(id)&&publishedVideoIds.has(id)?'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0':'';}
 function videoCard(video){
- const url=safeURL(video.url);if(!url||!videoEmbedURL(video.id))return '';
- return `<article class="video-card" data-video-id="${esc(video.id)}"><div class="video-player" id="video-player-${esc(video.id)}"><button class="video-cover video-trigger" type="button" data-video-trigger="${esc(video.id)}" data-video-title="${esc(video.title)}" aria-label="${esc(video.title)} — bu sayfada oynat"><span>${esc(video.kind)}</span><strong>${esc(video.title)}</strong><span class="video-play">Videoyu oynat</span></button></div><h3>${esc(video.subtitle)}</h3><p>${esc(video.description)}</p><div class="video-links"><a class="text-link video-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">YouTube’da aç</a><a class="text-link" href="etkinlik.html?slug=${encodeURIComponent(video.eventSlug)}">Buluşmanın hikâyesi</a></div></article>`;
+ const url=safeURL(video.url);if(!url||!mediaEmbedURL(video.id))return '';
+ return `<article class="video-card" data-video-id="${esc(video.id)}"><div class="video-player" id="video-player-${esc(video.id)}"><button class="video-cover video-trigger" type="button" data-video-trigger="${esc(video.id)}" data-video-title="${esc(video.title)}" aria-label="${esc(video.title)} — bu sayfada oynat"><span>${esc(video.kind)}</span><strong>${esc(video.title)}</strong><span class="video-play">Videoyu oynat</span></button></div><h3>${esc(video.subtitle)}</h3><p>${esc(video.description)}</p><div class="video-links"><a class="text-link video-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">YouTube’da aç</a>${video.eventSlug?`<a class="text-link" href="etkinlik.html?slug=${encodeURIComponent(video.eventSlug)}">Buluşmanın hikâyesi</a>`:''}</div></article>`;
 }
 function setupVideoPlayers(){
  document.querySelectorAll('[data-video-trigger]').forEach(button=>button.addEventListener('click',()=>{
-  const id=button.dataset.videoTrigger,url=videoEmbedURL(id);if(!url)return;
+  const id=button.dataset.videoTrigger,url=mediaEmbedURL(id);if(!url)return;
   const host=$('#video-player-'+id);if(!host)return;
   host.innerHTML=`<iframe src="${esc(url)}" title="YouTube: ${esc(button.dataset.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
  }));
 }
 async function renderMedia(selector='#media-list'){
- const data=await staticJSON('data/media.json');
- $(selector).classList.add('ux-media-lead');$(selector).innerHTML=data.videos.map(videoCard).join('');setupVideoPlayers();
+ const data=await loadMediaData();
+ $(selector).classList.add('ux-media-lead');$(selector).innerHTML=data.videos.length?data.videos.map(videoCard).join(''):`<div class="ux-note"><p>${data.unavailable?'Videolara şu anda ulaşılamıyor. Daha sonra yeniden deneyebilirsin.':'Bu alanda henüz yayımlanmış video bulunmuyor.'}</p><a class="text-link" href="https://www.youtube.com/@archifycom" target="_blank" rel="noopener noreferrer">Archify YouTube kanalını aç</a></div>`;setupVideoPlayers();
 }
+
 function categoryPlate(id){
  const photos={
   zirve:{stem:'istanbul-zirve-2025-avlu',small:800,width:1272,height:716,alt:'İstanbul Mimarlık Zirvesi 2025 avlusundaki atölye masalarının yukarıdan görünümü.',caption:'Arşivden referans: İstanbul Mimarlık Zirvesi 2025 · Archify tanıtım kitapçığı, s. 14.'},
@@ -219,7 +347,7 @@ function renderCategory(data){
  const setSection=(selector,content)=>{const host=$(selector);host.innerHTML=content;let section=host;while(section&&!section.classList.contains('section'))section=section.parentElement;if(section)section.hidden=!content;else host.hidden=!content;};
  if(!spec){$('#category-intro').innerHTML='<div class="ux-masthead-copy"><p class="eyebrow">Etkinlik türleri</p><h1>Nasıl buluşuyoruz?</h1></div><div class="ux-masthead-aside"><p class="lead">Konuşma, üretim, yolculuk veya sohbet: ilgini çeken alandan başla.</p></div><div class="category-grid">'+CATEGORY_PAGES.map(c=>`<a class="category-tile" data-category="${c.id}" href="kategori.html?tur=${c.id}"><h2>${esc(c.name)}</h2><p>${esc(c.kicker)}</p></a>`).join('')+'</div>';setSection('#category-upcoming','');setSection('#category-past','');setSection('#category-series','');return;}
  document.title=spec.name+' · Archify';document.body.dataset.categoryPage=spec.id;
- const selected=data.events.filter(e=>spec.matches.includes(e.category)),past=selected.filter(e=>e.archived||(e.endAt&&Date.parse(e.endAt)<Date.now())).sort((a,b)=>(b.year||0)-(a.year||0)),upcoming=selected.filter(e=>!past.includes(e));
+ const selected=data.events.filter(e=>spec.matches.includes(e.category)&&!['draft','cancelled'].includes(e.status)),past=selected.filter(e=>e.archived||(e.endAt&&Date.parse(e.endAt)<Date.now())).sort((a,b)=>(b.year||0)-(a.year||0)),upcoming=homeAvailableEvents(selected,Date.now());
  const series=data.editorial.series.filter(item=>spec.series.includes(item.slug));
  const workshopParents=spec.id==='atolye'?data.events.filter(e=>data.editorial.events[e.slug]?.subprograms?.length):[];
  $('#category-intro').innerHTML=`<div class="ux-masthead-copy"><p class="eyebrow">${esc(spec.kicker)}</p><h1>${esc(spec.name)}</h1>${categoryPlate(spec.id)}</div><div class="ux-masthead-aside"><p class="lead">${esc(spec.intro)}</p><ul class="category-topics">${spec.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><nav class="category-jump" aria-label="Kategori bölümleri">${upcoming.length?'<a href="#category-upcoming">Yaklaşan etkinlikler</a>':''}${past.length?'<a href="#kategori-arsiv">Geçmiş buluşmalar</a>':''}${series.length||workshopParents.length?'<a href="#kategori-seriler">İlgili programlar</a>':''}<a href="etkinlikler.html">Tüm kategoriler</a></nav></div>`;
@@ -337,6 +465,7 @@ async function setupForm() {
 setupNavigation();
 
 async function main(){
+  if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([catalogPromise,editorialPromise]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
   if(['application','team-application','community-application'].includes(page)){await setupForm();return;}
   if(page==='community'){await renderCommunity();return;}
   if(page==='media'){await renderMedia();return;}
