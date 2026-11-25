@@ -1,6 +1,6 @@
 // [codex] R12 career applications; submitted only to the same origin, never to analytics.
 import {apiURL,normalizePhone} from './core.mjs';
-import {analyticsRequestHeaders} from './analytics.mjs';
+import {analyticsRequestHeaders,advertisingRequestHeaders} from './analytics.mjs';
 const doc=document,page=doc.body.dataset.page,preview=doc.querySelector('meta[name="deployment"]')?.content==='preview';
 const form=doc.querySelector(page==='company-application'?'#company-form':'#career-form');
 const company=page==='company-application';
@@ -14,7 +14,7 @@ let csrf=null,requestId=id(),busy=false,done=false;
 const messages={invalid_phone:'Geçerli bir telefon numarası gir.',invalid_email:'Geçerli e-posta adresi gir.',invalid_city:'Bir şehir seç.',invalid_positions:'En az bir pozisyon seç.',invalid_fields:'En az bir mesleki alan seç.',class_required:'Sınıfını seç.',internship_period_required:'Staj dönemini belirt.',cv_required:'CV veya portfolyo için PDF ya da HTTPS bağlantısı ekle.',invalid_file:'Dosya yüklenemedi; boyut ve biçim sınırlarını kontrol et.',invalid_file_type:'CV için PDF, fotoğraf için JPEG/PNG kullan.',invalid_referenceInfo:'Referans alanında başka bir kişinin telefon veya e-posta bilgisini kullanma.',terms_required:'Başvuru açıklamasını okuyup onayla.',contact_consent_required:'Firma başvurusuyla ilgili iletişim seçimini işaretle.',rate_limited:'Çok sık deneme yapıldı. Daha sonra tekrar dene.',idempotency_conflict:'Başvuru bilgileri değişti. Yeniden dene.',invalid_url:'HTTPS ile başlayan geçerli bir bağlantı gir.'};
 function show(message,kind=''){status.textContent=message;status.className='form-status'+(kind?' '+kind:'');if(kind)status.focus();}
 async function call(route,body){
- const result=await fetch(apiURL(route,base),{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:body?{'Content-Type':'application/json','X-CSRF-Token':csrf,...analyticsRequestHeaders()}:undefined,body:body?JSON.stringify(body):undefined});
+ const result=await fetch(apiURL(route,base),{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:body?{'Content-Type':'application/json','X-CSRF-Token':csrf,...analyticsRequestHeaders(),...advertisingRequestHeaders()}:undefined,body:body?JSON.stringify(body):undefined});
  const data=await result.json().catch(()=>({error:'network'}));if(!result.ok)throw Object.assign(Error(data.error||'network'),{code:data.error,status:result.status});return data;
 }
 function payload(){
@@ -38,11 +38,11 @@ async function submit(e){
   let response;
   if(!company&&(cv||photo)){
    const multi=new FormData();multi.set('payload',JSON.stringify(data));if(cv)multi.set('cv',cv);if(photo)multi.set('photo',photo);
-   const req=await fetch(new URL('api/kariyer-dosya.php',base),{method:'POST',credentials:'same-origin',headers:{'X-CSRF-Token':csrf,...analyticsRequestHeaders()},body:multi,cache:'no-store'});
+   const req=await fetch(new URL('api/kariyer-dosya.php',base),{method:'POST',credentials:'same-origin',headers:{'X-CSRF-Token':csrf,...analyticsRequestHeaders(),...advertisingRequestHeaders()},body:multi,cache:'no-store'});
    response=await req.json().catch(()=>({error:'network'}));if(!req.ok)throw Object.assign(Error(response.error||'network'),{code:response.error,status:req.status});
   }else response=await call(company?'career/companies':'career/candidates',data);
   if(response.status!=='received'||typeof response.reference!=='string')throw Error('network');
-  done=true;form.reset();fields.hidden=true;
+  done=true;form.reset();fields.hidden=true;window.dispatchEvent(new Event('archify:accepted'));
   show('Başvurun alındı. Archify ekibi değerlendirecek. Referans: '+response.reference,'success');
  }catch(error){show(messages[error.code]||'Başvurun henüz doğrulanamadı. Aynı bilgilerle tekrar deneyebilirsin.','error');fields.disabled=false;if(error.code==='idempotency_conflict')requestId=id();}
  finally{busy=false}

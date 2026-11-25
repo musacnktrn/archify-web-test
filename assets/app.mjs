@@ -3,8 +3,10 @@
 import { escapeHTML as esc, safeURL, filterEvents, registrationState, archiveEvent, apiURL, errorMessage, normalizePhone, groupEventsByYear, sourceMarkup } from './core.mjs';
 import { CATEGORY_PAGES, GROUP_TYPES, categoryPage } from './information.mjs';
 import { setupNavigation } from './navigation.mjs';
-import { setupAnalytics, analyticsRequestHeaders } from './analytics.mjs';
+import { setupAnalytics, analyticsRequestHeaders, advertisingRequestHeaders } from './analytics.mjs';
 import { setupCommunityEligibility } from './community-eligibility.mjs';
+import { setupProviders } from './providers.mjs';
+import { setupTickets, ticketConfig, renderTicketReceipt, renderOrderReceipt, money, ticketError } from './tickets.mjs';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const page = document.body.dataset.page;
@@ -13,6 +15,7 @@ const base = new URL('./', location.href);
 const params = new URLSearchParams(location.search);
 let csrfToken;
 let analytics=null;
+let providers=null;
 let gallery = [];
 let galleryIndex = 0;
 let returnFocus = null;
@@ -27,7 +30,7 @@ async function request(route, body) {
     const response = await fetch(apiURL(route, base), {
       method: body ? 'POST' : 'GET', credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
       ...(route==='analytics/collect'?{keepalive:true}:{}),
-      headers: body ? { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken || '',...(['applications','team-applications','community-applications'].includes(route)?analyticsRequestHeaders():{}) } : { 'Accept': 'application/json' },
+      headers: body ? { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken || '',...(['applications','team-applications','community-applications','tickets/orders','tickets/order-status','integrations/conversions'].includes(route)?{...analyticsRequestHeaders(),...advertisingRequestHeaders()}:{}) } : { 'Accept': 'application/json' },
       ...(body ? { body: JSON.stringify(body) } : {})
     });
     let data;
@@ -35,6 +38,7 @@ async function request(route, body) {
     if (!response.ok) throw Object.assign(new Error(data.error || 'service_unavailable'), { code: data.error, status: response.status });
     if(route==='events'&&Array.isArray(data.events))analytics?.allowEvents(data.events);
     if(route.startsWith('events/')&&data.event)analytics?.allowEvents([data.event]);
+    if(body&&['applications','team-applications','community-applications'].includes(route)&&['accepted','received'].includes(data.status))void providers?.pullConversions();
     return data;
   } catch (error) {
     if (error.status !== undefined) throw error;
@@ -453,7 +457,8 @@ async function setupForm() {
   if(['community','community-application'].includes(page))return; // Profile eligibility is the sole public community submission path.
   const form = $('#application-form'), fields = $('#application-fields'), status = $('#form-status'), retry = $('#retry-application');
   const isTeam = page === 'team-application', isCommunity=page==='community-application';
-  const endpoint=isCommunity?'community-applications':isTeam?'team-applications':'applications';
+  let endpoint=isCommunity?'community-applications':isTeam?'team-applications':'applications';
+  let payment=null;
   let group;
   let event;
   let payload;
@@ -480,6 +485,10 @@ async function setupForm() {
         const state=registrationState(event);
         $('#application-event').innerHTML=event ? `<h2>${esc(event.title)}</h2><p>${esc([friendlyDate(event.startAt),event.city].filter(Boolean).join(' · '))}</p>` : '<p>Etkinlik bulunamadı.</p>';
         if (!state.open) { show(state.label+'. '+state.detail); return; }
+        payment=ticketConfig(await request('tickets/config/'+encodeURIComponent(slug)));
+        endpoint=payment.mode==='paid'?'tickets/orders':'applications';
+        $('#application-event').insertAdjacentHTML('beforeend',`<p class="ticket-price"><strong>${payment.mode==='paid'?esc(money(payment.priceMinor)):'Ücretsiz katılım'}</strong>${payment.mode==='paid'?' · Bilet, ödeme doğrulandıktan sonra oluşur.':' · Başvuru kabulünde kişisel giriş kodu oluşturulur.'}</p>`);
+        if(payment.mode==='paid'&&!payment.paymentAvailable){show('Bu ücretli etkinliğin ödeme bağlantısı şu anda kapalı. Henüz kişisel bilgi veya ödeme alınmıyor.');return;}
       }
       fields.disabled=false;
       show(isCommunity?'Adın ve telefonun yalnız seçtiğin topluluğa başvurunu değerlendirmek ve bu başvuruyla ilgili iletişim için kullanılır.':'Zorunlu alanlar işaretlidir. İletişim tercihlerini ayrı ayrı seçebilirsin.');
@@ -505,12 +514,17 @@ async function setupForm() {
         if (['csrf_invalid','invalid_csrf','csrf_failed','request_verification'].includes(error.code)) { await session(); result=await request(endpoint,payload); }
         else throw error;
       }
+      if(payment?.mode==='paid'){
+        if(!renderOrderReceipt(status,result))throw Object.assign(new Error('network'),{code:'network',status:0});
+        completed=true;form.reset();fields.hidden=true;retry.hidden=true;status.className='form-status success';payload=null;status.focus();return;
+      }
       if (!result || typeof result.reference!=='string' || !['accepted','received'].includes(result.status)) throw Object.assign(new Error('network'),{code:'network',status:0});
       completed=true;form.reset();fields.hidden=true;retry.hidden=true;status.className='form-status success';
       status.innerHTML=isCommunity?`<strong>Topluluk başvurun alındı.</strong><p>${esc(group.name)} için başvurun ekibe iletildi. Gruba otomatik katılım veya mesaj gönderimi yapılmadı. Başvuru referansını sakla.</p><code>${esc(result.reference)}</code><a class="text-link" href="topluluk.html">Topluluklara dön</a>`:`<strong>${isTeam?'Başvurun alındı.':'Başvurun kaydedildi.'}</strong>${isTeam?'Ekibin değerlendirmesi için iletildi. Bu sonuç ekip kabulü anlamına gelmez.':'Başvuru referansını sakla.'}<code>${esc(result.reference)}</code><p>${payload.noticeConsent?'WhatsApp bilgilendirmesi tercihin kaydedildi. Bu ekran başvuru kaydını doğrular; mesajın teslim edildiğini göstermez.':'Başvurunun kaydı tamamlandı. WhatsApp bilgilendirmesi istemedin.'}</p><a class="text-link" href="${isTeam?'hakkimizda.html':eventURL(event)}">${isTeam?'Archify’ı keşfet':'Etkinliğe dön'}</a>`;
+      if(!isTeam&&!isCommunity&&result.ticket){status.insertAdjacentHTML('beforeend','<div id="application-ticket"></div>');renderTicketReceipt($('#application-ticket'),result.ticket);}
       payload=null;status.focus();
     } catch(error) {
-      show(errorMessage(error.code),'error',true);
+      show(['payment_unavailable','paid_registration_required','invalid_ticket_config'].includes(error.code)?ticketError(error):errorMessage(error.code),'error',true);
       const uncertain=!error.status || error.status>=500;
       if (uncertain) { retryKind='submit';retry.textContent='Aynı başvuruyu tekrar dene';retry.hidden=false; }
       else if (['event_full','registration_closed','event_not_found','idempotency_conflict'].includes(error.code)) { retry.hidden=true; }
@@ -533,10 +547,21 @@ async function setupForm() {
 }
 
 setupNavigation();
-analytics=setupAnalytics({document,window,location,preview,request,session});
+providers=setupProviders({document,window,preview,request,session,page});
+analytics=setupAnalytics({document,window,location,preview,request,session,onConsent:choice=>void providers.setConsent(choice),onEvent:event=>providers.measure(event)});
 catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
 
+async function downloadCertificate(token){
+  if(preview)return;
+  const send=()=>fetch(new URL('api/sertifika.php',base),{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken||''},body:JSON.stringify({token})});
+  let response=await send();
+  if(!response.ok){let problem;try{problem=await response.json();}catch{}if(['request_verification','csrf_invalid','invalid_csrf'].includes(problem?.error)){await session();response=await send();}else throw Object.assign(new Error('certificate'),{code:problem?.error});}
+  if(!response.ok||!response.headers.get('Content-Type')?.includes('application/pdf'))throw new Error('certificate');
+  const blob=await response.blob();if(blob.size>5*1024*1024||!blob.size)throw new Error('certificate');
+  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='archify-katilim-sertifikasi.pdf';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 async function main(){
+  if(['ticket','checkout'].includes(page)){setupTickets({document,window,location,preview,request,session,certificateDownload:downloadCertificate,onAccepted:()=>void providers.pullConversions()});return;}
   if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([catalogPromise,editorialPromise]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
   if(['application','team-application'].includes(page)){await setupForm();return;}
   if(page==='community-application'){await setupCommunityFlow();return;}
