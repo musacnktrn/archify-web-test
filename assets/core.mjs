@@ -18,12 +18,19 @@ export function safeURL(value, { image = false } = {}) {
 }
 export function normalizePhone(value) {
   const raw = String(value).trim();
-  if (!/^[+\d\s().-]+$/.test(raw)) return null;
-  let digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('0090')) digits = digits.slice(4);
-  else if (digits.startsWith('90') && digits.length === 12) digits = digits.slice(2);
-  else if (digits.startsWith('0') && digits.length === 11) digits = digits.slice(1);
-  return /^5\d{9}$/.test(digits) ? '+90' + digits : null;
+  if (!/^[+0-9() .-]+$/.test(raw)) return null;
+  const compact = raw.replace(/[() .-]/g, '');
+  if (compact.startsWith('+') || compact.startsWith('00')) {
+    const international = compact.startsWith('00') ? '+' + compact.slice(2) : compact;
+    if (!/^\+[1-9]\d{7,14}$/.test(international)) return null;
+    // Turkish numbers keep the existing GSM rule even with an explicit country code.
+    if (international.startsWith('+90') && !/^\+905\d{9}$/.test(international)) return null;
+    return international;
+  }
+  if (/^05\d{9}$/.test(compact)) return '+9' + compact;
+  if (/^5\d{9}$/.test(compact)) return '+90' + compact;
+  if (/^905\d{9}$/.test(compact)) return '+' + compact;
+  return null;
 }
 export function registrationState(event, now = Date.now()) {
   if (!event) return { open: false, label: 'Etkinlik bulunamadı', detail: 'Bağlantıyı kontrol edebilir veya etkinliklere dönebilirsin.' };
@@ -51,12 +58,13 @@ export function errorMessage(code) {
     registration_closed: 'Etkinliğin başvurusu kapanmış. Etkinlik sayfasındaki güncel durumu kontrol et.', event_closed: 'Bu etkinlik şu anda başvuru almıyor.',
     event_archived: 'Bu etkinlik arşivde; başvuru alınmıyor.', event_cancelled: 'Bu etkinlik iptal edildi. Başvurun alınmadı.',
     not_found: 'Etkinlik bulunamadı. Etkinlik listesine dönerek bağlantıyı yenileyebilirsin.', event_not_found: 'Etkinlik bulunamadı.',
-    invalid_phone: 'Telefonunu 05xx xxx xx xx biçiminde yaz.', invalid_email: 'Geçerli bir e posta adresi yaz.',
+    invalid_phone: 'Türkiye cep telefonunu 05xx xxx xx xx biçiminde; yabancı numaranı + veya 00 ile başlayan ülke koduyla yaz.', invalid_email: 'Geçerli bir e posta adresi yaz.',
     invalid_input: 'Bilgilerini ve zorunlu alanları kontrol et.', validation_failed: 'Bilgilerini ve zorunlu alanları kontrol et.',
     terms_required: 'Başvuru ve gizlilik açıklamasını okuyup zorunlu onay alanını işaretle.', invalid_name: 'Adını ve soyadını kontrol et.',
     invalid_department: 'İlgilendiğin alanı seç.', invalid_motivation: 'Kendini kısaca anlatan metni kontrol et.',
     rate_limited: 'Kısa sürede çok fazla deneme yapıldı. Biraz bekleyip aynı başvuruyu tekrar deneyebilirsin.',
     csrf_invalid: 'Oturum doğrulaması yenilenmeli. Sayfayı yenilemeden aşağıdaki düğmeyle tekrar dene.', invalid_csrf: 'Oturum doğrulaması yenilenmeli. Tekrar dene.',
+    request_verification: 'Oturum doğrulanamadı. Aynı başvuruyu tekrar deneyebilirsin.',
     already_applied: 'Bu telefon için daha önce başvuru alınmış.', duplicate_application: 'Bu telefon için daha önce başvuru alınmış.',
     idempotency_conflict: 'Bu başvuru denemesi farklı bilgilerle eşleşiyor. Yeni kayıt oluşturmadan Archify ile iletişime geç.',
     request_conflict: 'Bu başvuru denemesi farklı bilgilerle eşleşiyor. Archify ile iletişime geç.',

@@ -233,7 +233,7 @@ async function setupForm() {
       let result;
       try { result=await request(isTeam?'team-applications':'applications',payload); }
       catch(error) {
-        if (['csrf_invalid','invalid_csrf','csrf_failed'].includes(error.code)) { await session(); result=await request(isTeam?'team-applications':'applications',payload); }
+        if (['csrf_invalid','invalid_csrf','csrf_failed','request_verification'].includes(error.code)) { await session(); result=await request(isTeam?'team-applications':'applications',payload); }
         else throw error;
       }
       if (!result || typeof result.reference!=='string' || !['accepted','received'].includes(result.status)) throw Object.assign(new Error('network'),{code:'network',status:0});
@@ -253,7 +253,7 @@ async function setupForm() {
     if(!form.reportValidity()) return;
     const values=new FormData(form);
     const phone=normalizePhone(values.get('phone'));
-    if(!phone) { $('#phone').setCustomValidity('Telefonunu 05xx xxx xx xx biçiminde yaz.');$('#phone').reportValidity();return; }
+    if(!phone) { $('#phone').setCustomValidity(errorMessage('invalid_phone'));$('#phone').reportValidity();return; }
     payload={...(isTeam?{}:{eventSlug:event.slug}),name:String(values.get('name')).trim(),phone,email:String(values.get('email')).trim(),noticeConsent:values.has('noticeConsent'),marketingConsent:values.has('marketingConsent'),termsAccepted:values.has('termsAccepted'),requestId};
     if(isTeam) { payload.department=String(values.get('department'));payload.motivation=String(values.get('motivation')).trim(); }
     void submit();
