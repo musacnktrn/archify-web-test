@@ -1,0 +1,142 @@
+{
+  "_producer": "codex / 01a20fe8-199e-7631-8910-07e7d27b753d",
+  "events": {
+    "istanbul-mimarlik-zirvesi-2023": {
+      "dateLabel": "29 ve 30 Nisan 2023",
+      "venue": "İTÜ Maçka Kampüsü, Mustafa Kemal Amfisi",
+      "series": "Mimarlık Zirvesi",
+      "theme": "Bazen bir karşılaşma, yeni bir bakış açısıdır.",
+      "story": [
+        "İstanbul Mimarlık Zirvesi, farklı üniversitelerden mimarlık ve tasarım öğrencilerini İTÜ Maçka Kampüsü’nde bir araya getirdi. İki günlük buluşmada konuşmalar ve atölyeler birbirini tamamladı.",
+        "Sahnenin dışında devam eden sohbetler de programın bir parçasıydı. Fuaye, mesleki deneyimlerin paylaşıldığı ve yeni bağlantıların kurulduğu bir karşılaşma alanına dönüştü."
+      ],
+      "source": {
+        "title": "ARGEPLANO · Akademi, Archify ’23 Mimarlık Zirvesi",
+        "url": "https://www.argeplano.com/akademi"
+      },
+      "additionalSources": [
+        {
+          "title": "İTÜ Mimarlık · Zirve ’23 katılım duyurusu",
+          "url": "https://linktr.ee/mimarlikitu"
+        }
+      ],
+      "imageCredit": "Archify Tanıtım Kitapçığı · İstanbul Mimarlık Zirvesi 2023 sahne detayı."
+    },
+    "archfest-2023": {
+      "dateLabel": "2023",
+      "venue": null,
+      "series": "ARCHFEST",
+      "theme": "Birlikte düşünmek için başka bir yer.",
+      "story": [
+        "ARCHFEST’in 2023 edisyonu İzmir’de gerçekleşti. Mimarlık topluluğu, festivalin ilk buluşmasında açık havada bir araya geldi.",
+        "ARCHFEST serisi, mimarlık üzerine buluşmayı kamp deneyimiyle yan yana getiriyor. Bu kayıt, serinin 2023 edisyonuna ait."
+      ],
+      "source": {
+        "title": "Kalemlik Orman Kampı · Etkinlikler",
+        "url": "https://kalemlikormankampi.com/tr/7/45/0/etkinlik.html"
+      }
+    },
+    "izmir-vizyon-2024": {
+      "dateLabel": "2 Mart 2024",
+      "venue": "İzmir Mimarlık Merkezi",
+      "series": "Vizyon",
+      "theme": "Aynı mekânda, farklı ufuklar.",
+      "story": [
+        "İzmir Vizyon’da mimarlık, iç mimarlık ve tasarım öğrencileri, genç meslektaşlar ve deneyimlerini paylaşan mimarlar İzmir Mimarlık Merkezi’nde buluştu.",
+        "Günün programında mimari yarışmalar, parametrik tasarım ve oyun mimarisi gibi farklı alanlar konuşuldu. Birbirinden farklı pratikler, ortak bir mesleki merakın etrafında bir araya geldi."
+      ],
+      "source": {
+        "title": "İzmir Mimarlık Merkezi · Archify Vizyon Etkinliği",
+        "url": "https://www.izmirmimarlikmerkezi.com/duyurular/haberler/archify-vizyon-etkinligi"
+      },
+      "additionalSources": [
+        {
+          "title": "İzmir Vizyon · yayımlanan program",
+          "url": "https://www.biletimgo.com/etkinlik/archify-izmir-vizyon-6081"
+        }
+      ]
+    },
+    "archfest-2024": {
+      "dateLabel": "6, 7 ve 8 Eylül 2024",
+      "venue": "Acar Camping, Foça",
+      "series": "ARCHFEST",
+      "theme": "Çadırını kur. Yeni fikirlere yer aç.",
+      "story": [
+        "ARCHFEST 2024, İzmir Foça’daki Acar Camping’de üç günlük bir kamp festivali olarak düzenlendi. Mimarlık ve tasarım etrafında kurulan program, açık havada birlikte zaman geçirme deneyimiyle birleşti.",
+        "Seminerler ve atölyelerin yanı sıra konserler, sosyal etkinlikler ve turnuvalar programda yer aldı. Festival, gün içindeki üretimi akşamın müziğiyle buluşturdu."
+      ],
+      "source": {
+        "title": "ARCHFEST ’24 · yayımlanan etkinlik programı",
+        "url": "https://www.biletimgo.com/etkinlik/archfest24-7033"
+      }
+    },
+    "istanbul-mimarlik-zirvesi-2025": {
+      "dateLabel": "3 ve 4 Mayıs 2025",
+      "venue": "İstinye Üniversitesi, Vadi Kampüsü",
+      "series": "Mimarlık Zirvesi",
+      "theme": "Mimarlığın geleceğini birlikte konuşmak.",
+      "story": [
+        "İstanbul Mimarlık Zirvesi 2025, İstinye Üniversitesi ev sahipliğinde akademisyenleri, sektör profesyonellerini ve öğrencileri buluşturdu.",
+        "Mimarlığın estetik ve işlev kadar toplumsal sorumlulukla ilişkisi de konuşmaların odağındaydı. İki günlük program, farklı mesleki yaklaşımları aynı buluşmaya taşıdı."
+      ],
+      "source": {
+        "title": "İstinye Post · İstanbul Mimarlık Zirvesi 2025",
+        "url": "https://post.istinye.edu.tr/en/rethinking-architecture-in-the-face-of-earthquakes-expert-talks-at-istinye-university.html"
+      }
+    },
+    "deprem-ozel-sempozyumu-2025": {
+      "dateLabel": "22 Kasım 2025",
+      "venue": "İstinye Üniversitesi Topkapı Yerleşkesi, Kongre Merkezi",
+      "series": "Deprem Özel",
+      "theme": "Güvenli bir gelecek, ortak bir sorumluluk.",
+      "story": [
+        "Archify ve İSÜ Mimarlık Kulübü’nün Deprem Özel Sempozyumu, mimarlığı yapı güvenliği ve toplumsal sorumlulukla birlikte ele aldı.",
+        "İstinye Üniversitesi Topkapı Yerleşkesi’ndeki program; mimarlık, mühendislik, şehircilik ve deprem bilimi alanlarından uzmanların paylaşımlarına yer verdi."
+      ],
+      "source": {
+        "title": "İstinye Üniversitesi · Deprem Özel Sempozyumu",
+        "url": "https://www.istinye.edu.tr/tr/sks/duyurular/isu-mimarlik-kulubu-deprem-ozel-sempozyum"
+      }
+    }
+  },
+  "series": [
+    {
+      "slug": "mimarlik-zirvesi",
+      "title": "Mimarlık Zirvesi",
+      "category": "Zirve",
+      "intro": "Meslek pratiğiyle yeni fikirlerin aynı sahnede buluştuğu seri. Konuşmalar, atölyeler ve fuayede devam eden sohbetler.",
+      "slugs": [
+        "istanbul-mimarlik-zirvesi-2023",
+        "istanbul-mimarlik-zirvesi-2025"
+      ]
+    },
+    {
+      "slug": "archfest",
+      "title": "ARCHFEST",
+      "category": "Festival",
+      "intro": "Mimarlığı açık havaya taşıyoruz. Kamp, üretim, müzik ve karşılaşmalarla bir festival deneyimi.",
+      "slugs": [
+        "archfest-2023",
+        "archfest-2024"
+      ]
+    },
+    {
+      "slug": "vizyon",
+      "title": "Vizyon",
+      "category": "Buluşma",
+      "intro": "Tasarımın farklı pratiklerine bir pencere. Mesleki deneyimlerin, öğrencilerin ve yeni bakış açılarının buluşması.",
+      "slugs": [
+        "izmir-vizyon-2024"
+      ]
+    },
+    {
+      "slug": "deprem-ozel",
+      "title": "Deprem Özel",
+      "category": "Sempozyum",
+      "intro": "Dayanıklı yapılar ve güvenli kentler için disiplinler arası bir düşünme alanı.",
+      "slugs": [
+        "deprem-ozel-sempozyumu-2025"
+      ]
+    }
+  ]
+}

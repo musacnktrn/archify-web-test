@@ -1,0 +1,63 @@
+{
+  "events": [
+    {
+      "slug": "istanbul-mimarlik-zirvesi-2023",
+      "title": "İstanbul Mimarlık Zirvesi 2023",
+      "year": 2023,
+      "city": "İstanbul",
+      "category": "Zirve",
+      "summary": "İTÜ’de iki gün boyunca mimarlık üzerine konuşmalar, üretim ve yeni karşılaşmalar. Mimarlık Zirvesi’nin ilk İstanbul buluşması.",
+      "gallery": [
+        {
+          "src": "assets/images/istanbul-zirve-2023-1600.webp",
+          "alt": "İstanbul Mimarlık Zirvesi 2023 için hazırlanan İTÜ sahnesindeki Archify harfleri."
+        }
+      ]
+    },
+    {
+      "slug": "archfest-2023",
+      "title": "ARCHFEST 2023",
+      "year": 2023,
+      "city": "İzmir",
+      "category": "Festival",
+      "summary": "İzmir’de mimarlığı açık havaya taşıyan buluşma. Festivalin ilk edisyonunda kamp yaşamı ve mimarlık aynı programda yer aldı.",
+      "gallery": []
+    },
+    {
+      "slug": "izmir-vizyon-2024",
+      "title": "İzmir Vizyon 2024",
+      "year": 2024,
+      "city": "İzmir",
+      "category": "Buluşma",
+      "summary": "İzmir Mimarlık Merkezi’nde mimarlık, iç mimarlık ve tasarım öğrencileriyle meslek pratiğinden isimlerin buluştuğu bir gün.",
+      "gallery": []
+    },
+    {
+      "slug": "archfest-2024",
+      "title": "ARCHFEST 2024",
+      "year": 2024,
+      "city": "İzmir",
+      "category": "Festival",
+      "summary": "Foça’da üç gün. Acar Camping’de seminerler, atölyeler, müzik ve kamp deneyimi etrafında bir araya gelen mimarlık topluluğu.",
+      "gallery": []
+    },
+    {
+      "slug": "istanbul-mimarlik-zirvesi-2025",
+      "title": "İstanbul Mimarlık Zirvesi 2025",
+      "year": 2025,
+      "city": "İstanbul",
+      "category": "Zirve",
+      "summary": "İstinye Üniversitesi’nde mimarlığın toplumsal sorumluluğuna, tasarıma ve üretime açılan iki günlük buluşma.",
+      "gallery": []
+    },
+    {
+      "slug": "deprem-ozel-sempozyumu-2025",
+      "title": "Deprem Özel Sempozyumu 2025",
+      "year": 2025,
+      "city": "İstanbul",
+      "category": "Sempozyum",
+      "summary": "Mimarlık, mühendislik, şehircilik ve deprem bilimi üzerine ortak bir düşünme alanı. İSÜ Mimarlık Kulübü ile İstinye Üniversitesi’nde.",
+      "gallery": []
+    }
+  ]
+}
