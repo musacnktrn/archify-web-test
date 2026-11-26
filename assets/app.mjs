@@ -10,6 +10,7 @@ import { setupTickets, ticketConfig, renderTicketReceipt, renderOrderReceipt, mo
 import {renderTicketOptions} from './r14-tickets.mjs';
 import {setupEventQuestions,setupTicketSurvey} from './event-forms.mjs';
 import {setupEventProgram} from './event-program.mjs';
+import {categoryIcon,enhanceCategoryIdentity,publicSeries,seriesEvents,premiumSeriesCards,premiumSeriesIntro,categoryWayfinder} from './premium.mjs';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const page = document.body.dataset.page;
@@ -73,7 +74,7 @@ async function loadData() {
   }
 }
 function eventURL(event) { return 'etkinlik.html?slug=' + encodeURIComponent(event.slug); }
-function photo(event) { return (Array.isArray(event.gallery) ? event.gallery : []).find(item => safeURL(item.src, { image: true })); }
+function photo(event) { return (Array.isArray(event.gallery) ? event.gallery : []).find(item => item&&typeof item==='object'&&safeURL(item.src, { image: true })); }
 function categoryClass(category) { return ({'Festival':'festival','Zirve':'zirve','Buluşma':'sosyal','Sempozyum':'sempozyum','Atölye':'atolye','Teknik gezi':'teknik-gezi','Yurt dışı tur':'yurt-disi-tur'})[category] || 'bulusma'; }
 function cover(event, editorial) {
   const image = photo(event);
@@ -91,8 +92,8 @@ function row(event, editorial) {
 function archiveRows(events, editorial) {
   return groupEventsByYear(events).map(group=>`<section class="ux-year-section" aria-label="${esc(group.label)}"><h2 class="ux-year-label">${esc(group.label)}</h2><div class="ux-year-events">${group.events.map(event=>row(event,editorial)).join('')}</div></section>`).join('');
 }
-function seriesRows(series) {
-  return series.map(item => `<article class="series-row"><div><p class="eyebrow">${esc(item.category)}</p><h3>${esc(item.title)}</h3></div><p>${esc(item.intro)}</p><a class="text-link" href="seri.html?seri=${encodeURIComponent(item.slug)}">Seriyi keşfet<span class="visually-hidden">: ${esc(item.title)}</span></a></article>`).join('');
+function seriesRows(series,data) {
+  return premiumSeriesCards(series,data?.events||[],data?.editorial||{});
 }
 function friendlyDate(value) {
   if (!value || !Number.isFinite(Date.parse(value))) return '';
@@ -239,18 +240,19 @@ function renderArchive(data) {
 function renderEvents(data) {
   const upcoming = homeAvailableEvents(data.events,Date.now());
   $('#upcoming-events').innerHTML = upcoming.length ? `<div class="editorial-grid">${upcoming.map(e => card(e,data.editorial)).join('')}</div>` : noEvents(data.live);
-  $('#series-list').innerHTML = seriesRows(data.editorial.series);
+  $('#series-list').innerHTML = seriesRows(data.editorial.series,data);
 }
 function renderSeries(data) {
-  const requested = params.get('seri');
-  if (!requested) { $('#series-list').innerHTML = seriesRows(data.editorial.series); return; }
-  const series = data.editorial.series.find(s => s.slug === requested);
-  if (!series) { $('#series-intro').innerHTML = '<div class="ux-masthead-copy"><p class="eyebrow">Seri bulunamadı</p><h1>Etkinlik serileri</h1><a class="text-link" href="seri.html">Tüm serileri göster</a></div>'; return; }
-  document.title = `${series.title} · Archify`;
-  $('#series-intro').innerHTML = `<div class="ux-masthead-copy"><p class="eyebrow">${esc(series.category)} · Archify serileri</p><h1>${esc(series.title)}</h1></div><div class="ux-masthead-aside"><p class="lead">${esc(series.intro)}</p><a class="text-link" href="seri.html">Tüm seriler</a></div>`;
-  $('#series-list').hidden = true;
-  const events = series.slugs.map(slug => data.events.find(e => e.slug === slug)).filter(Boolean).sort((a,b) => (b.year || 0) - (a.year || 0));
-  $('#series-events').innerHTML = events.length ? events.map(e => row(e,data.editorial)).join('') : noEvents(data.live);
+  const requested=params.get('seri'),list=$('#series-list'),host=$('#series-events'),intro=$('#series-intro'),definitions=publicSeries(data.editorial?.series);
+  list.hidden=false;host.hidden=false;host.innerHTML='';
+  if(!requested){list.innerHTML=seriesRows(definitions,data);return;}
+  const series=definitions.find(item=>item.slug===requested);
+  if(!series){intro.innerHTML='<div class="ux-masthead-copy"><p class="eyebrow">Seri bulunamadı</p><h1>Etkinlik serileri</h1><p class="lead">Bu bağlantıyla eşleşen bir seri yok. Aşağıdaki yayımlanmış serilerden devam edebilirsin.</p></div><div class="ux-masthead-aside"><a class="text-link" href="seri.html">Tüm seriler</a></div>';list.innerHTML=seriesRows(definitions,data);return;}
+  const events=seriesEvents(series,data.events);
+  // Compose first. A render failure must never send the recovery message to a hidden list.
+  const markup=events.length?events.map(event=>{const edit=data.editorial?.events?.[event.slug]||{};return `<section class="premium-series-edition" aria-label="${esc(event.title)}"><div class="premium-series-edition-year">${esc(event.year||'Arşiv')}</div><div>${edit.dateLabel||event.venue?`<p class="premium-series-edition-date">${esc([edit.dateLabel,event.venue].filter(Boolean).join(' · '))}</p>`:''}${row(event,data.editorial)}</div></section>`;}).join(''):'<div class="empty-state"><h2>Bu serinin kayıtları şu anda görünmüyor.</h2><p>Yayımlanan edisyonlar burada listelenir. Diğer serileri veya etkinlik kategorilerini inceleyebilirsin.</p><a class="button" href="seri.html">Tüm serileri keşfet</a></div>';
+  const heading=premiumSeriesIntro(series,events,data.editorial);
+  document.title=`${series.title} · Archify`;document.body.dataset.series=series.slug;intro.classList.add('premium-series-intro');intro.innerHTML=heading;host.innerHTML=markup;list.innerHTML='';list.hidden=true;
 }
 async function trackNavigation(slug) {
   if (preview) return;
@@ -412,21 +414,21 @@ function categoryPlate(id,events){
  };
  const photo=photos[id];
  if(photo){const stem='assets/images/ux/'+photo.stem;if(events.some(event=>(event.gallery||[]).some(image=>image.src===stem+'-1600.webp')))return `<figure class="ux-category-plate ux-category-plate--photo"><img src="${stem}-800.webp" srcset="${stem}-800.webp ${photo.small}w, ${stem}-1600.webp ${photo.width}w" sizes="(max-width: 760px) 92vw, 52vw" width="${photo.width}" height="${photo.height}" alt="${esc(photo.alt)}"><figcaption>${esc(photo.caption)}</figcaption></figure>`;}
- return '<div class="ux-category-plate ux-category-plate--diagram" aria-hidden="true"><span class="ux-category-mark ux-category-mark--one"></span><span class="ux-category-mark ux-category-mark--two"></span><span class="ux-category-mark ux-category-mark--three"></span></div>';
+ return `<div class="ux-category-plate ux-category-plate--diagram premium-category-plate" aria-hidden="true">${categoryIcon(id)}</div>`;
 }
 function renderCategory(data){
  const spec=categoryPage(params.get('tur'));
  const setSection=(selector,content)=>{const host=$(selector);host.innerHTML=content;let section=host;while(section&&!section.classList.contains('section'))section=section.parentElement;if(section)section.hidden=!content;else host.hidden=!content;};
- if(!spec){$('#category-intro').innerHTML='<div class="ux-masthead-copy"><p class="eyebrow">Etkinlik türleri</p><h1>Nasıl buluşuyoruz?</h1></div><div class="ux-masthead-aside"><p class="lead">Konuşma, üretim, yolculuk veya sohbet: ilgini çeken alandan başla.</p></div><div class="category-grid">'+CATEGORY_PAGES.map(c=>`<a class="category-tile" data-category="${c.id}" href="kategori.html?tur=${c.id}"><h2>${esc(c.name)}</h2><p>${esc(c.kicker)}</p></a>`).join('')+'</div>';setSection('#category-upcoming','');setSection('#category-past','');setSection('#category-series','');return;}
+ if(!spec){$('#category-intro').innerHTML='<div class="ux-masthead-copy"><p class="eyebrow">Etkinlik türleri</p><h1>Nasıl buluşuyoruz?</h1></div><div class="ux-masthead-aside"><p class="lead">Konuşma, üretim, yolculuk veya sohbet: ilgini çeken alandan başla.</p></div><div class="category-grid">'+CATEGORY_PAGES.map(c=>`<a class="category-tile" data-category="${c.id}" href="kategori.html?tur=${c.id}"><span class="ux-category-mark" aria-hidden="true"></span><h2>${esc(c.name)}</h2><p>${esc(c.kicker)}</p></a>`).join('')+'</div>';setSection('#category-upcoming','');setSection('#category-past','');setSection('#category-series','');return;}
  document.title=spec.name+' · Archify';document.body.dataset.categoryPage=spec.id;
  const selected=data.events.filter(e=>spec.matches.includes(e.category)&&!['draft','cancelled'].includes(e.status)),past=selected.filter(e=>e.archived||(e.endAt&&Date.parse(e.endAt)<Date.now())).sort((a,b)=>(b.year||0)-(a.year||0)),upcoming=homeAvailableEvents(selected,Date.now());
- const series=data.editorial.series.filter(item=>spec.series.includes(item.slug));
+ const series=publicSeries(data.editorial.series).filter(item=>spec.series.includes(item.slug));
  const workshopParents=spec.id==='atolye'?data.events.filter(e=>data.editorial.events[e.slug]?.subprograms?.length||data.editorial.events[e.slug]?.workshops?.length):[];
- $('#category-intro').innerHTML=`<div class="ux-masthead-copy"><p class="eyebrow">${esc(spec.kicker)}</p><h1>${esc(spec.name)}</h1>${categoryPlate(spec.id,selected)}</div><div class="ux-masthead-aside"><p class="lead">${esc(spec.intro)}</p><ul class="category-topics">${spec.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><nav class="category-jump" aria-label="Kategori bölümleri">${upcoming.length?'<a href="#category-upcoming">Yaklaşan etkinlikler</a>':''}${past.length?'<a href="#kategori-arsiv">Geçmiş buluşmalar</a>':''}${series.length||workshopParents.length?'<a href="#kategori-seriler">İlgili programlar</a>':''}<a href="etkinlikler.html">Tüm kategoriler</a></nav></div>`;
+ $('#category-intro').innerHTML=`<div class="ux-masthead-copy"><p class="eyebrow">${esc(spec.kicker)}</p>${categoryIcon(spec.id,'premium-category-heading-icon')}<h1>${esc(spec.name)}</h1>${categoryPlate(spec.id,selected)}</div><div class="ux-masthead-aside"><p class="lead">${esc(spec.intro)}</p><ul class="category-topics">${spec.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><nav class="category-jump" aria-label="Kategori bölümleri">${upcoming.length?'<a href="#category-upcoming">Yaklaşan etkinlikler</a>':''}${past.length?'<a href="#kategori-arsiv">Geçmiş buluşmalar</a>':''}${series.length||workshopParents.length?'<a href="#kategori-seriler">İlgili programlar</a>':''}<a href="etkinlikler.html">Tüm kategoriler</a></nav>${categoryWayfinder(spec.id)}</div>`;
  setSection('#category-upcoming',upcoming.length?`<div class="editorial-grid">${upcoming.map(e=>card(e,data.editorial)).join('')}</div>`:(!past.length&&!series.length&&!workshopParents.length?`<div class="empty-state"><h2>${esc(spec.name)} için yeni programlar</h2><p>Bu kategoride yayımlanan bir kayıt henüz yok. Yeni buluşmalar için topluluğu takip edebilirsin.</p><a class="button" href="topluluk.html">Topluluğa katıl</a></div>`:''));
  const social=past.filter(e=>e.category!=='Teknik gezi'),technical=past.filter(e=>e.category==='Teknik gezi');
  setSection('#category-past',archiveRows(social,data.editorial)+(technical.length?`<section class="ux-technical-visits"><h2>Türkiye içi teknik geziler</h2>${archiveRows(technical,data.editorial)}</section>`:''));
- setSection('#category-series',seriesRows(series)+(workshopParents.length?`<div class="ux-parent-programs"><h2>Zirve ve festival atölyeleri</h2><p>Bu atölyeler, ana etkinliklerin programı içinde gerçekleşti.</p>${workshopParents.map(e=>`<p><a class="text-link" href="${eventURL(e)}#atolyeler">${esc(e.title)} atölyeleri</a></p>`).join('')}</div>`:''));
+ setSection('#category-series',seriesRows(series,data)+(workshopParents.length?`<div class="ux-parent-programs"><h2>Zirve ve festival atölyeleri</h2><p>Bu atölyeler, ana etkinliklerin programı içinde gerçekleşti.</p>${workshopParents.map(e=>`<p><a class="text-link" href="${eventURL(e)}#atolyeler">${esc(e.title)} atölyeleri</a></p>`).join('')}</div>`:''));
 }
 async function renderCommunity(){
  const catalog=await staticJSON('data/community.json');
@@ -555,6 +557,7 @@ async function setupForm() {
 }
 
 setupNavigation();
+enhanceCategoryIdentity(document,location);
 providers=setupProviders({document,window,preview,request,session,page});
 analytics=setupAnalytics({document,window,location,preview,request,session,onConsent:choice=>void providers.setConsent(choice),onEvent:event=>providers.measure(event)});
 catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
@@ -580,10 +583,11 @@ async function main(){
   const data=await loadData();
   const renderers={home:renderHome,archive:renderArchive,events:renderEvents,series:renderSeries,detail:renderDetail,sources:renderSources,category:renderCategory};
   await renderers[page](data);
+  enhanceCategoryIdentity(document,location);
 }
 // Avoid unhandled fetch failures on pages that do not need the catalogue.
 catalogPromise.catch(()=>{});editorialPromise.catch(()=>{});
 main().finally(()=>analytics.pageView()).catch(()=>{
-  const host=$('#home-events')||$('#event-list')||$('#upcoming-events')||$('#series-list')||$('#event-detail')||$('#source-list')||$('#group-list')||$('#media-list')||$('#category-upcoming');
-  if(host)host.innerHTML='<div class="empty-state"><h2>Bağlantıya kısa bir ara.</h2><p>İçerik şu anda yüklenemedi. Sayfayı yenileyebilir veya iletişim sayfasından devam edebilirsin.</p><a class="button" href="iletisim.html">İletişim</a></div>';
+  const host=(page==='series'&&params.get('seri')?$('#series-events'):null)||$('#home-events')||$('#event-list')||$('#upcoming-events')||$('#series-list')||$('#event-detail')||$('#source-list')||$('#group-list')||$('#media-list')||$('#category-upcoming');
+  if(host){host.hidden=false;host.innerHTML='<div class="empty-state"><h2>Bağlantıya kısa bir ara.</h2><p>İçerik şu anda yüklenemedi. Sayfayı yenileyebilir veya iletişim sayfasından devam edebilirsin.</p><a class="button" href="iletisim.html">İletişim</a></div>';}
 });
