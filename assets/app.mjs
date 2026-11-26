@@ -93,7 +93,7 @@ function archiveRows(events, editorial) {
   return groupEventsByYear(events).map(group=>`<section class="ux-year-section" aria-label="${esc(group.label)}"><h2 class="ux-year-label">${esc(group.label)}</h2><div class="ux-year-events">${group.events.map(event=>row(event,editorial)).join('')}</div></section>`).join('');
 }
 function seriesRows(series,data) {
-  return premiumSeriesCards(series,data?.events||[],data?.editorial||{});
+  return series.length ? premiumSeriesCards(series,data?.events||[],data?.editorial||{}) : '';
 }
 function friendlyDate(value) {
   if (!value || !Number.isFinite(Date.parse(value))) return '';
@@ -494,6 +494,14 @@ async function setupForm() {
         payment=ticketConfig(await request('tickets/config/'+encodeURIComponent(slug)));
         const catalog=await request('ticket-options/'+encodeURIComponent(slug));
         ticketOptions=renderTicketOptions({document,host:$('#r14-ticket-options'),catalog,paymentAvailable:payment.paymentAvailable});
+        if (catalog.classes.some(ticketClass => ticketClass.seatRequired)) {
+          const selection = ticketOptions;
+          void request('seat-layout/'+encodeURIComponent(slug)).then(plan => {
+            if (ticketOptions === selection && plan.eventSlug === slug && plan.layout) {
+              selection.setSeatPlan(plan);
+            }
+          }).catch(() => { /* Seat inventory and the accessible selection list remain available. */ });
+        }
         eventQuestions=await setupEventQuestions({document,host:$('#event-questions'),preview,request,eventSlug:slug});
         endpoint=payment.mode==='paid'?'tickets/orders':'applications';
         if(ticketOptions.required){$('#application-event').insertAdjacentHTML('beforeend','<p class="ticket-price"><strong>Bilet sınıfına göre kayıt</strong> · Uygun sınıfı ve gerekiyorsa koltuğu seç.</p>');if(!ticketOptions.available){show('Şu anda uygun bilet sınıfı bulunmuyor.');return;}}
@@ -558,9 +566,14 @@ async function setupForm() {
 
 setupNavigation();
 enhanceCategoryIdentity(document,location);
-providers=setupProviders({document,window,preview,request,session,page});
-analytics=setupAnalytics({document,window,location,preview,request,session,onConsent:choice=>void providers.setConsent(choice),onEvent:event=>providers.measure(event)});
-catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
+// [codex] R16 private account pages never initialize analytics or provider scripts.
+if(page==='member-dashboard'||page==='member-register'){
+  document.querySelectorAll('[data-consent-preferences]').forEach(control=>{control.hidden=true;});
+}else{
+  providers=setupProviders({document,window,preview,request,session,page});
+  analytics=setupAnalytics({document,window,location,preview,request,session,onConsent:choice=>void providers.setConsent(choice),onEvent:event=>providers.measure(event)});
+  catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
+}
 
 async function downloadCertificate(token){
   if(preview)return;

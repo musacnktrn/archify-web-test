@@ -2487,3 +2487,25 @@ body[data-category-page="yurt-disi-tur"] .ux-masthead-aside {
     left: calc(50% + 18px);
   }
 }
+
+/* [codex] 01a20fd9-f999-7b90-8b1b-b8cd977d4517. Keep the event in view during seat selection. */
+@media (min-width: 1050px) and (min-height: 780px) {
+  body[data-page="application"] .form-layout {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    column-gap: clamp(42px, 5vw, 80px);
+    align-items: start;
+  }
+  body[data-page="application"] .form-intro {
+    position: sticky;
+    top: 100px;
+  }
+  body[data-page="application"] .form-intro h1 {
+    font-size: clamp(40px, 4vw, 62px);
+  }
+}
+@media (max-width: 560px) {
+  body[data-page="application"] #r14-ticket-options {
+    margin-inline: -9px;
+    padding-inline: 10px;
+  }
+}

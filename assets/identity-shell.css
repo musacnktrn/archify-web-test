@@ -1,0 +1,7 @@
+/* [codex] 01a20fd9-f999-7b90-8b1b-b8cd977d4517 · R16 account entry and shared navigation. */
+.site-nav .nav-member,#site-nav .nav-member{font-weight:650;letter-spacing:-.02em;color:#29382b;white-space:nowrap}
+@media(min-width:901px){#site-nav .nav-member{padding:10px 15px;border:1px solid #9ba78d;border-radius:3px;margin-left:8px;transition:border-color .18s,background-color .18s}}
+#site-nav .nav-member:focus-visible{outline:2px solid #526443;outline-offset:3px}
+@media(min-width:901px){#site-nav .nav-member:hover,#site-nav .nav-member[aria-current="page"]{border-color:#405239;background:#ebefd9}}
+@media(prefers-reduced-motion:reduce){#site-nav .nav-member{transition:none}}
+@media(min-width:801px) and (max-width:1150px){#site-nav{gap:clamp(8px,1.15vw,20px)}.site-header .brand img{width:116px}#site-nav .nav-member{padding:7px 8px;margin-left:0}}
