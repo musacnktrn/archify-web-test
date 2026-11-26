@@ -1,7 +1,9 @@
 // [codex] 01a20fe8-62df-78c3-a20e-1c904d040938 · R15 private career wizard; no field storage or ranking.
 import {apiURL,normalizePhone} from './core.mjs';
 import {analyticsRequestHeaders,advertisingRequestHeaders} from './analytics.mjs';
-const doc=document,page=doc.body.dataset.page,preview=doc.querySelector('meta[name="deployment"]')?.content==='preview';
+// [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · P5 explicit account choice; legacy questions and anonymous submission remain canonical.
+import {createCareerAccountChoice,MEMBER_CAREER_ERRORS} from './member-career.mjs';
+const doc=document,page=doc.body.dataset.page,preview=doc.querySelector('meta[name="deployment"]')?.content!=='server'||location.protocol==='file:'||location.hostname.endsWith('.github.io');
 const company=page==='company-application',form=doc.querySelector(company?'#company-form':'#career-form');
 const fields=form?.querySelector(company?'#company-fields':'#career-fields'),status=form?.querySelector(company?'#company-status':'#career-status');
 const base=new URL('./',location.href),steps=[...(form?.querySelectorAll('[data-career-step]')||[])].sort((a,b)=>Number(a.dataset.careerStep)-Number(b.dataset.careerStep));
@@ -9,9 +11,10 @@ const prev=doc.querySelector('#career-prev'),next=doc.querySelector('#career-nex
 const requiredStatus=()=>form?.querySelector('#educationStatus')?.value==='student';
 const hasInternship=()=>Boolean(form?.querySelector('input[name="positions"][value="internship"]:checked'));
 const id=()=>{const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('')};
-let csrf=null,requestId=id(),busy=false,done=false,stepIndex=0;
+let csrf=null,requestId=id(),busy=false,done=false,stepIndex=0,accountChoice=null;
 const messages={invalid_phone:'Geçerli bir telefon numarası gir.',invalid_email:'Geçerli e-posta adresi gir.',invalid_city:'Bir şehir seç.',invalid_positions:'En az bir pozisyon seç.',invalid_fields:'En az bir mesleki alan seç.',class_required:'Sınıfını seç.',internship_period_required:'Staj dönemini belirt.',cv_required:'CV veya portfolyo için PDF ya da HTTPS bağlantısı ekle.',invalid_file:'Dosya boyutunu kontrol et: PDF en çok 10 MB, fotoğraf en çok 3 MB.',invalid_file_type:'CV için PDF, fotoğraf için JPEG veya PNG kullan.',invalid_referenceInfo:'Referans alanına başka bir kişinin telefon veya e-posta bilgisini yazma.',terms_required:'Başvuru açıklamasını okuyup onayla.',contact_consent_required:'Firma başvurusuyla ilgili iletişim seçimini işaretle.',rate_limited:'Çok sık deneme yapıldı. Daha sonra tekrar dene.',idempotency_conflict:'Başvuru bilgileri değişti. Yeniden dene.',invalid_url:'HTTPS ile başlayan geçerli bir bağlantı gir.',invalid_gender:'Cinsiyet alanındaki seçeneklerden birini seç veya boş bırak.',invalid_military:'Askerlik durumu için geçerli bir seçenek seç.',military_not_applicable:'Askerlik alanı yalnız erkek seçimi için kullanılabilir.'};
 function show(message,kind=''){if(!status)return;status.textContent=message;status.className='form-status'+(kind?' '+kind:'');if(kind)status.focus();}
+Object.assign(messages,MEMBER_CAREER_ERRORS);
 function isLocked(){return busy||done||(!preview&&!csrf);}
 function updateNavigation(){
  if(!steps.length){if(send)send.disabled=preview||isLocked();return;}
@@ -88,17 +91,20 @@ async function submit(e){
  if(!validateAll())return;
  let data;try{data=payload();}catch(err){show(messages[err.code]||'Bilgileri kontrol et.','error');return;}
  const cv=form.querySelector('#cv')?.files?.[0],photo=form.querySelector('#photo')?.files?.[0];
+ const accountLinked=accountChoice?.selected()===true;
  busy=true;fields.disabled=true;updateNavigation();show('Başvurun güvenli biçimde kaydediliyor…');
  try{
   let response;
-  if(!company&&(cv||photo)){
+  if(accountLinked)response=await accountChoice.submit({company,application:data,cv,photo});
+  else if(!company&&(cv||photo)){
    const multi=new FormData();multi.set('payload',JSON.stringify(data));if(cv)multi.set('cv',cv);if(photo)multi.set('photo',photo);
    const req=await fetch(new URL('api/kariyer-dosya.php',base),{method:'POST',credentials:'same-origin',headers:{'X-CSRF-Token':csrf,...analyticsRequestHeaders(),...advertisingRequestHeaders()},body:multi,cache:'no-store'});
    response=await req.json().catch(()=>({error:'network'}));if(!req.ok)throw Object.assign(Error(response.error||'network'),{code:response.error,status:req.status});
   }else response=await call(company?'career/companies':'career/candidates',data);
   if(response.status!=='received'||typeof response.reference!=='string')throw Error('network');
-  done=true;form.reset();fields.hidden=true;form.querySelector('.career-actions')?.setAttribute('hidden','');window.dispatchEvent(new Event('archify:accepted'));
-  show('Başvurun alındı. Archify ekibi değerlendirecek. Referans: '+response.reference,'success');
+  done=true;accountChoice?.complete();form.reset();fields.hidden=true;form.querySelector('.career-actions')?.setAttribute('hidden','');window.dispatchEvent(new Event('archify:accepted'));
+  show((accountLinked?'Başvurun alındı ve hesabına bağlandı. ':'Başvurun alındı. ')+'Archify ekibi değerlendirecek. Referans: '+response.reference,'success');
+  if(accountLinked){const link=doc.createElement('a');link.className='text-link';link.href='hesabim.html#member-career';link.textContent='Başvurumu hesabımda gör ↗';status.append(doc.createElement('br'),link);}
  }catch(error){show(messages[error.code]||'Başvurun henüz doğrulanamadı. Aynı bilgilerle tekrar deneyebilirsin.','error');fields.disabled=false;if(error.code==='idempotency_conflict')requestId=id();}
  finally{busy=false;updateNavigation();}
 }
@@ -111,6 +117,7 @@ async function setup(){
  form.addEventListener('input',()=>{if(!busy&&!done)requestId=id();});
  showStep(0);updateConditional();
  if(preview){fields.disabled=true;updateNavigation();show('Bu test görünümünde adımları gezebilirsin. Kişisel bilgi girilmez, dosya veya başvuru gönderilmez.');return;}
+ accountChoice=createCareerAccountChoice({form,base,fetch,headers:()=>({...analyticsRequestHeaders(),...advertisingRequestHeaders()})});
  try{
   const [catalog,sess]=await Promise.all([fetch(new URL('data/community-profiles.json',base),{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}),call('session')]);
   csrf=sess.csrfToken;if(typeof csrf!=='string'||!csrf||!Array.isArray(catalog.cities)||!Array.isArray(catalog.schools))throw Error('session');

@@ -6,7 +6,7 @@ const fail=(code,status=0)=>Object.assign(new Error(code),{code,status});
 const message=error=>MEMBER_ERRORS[error?.code]||COMMUNITY_ERRORS[error?.code]||'İşlem tamamlanamadı. Bilgilerini kontrol edip yeniden dene.';
 const textValid=(value,max)=>typeof value==='string'&&[...value.trim()].length>=1&&[...value.trim()].length<=max&&!/[\u0000-\u001f\u007f]/.test(value);
 export function memberPreview(document,location){return document.querySelector('meta[name="deployment"]')?.content!=='server'||location.protocol==='file:'||location.hostname.endsWith('.github.io');}
-export function memberAPIURL(route,href){if(!/^member\/(?:session|register|login|logout|profile|password|dashboard|favorites|(?:tickets|orders)\/(?:claim|open))$/.test(route))throw fail('invalid_route');const url=new URL('api/member.php',new URL('./',href));url.searchParams.set('r',route);return url;}
+export function memberAPIURL(route,href){if(!/^member\/(?:session|register|login|logout|profile|password|dashboard|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/.test(route))throw fail('invalid_route');const url=new URL('api/member.php',new URL('./',href));url.searchParams.set('r',route);return url;}
 export function consumeMemberHandoff(location,history){
  const raw=location.hash||'';if(!raw)return null;
  // Remove the fragment before any session request. Never retain the full URL.
@@ -17,12 +17,24 @@ export function consumeMemberHandoff(location,history){
 }
 export function validateCredentials(input,register=false){const username=String(input.username||'').trim().toLowerCase(),password=input.password;if(!/^[a-z0-9][a-z0-9_.-]{2,63}$/.test(username))throw fail('invalid_username');if(typeof password!=='string'||!password||password.includes('\0'))throw fail('invalid_password');if(register){const bytes=new TextEncoder().encode(password).length;if(bytes<14)throw fail('password_too_short');if(bytes>72)throw fail('invalid_password');if(!textValid(input.displayName,120))throw fail('invalid_display_name');}return {username,password,...(register?{displayName:input.displayName.trim()}:{})};}
 export function publicMember(value){if(!value||!safeId(value.id)||!textValid(value.displayName,120)||!Number.isInteger(value.revision)||value.revision<1||!Array.isArray(value.interests))throw fail('invalid_member_response');return {id:value.id,displayName:value.displayName,revision:value.revision,profile:value.profile&&typeof value.profile==='object'?{status:value.profile.status,field:value.profile.field,cityId:value.profile.cityId,...(typeof value.profile.schoolId==='string'?{schoolId:value.profile.schoolId}:{}),...(typeof value.profile.schoolName==='string'?{schoolName:value.profile.schoolName}:{})}:null,interests:value.interests.filter(id=>Object.hasOwn(MEMBER_INTERESTS,id))};}
+function careerSummaries(value){
+ if(!value||value.available!==true)return {available:false,linked:[]};
+ if(!Array.isArray(value.linked))throw fail('invalid_dashboard_response');
+ const linked=value.linked.map(row=>{
+  if(!row||!['candidate','company'].includes(row.kind)||!['received','in_review','closed'].includes(row.status))throw fail('invalid_dashboard_response');
+  const pattern=row.kind==='candidate'?/^KRY-[0-9A-F]{16}$/:/^FIR-[0-9A-F]{16}$/;
+  const validTime=t=>typeof t==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(t)&&Number.isFinite(Date.parse(t));
+  if(!pattern.test(row.reference)||!validTime(row.createdAt)||!validTime(row.updatedAt))throw fail('invalid_dashboard_response');
+  return {kind:row.kind,reference:row.reference,status:row.status,createdAt:row.createdAt,updatedAt:row.updatedAt};
+ });
+ return {available:true,linked};
+}
 export function privateDashboard(value){
  if(!value||!['tickets','orders','favorites','upcoming'].every(key=>Array.isArray(value[key])))throw fail('invalid_dashboard_response');
  const select=(object,keys)=>Object.fromEntries(keys.filter(key=>Object.hasOwn(object,key)).map(key=>[key,object[key]]));
  const events=list=>list.filter(e=>e&&safeSlug(e.slug)&&typeof e.title==='string').map(e=>select(e,['slug','title','category','startAt','endAt','year','city','registrationOpen','interestMatched']));
  const groups=value.eligibleGroups&&Array.isArray(value.eligibleGroups.groups)?{requiresReview:value.eligibleGroups.requiresReview===true,groups:value.eligibleGroups.groups.filter(g=>g&&safeSlug(g.id)&&typeof g.name==='string').map(g=>select(g,['id','name','category','city']))}:null;
- return {member:publicMember(value.member),tickets:value.tickets.filter(t=>t&&safeId(t.id)).map(t=>select(t,['id','eventSlug','eventTitle','serial','issuedAt','startAt','endAt','checkedIn','certificateEligible','certificateIssued','eventAvailable'])),orders:value.orders.filter(o=>o&&safeId(o.id)).map(o=>select(o,['id','eventSlug','eventTitle','status','priceMinor','currency','expiresAt','createdAt'])),favorites:events(value.favorites),upcoming:events(value.upcoming),eligibleGroups:groups};
+ return {member:publicMember(value.member),tickets:value.tickets.filter(t=>t&&safeId(t.id)).map(t=>select(t,['id','eventSlug','eventTitle','serial','issuedAt','startAt','endAt','checkedIn','certificateEligible','certificateIssued','eventAvailable'])),orders:value.orders.filter(o=>o&&safeId(o.id)).map(o=>select(o,['id','eventSlug','eventTitle','status','priceMinor','currency','expiresAt','createdAt'])),favorites:events(value.favorites),upcoming:events(value.upcoming),eligibleGroups:groups,career:careerSummaries(value.career)};
 }
 export function createMemberClient({fetch,location,preview=false,timeout=12000}={}){
  let csrfToken='';
