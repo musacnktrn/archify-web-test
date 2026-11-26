@@ -7,6 +7,9 @@ import { setupAnalytics, analyticsRequestHeaders, advertisingRequestHeaders } fr
 import { setupCommunityEligibility } from './community-eligibility.mjs';
 import { setupProviders } from './providers.mjs';
 import { setupTickets, ticketConfig, renderTicketReceipt, renderOrderReceipt, money, ticketError } from './tickets.mjs';
+import {renderTicketOptions} from './r14-tickets.mjs';
+import {setupEventQuestions,setupTicketSurvey} from './event-forms.mjs';
+import {setupEventProgram} from './event-program.mjs';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const page = document.body.dataset.page;
@@ -340,6 +343,7 @@ async function renderDetail(data) {
   if(relatedEvents.length)$('#event-detail').insertAdjacentHTML('beforeend',`<section class="section detail-related"><div class="section-heading"><h2>İlgili buluşmalar</h2></div><div class="editorial-grid">${relatedEvents.map(other=>card(other,data.editorial)).join('')}</div></section>`);
   setupVideoPlayers();
   await trackNavigation(event.slug);
+  try{await setupEventProgram({document,preview,request,eventSlug:event.slug});}catch{/* program unavailable never replaces other event content */}
 }
 function paintGallery() {
   const item = gallery[galleryIndex]; if (!item) return;
@@ -458,7 +462,7 @@ async function setupForm() {
   const form = $('#application-form'), fields = $('#application-fields'), status = $('#form-status'), retry = $('#retry-application');
   const isTeam = page === 'team-application', isCommunity=page==='community-application';
   let endpoint=isCommunity?'community-applications':isTeam?'team-applications':'applications';
-  let payment=null;
+  let payment=null,ticketOptions=null,eventQuestions=null;
   let group;
   let event;
   let payload;
@@ -486,9 +490,12 @@ async function setupForm() {
         $('#application-event').innerHTML=event ? `<h2>${esc(event.title)}</h2><p>${esc([friendlyDate(event.startAt),event.city].filter(Boolean).join(' · '))}</p>` : '<p>Etkinlik bulunamadı.</p>';
         if (!state.open) { show(state.label+'. '+state.detail); return; }
         payment=ticketConfig(await request('tickets/config/'+encodeURIComponent(slug)));
+        const catalog=await request('ticket-options/'+encodeURIComponent(slug));
+        ticketOptions=renderTicketOptions({document,host:$('#r14-ticket-options'),catalog,paymentAvailable:payment.paymentAvailable});
+        eventQuestions=await setupEventQuestions({document,host:$('#event-questions'),preview,request,eventSlug:slug});
         endpoint=payment.mode==='paid'?'tickets/orders':'applications';
-        $('#application-event').insertAdjacentHTML('beforeend',`<p class="ticket-price"><strong>${payment.mode==='paid'?esc(money(payment.priceMinor)):'Ücretsiz katılım'}</strong>${payment.mode==='paid'?' · Bilet, ödeme doğrulandıktan sonra oluşur.':' · Başvuru kabulünde kişisel giriş kodu oluşturulur.'}</p>`);
-        if(payment.mode==='paid'&&!payment.paymentAvailable){show('Bu ücretli etkinliğin ödeme bağlantısı şu anda kapalı. Henüz kişisel bilgi veya ödeme alınmıyor.');return;}
+        if(ticketOptions.required){$('#application-event').insertAdjacentHTML('beforeend','<p class="ticket-price"><strong>Bilet sınıfına göre kayıt</strong> · Uygun sınıfı ve gerekiyorsa koltuğu seç.</p>');if(!ticketOptions.available){show('Şu anda uygun bilet sınıfı bulunmuyor.');return;}}
+        else {$('#application-event').insertAdjacentHTML('beforeend',`<p class="ticket-price"><strong>${payment.mode==='paid'?esc(money(payment.priceMinor)):'Ücretsiz katılım'}</strong>${payment.mode==='paid'?' · Bilet, ödeme doğrulandıktan sonra oluşur.':' · Başvuru kabulünde kişisel giriş kodu oluşturulur.'}</p>`);if(payment.mode==='paid'&&!payment.paymentAvailable){show('Bu ücretli etkinliğin ödeme bağlantısı şu anda kapalı. Henüz kişisel bilgi veya ödeme alınmıyor.');return;}}
       }
       fields.disabled=false;
       show(isCommunity?'Adın ve telefonun yalnız seçtiğin topluluğa başvurunu değerlendirmek ve bu başvuruyla ilgili iletişim için kullanılır.':'Zorunlu alanlar işaretlidir. İletişim tercihlerini ayrı ayrı seçebilirsin.');
@@ -514,7 +521,7 @@ async function setupForm() {
         if (['csrf_invalid','invalid_csrf','csrf_failed','request_verification'].includes(error.code)) { await session(); result=await request(endpoint,payload); }
         else throw error;
       }
-      if(payment?.mode==='paid'){
+      if(endpoint==='tickets/orders'){
         if(!renderOrderReceipt(status,result))throw Object.assign(new Error('network'),{code:'network',status:0});
         completed=true;form.reset();fields.hidden=true;retry.hidden=true;status.className='form-status success';payload=null;status.focus();return;
       }
@@ -539,6 +546,7 @@ async function setupForm() {
     if(!phone) { $('#phone').setCustomValidity(errorMessage('invalid_phone'));$('#phone').reportValidity();return; }
     payload=isCommunity?{groupId:group.id,name:String(values.get('name')).trim(),phone,termsAccepted:values.has('termsAccepted'),requestId}:{...(isTeam?{}:{eventSlug:event.slug}),name:String(values.get('name')).trim(),phone,email:String(values.get('email')).trim(),noticeConsent:values.has('noticeConsent'),marketingConsent:values.has('marketingConsent'),termsAccepted:values.has('termsAccepted'),requestId};
     if(isTeam) { payload.department=String(values.get('department'));payload.motivation=String(values.get('motivation')).trim(); }
+    if(!isTeam&&!isCommunity){try{if(ticketOptions?.required){const selected=ticketOptions.read();payload.selection=selected.selection;endpoint=selected.mode==='paid'?'tickets/orders':'applications';}if(eventQuestions){if(!eventQuestions.validate()){payload=null;return;}Object.assign(payload,eventQuestions.read());}}catch(err){payload=null;show('Bilet sınıfı, koltuk ve zorunlu yanıtları kontrol et.','error',true);return;}}
     void submit();
   });
   $('#phone').addEventListener('input',()=>$('#phone').setCustomValidity(''));
@@ -558,10 +566,11 @@ async function downloadCertificate(token){
   if(!response.ok){let problem;try{problem=await response.json();}catch{}if(['request_verification','csrf_invalid','invalid_csrf'].includes(problem?.error)){await session();response=await send();}else throw Object.assign(new Error('certificate'),{code:problem?.error});}
   if(!response.ok||!response.headers.get('Content-Type')?.includes('application/pdf'))throw new Error('certificate');
   const blob=await response.blob();if(blob.size>5*1024*1024||!blob.size)throw new Error('certificate');
+  if($('#ticket-token')?.value.trim()!==token||$('#ticket-receipt')?.hidden)return;
   const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='archify-katilim-sertifikasi.pdf';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function main(){
-  if(['ticket','checkout'].includes(page)){setupTickets({document,window,location,preview,request,session,certificateDownload:downloadCertificate,onAccepted:()=>void providers.pullConversions()});return;}
+  if(['ticket','checkout'].includes(page)){const badge=$('#r14-badge-button');const clearTicket=()=>{if(badge)badge.disabled=true;window.dispatchEvent(new Event('archify:ticket-clear'));void setupTicketSurvey({document,preview,request,session,token:null});};const verifiedTicket=token=>{if(badge)badge.disabled=false;window.dispatchEvent(new Event('archify:ticket-verified'));void setupTicketSurvey({document,preview,request,session,token}).catch(()=>{});};setupTickets({document,window,location,preview,request,session,certificateDownload:downloadCertificate,onAccepted:()=>void providers.pullConversions(),onTicketLookupStart:clearTicket,onTicketVerified:verifiedTicket});return;}
   if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([catalogPromise,editorialPromise]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
   if(['application','team-application'].includes(page)){await setupForm();return;}
   if(page==='community-application'){await setupCommunityFlow();return;}
