@@ -476,6 +476,11 @@ async function renderCategoryArchive(category) {
     const mount = travel ? (await import('./travel-archive.mjs')).mountTravelArchive
                          : (await import('./academy-library.mjs')).mountAcademyLibrary;
     await mount({host, loadArchive:loadPublishedArchive});
+    if (!travel) {
+      const nav=document.createElement('nav');nav.className='section';nav.setAttribute('aria-label','Atölye hesabı');
+      const link=document.createElement('a');link.className='text-link';link.href='egitim-ilgilerim.html';link.textContent='Hesabımda eğitim ilgilerimi yönet';
+      nav.append(link);host.after(nav);
+    }
   } catch {
     host.innerHTML='<section class="section"><h1>'+ (travel?'Tur arşivi':'Atölye kitaplığı') +' yüklenemedi.</h1><p>Bağlantını kontrol edip yeniden deneyebilirsin.</p><a class="button" href="kategori.html?tur='+category+'">Yeniden dene</a></section>';
   }
@@ -517,7 +522,8 @@ async function renderCommunity(){
 }
 async function setupCommunityFlow(catalog){
  const [profiles,communities]=await Promise.all([staticJSON('data/community-profiles.json'),catalog?Promise.resolve(catalog):staticJSON('data/community.json')]);
- await setupCommunityEligibility({document,preview,profiles,groups:communities.groups,request,session,params});
+ const accountChoice=preview?null:(await import('./community-account-choice.mjs')).setupCommunityAccountChoice({doc:document,preview});
+ await setupCommunityEligibility({document,preview,profiles,groups:communities.groups,request,session,params,accountChoice});
 }
 
 function renderSources(data) {

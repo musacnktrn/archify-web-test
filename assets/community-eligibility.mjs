@@ -35,10 +35,11 @@ export function publicEligibilityResponse(value,catalog){
  const groups=value.groups.flatMap(g=>{if(!g||!known.has(g.id)||ids.has(g.id))return [];ids.add(g.id);const item=known.get(g.id);return [{id:item.id,name:item.name,category:item.category,city:item.city,description:item.description}];});
  return {groups,requiresReview:value.requiresReview};
 }
-export async function setupCommunityEligibility({document,preview,profiles,groups,request,session,params=new URLSearchParams(),crypto=globalThis.crypto}={}){
+export async function setupCommunityEligibility({document,preview,profiles,groups,request,session,params=new URLSearchParams(),crypto=globalThis.crypto,accountChoice=null}={}){
  const q=s=>document.querySelector(s),profileForm=q('#community-profile-form'),profileFields=q('#community-profile-fields'),form=q('#application-form'),fields=q('#application-fields');
  if(!profileForm||!profileFields||!form||!fields)return null;
  const profileStatus=q('#community-profile-status'),status=q('#form-status'),retry=q('#retry-application'),recommendations=q('#community-recommendations');
+ let sendLinked=null;
  let profile=null,eligible=[],selected=null,payload=null,requestId=null,inFlight=false,completed=false,uncertain=false,revision=0,requiresReview=false;
  const profileMessage=(text,kind='')=>{profileStatus.textContent=text;profileStatus.className=kind;};
  const formMessage=(text,kind='',focus=false)=>{status.textContent=text;status.className='form-status '+kind;if(focus)status.focus();};
@@ -51,11 +52,11 @@ export async function setupCommunityEligibility({document,preview,profiles,group
  fields.disabled=true;profileFields.disabled=preview;retry.hidden=true;
  const readProfile=()=>({status:q('#profile-status').value,field:q('#profile-field').value,cityId:q('#profile-city').value,schoolId:q('#profile-school').value,schoolName:q('#profile-school-name').value});
  const conditionalFields=()=>{const needed=['student','graduate'].includes(q('#profile-status').value),manual=needed&&q('#profile-school').value==='manual';q('#profile-school-section').hidden=!needed;q('#profile-school-manual').hidden=!manual;q('#profile-school').required=needed;q('#profile-school-name').required=manual;};
- const clearSelection=()=>{selected=null;profile=null;eligible=[];payload=null;requestId=null;completed=false;fields.disabled=true;fields.hidden=false;recommendations.innerHTML='';q('#community-selection').innerHTML='';retry.hidden=true;formMessage(preview?'Test yayınında kişisel bilgi alınmaz; başvuru gönderimi kapalıdır.':'Önce profilini kontrol et ve önerilen topluluklardan birini seç.');};
+ const clearSelection=()=>{sendLinked=null;selected=null;profile=null;eligible=[];payload=null;requestId=null;completed=false;fields.disabled=true;fields.hidden=false;recommendations.innerHTML='';q('#community-selection').innerHTML='';retry.hidden=true;formMessage(preview?'Test yayınında kişisel bilgi alınmaz; başvuru gönderimi kapalıdır.':'Önce profilini kontrol et ve önerilen topluluklardan birini seç.');};
  const cards=()=>{recommendations.innerHTML=eligible.map(group=>`<article class="community-choice" data-selected="${selected?.id===group.id}"><p class="eyebrow">${esc(group.category)}</p><h3>${esc(group.name)}</h3><p>${esc(group.description)}</p><button type="button" class="button button-secondary" data-community-group="${esc(group.id)}" data-analytics-target="community-group-select" aria-pressed="${selected?.id===group.id}"${inFlight||uncertain?' disabled':''}>${selected?.id===group.id?'Seçildi':'Bu grubu seç'}<span class="visually-hidden">: ${esc(group.name)}</span></button></article>`).join('')||'<p>Bu profil için şu anda önerilebilen bir topluluk bulunmuyor.</p>';recommendations.querySelectorAll('[data-community-group]').forEach(button=>button.addEventListener('click',()=>selectGroup(button.dataset.communityGroup)));};
  function selectGroup(id){
   if(inFlight||uncertain)return false;const group=eligible.find(item=>item.id===id);if(!group)return false;
-  selected=group;payload=null;requestId=null;completed=false;fields.hidden=false;fields.disabled=preview;retry.hidden=true;cards();
+  selected=group;sendLinked=null;payload=null;requestId=null;completed=false;fields.hidden=false;fields.disabled=preview;retry.hidden=true;cards();
   q('#community-selection').innerHTML=`<h3>${esc(group.name)}</h3><p>Başvurun yalnız seçtiğin topluluk için değerlendirilir. Gruba otomatik katılım veya mesaj gönderimi yapılmaz.</p>${requiresReview?'<p class="community-review-note">Okul ve şehir bilginin ekip tarafından incelenmesi gerekiyor. Şehir ve bölge grupları otomatik önerilmedi.</p>':''}`;
   if(q('#application-group'))q('#application-group').innerHTML=`<h2>${esc(group.name)}</h2><p>${esc(group.description)}</p>`;
   formMessage(preview?'Bu seçim örnektir. Test yayını kişisel bilgi kabul etmez ve başvuru göndermez.':'Adını ve telefonunu yalnız bu topluluk başvurusunun değerlendirilmesi için kullanacağız.');return true;
@@ -75,13 +76,14 @@ export async function setupCommunityEligibility({document,preview,profiles,group
  }
  async function submit(){
   if(preview||inFlight||!payload||completed||!selected||!profile)return;
+  const awaitingLinkedReceipt=uncertain&&Boolean(sendLinked);
   inFlight=true;fields.disabled=true;profileFields.disabled=true;retry.hidden=true;cards();formMessage('Topluluk başvurun gönderiliyor…');
   try{
-   let result;try{result=await request('community-applications',payload);}catch(error){if(['request_verification','csrf_invalid','invalid_csrf'].includes(error.code)){await session();result=await request('community-applications',payload);}else throw error;}
+   let result;if(sendLinked){result=await sendLinked(payload);}else try{result=await request('community-applications',payload);}catch(error){if(['request_verification','csrf_invalid','invalid_csrf'].includes(error.code)){await session();result=await request('community-applications',payload);}else throw error;}
    if(!result||result.status!=='received'||typeof result.reference!=='string')throw Object.assign(new Error('network'),{code:'network',status:0});
-   completed=true;uncertain=false;form.reset();fields.hidden=true;status.className='form-status success';status.innerHTML=`<strong>Topluluk başvurun alındı.</strong><p>${esc(selected.name)} için başvurun ekibe iletildi. Bu sonuç gruba otomatik kabul veya mesaj teslimi anlamına gelmez.</p><code>${esc(result.reference)}</code><p>Başka bir uygun topluluk için yukarıdan seçim yapabilirsin.</p>`;payload=null;requestId=null;status.focus();
+   const linked=Boolean(sendLinked);completed=true;uncertain=false;form.reset();if(linked)accountChoice?.complete();fields.hidden=true;status.className='form-status success';status.innerHTML=`<strong>Topluluk başvurun alındı.</strong><p>${esc(selected.name)} için başvurun ekibe iletildi. Bu sonuç gruba otomatik kabul veya mesaj teslimi anlamına gelmez.</p><code>${esc(result.reference)}</code><p>Başka bir uygun topluluk için yukarıdan seçim yapabilirsin.</p>`;if(linked){const a=document.createElement('a');a.href='topluluk-basvurularim.html';a.className='text-link';a.textContent='Hesabımda başvuruyu takip et';status.append(a);}sendLinked=null;payload=null;requestId=null;status.focus();
   }catch(error){
-   const unknown=!error.status||error.status>=500;uncertain=unknown;formMessage(COMMUNITY_ERRORS[error.code]||errorMessage(error.code),'error',true);
+   const unknown=awaitingLinkedReceipt||!error.status||error.status>=500;uncertain=unknown;formMessage(({community_result_unconfirmed:'Yanıt aynı hesapta doğrulanamadı. Aynı oturumla sonucu yeniden kontrol et.',community_account_changed:'Hesap tercihi veya oturum değişti. Başvuruyu aynı hesapla kontrol et.',community_link_unavailable:'Bu işlem hesabına bağlanamadı. Hesabındaki başvuruları kontrol edebilirsin.'})[error.code]||COMMUNITY_ERRORS[error.code]||errorMessage(error.code),'error',true);
    if(unknown){retry.textContent='Aynı başvuruyu tekrar dene';retry.hidden=false;}
    else if(['group_not_eligible','profile_required','invalid_profile','school_city_mismatch','invalid_school'].includes(error.code)){clearSelection();profileMessage(COMMUNITY_ERRORS[error.code],'error');}
    else if(error.code!=='idempotency_conflict'){payload=null;requestId=null;fields.disabled=false;}
@@ -95,6 +97,7 @@ export async function setupCommunityEligibility({document,preview,profiles,group
   if(!form.reportValidity())return;const name=q('#name').value.trim(),phone=normalizePhone(q('#phone').value),terms=form.querySelector('input[name="termsAccepted"]')?.checked===true;
   if(!name||name.length>120||!phone||!terms){formMessage(!phone?errorMessage('invalid_phone'):!terms?errorMessage('terms_required'):errorMessage('invalid_name'),'error',true);return;}
   requestId??=crypto?.randomUUID?.();if(!requestId){formMessage('Başvuru güvenli bağlantı gerektiriyor. HTTPS adresinden yeniden aç.','error');return;}
+  try{sendLinked=accountChoice?.capture()||null;}catch{formMessage('Hesap oturumu doğrulanamadı. Doğru hesapla girişini kontrol et.','error',true);return;}
   payload={groupId:selected.id,name,phone,termsAccepted:true,requestId,profile:{...profile}};void submit();
  });
  retry.addEventListener('click',()=>{if(payload)void submit();});

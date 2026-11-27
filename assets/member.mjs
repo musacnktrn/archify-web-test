@@ -7,7 +7,7 @@ const message=error=>MEMBER_ERRORS[error?.code]||COMMUNITY_ERRORS[error?.code]||
 const textValid=(value,max)=>typeof value==='string'&&[...value.trim()].length>=1&&[...value.trim()].length<=max&&!/[\u0000-\u001f\u007f]/.test(value);
 export {memberPreview};
 // [codex] 01a20fd9 · Exact same-origin routes for the private member workspaces.
-const baseMemberRoute = /^member\/(?:session|register|login|logout|profile|password|dashboard|event-history|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/;
+const baseMemberRoute = /^member\/(?:session|register|login|logout|profile|password|dashboard|event-history|academy-interests|community-applications|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/;
 const companyMemberRoute = /^member\/companies(?:\/request|\/[a-f0-9]{32}\/vacancies(?:\/[a-f0-9]{32}(?:\/(?:save|submit|close))?)?)?$/;
 const applicantRoute = /^member\/vacancy-applications(?:\/(?:options|preview|[a-f0-9]{32}(?:\/withdraw)?))?$/;
 const employerIntakeRoute = /^member\/companies\/[a-f0-9]{32}\/vacancies\/[a-f0-9]{32}\/applications(?:\/[a-f0-9]{32}(?:\/status)?)?$/;
@@ -26,7 +26,7 @@ export function memberAPIURL(route,href,query={}) {
 }
 export function careerContinuation(search){
  const params=new URLSearchParams(search||''),name=params.get('devam');
- if(name==='etkinlik-gecmisim')return params.size===1?'etkinlik-gecmisim.html':null;
+ if(['etkinlik-gecmisim','egitim-ilgilerim','topluluk-basvurularim'].includes(name))return params.size===1?name+'.html':null;
  if(!['ilan-basvurusu','firma-adaylari'].includes(name)||params.getAll('devam').length!==1||[...params.keys()].some(key=>!['devam','ilan'].includes(key)))return null;
  const jobs=params.getAll('ilan');
  if(jobs.length>1||jobs.length===1&&!/^[a-f0-9]{32}$/.test(jobs[0]))return null;
@@ -92,7 +92,7 @@ export function setupMember({document,window=globalThis.window,location=window?.
   on('#member-auth-form','submit',event=>{event.preventDefault();void authenticate();});
   for(const toggle of host.querySelectorAll('[data-member-auth-mode]'))toggle.addEventListener('click',()=>{if(busy)return;clearSecrets();mode=toggle.dataset.memberAuthMode;renderAuth();q('#member-username')?.focus();});
   if(continuation&&!preview){
-   const hint=document.createElement('p');hint.className='member-notice';hint.textContent=continuation==='etkinlik-gecmisim.html'?'Giriş yaptıktan sonra etkinlik geçmişine döneceksin.':'Giriş yaptıktan sonra seçtiğin kariyer ekranına döneceksin.';q('.member-auth-card')?.append(hint);
+   const hint=document.createElement('p');hint.className='member-notice';hint.textContent=continuation==='etkinlik-gecmisim.html'?'Giriş yaptıktan sonra etkinlik geçmişine döneceksin.':continuation==='topluluk-basvurularim.html'?'Giriş yaptıktan sonra topluluk başvurularına döneceksin.':continuation==='egitim-ilgilerim.html'?'Giriş yaptıktan sonra eğitim ilgilerine döneceksin.':'Giriş yaptıktan sonra seçtiğin kariyer ekranına döneceksin.';q('.member-auth-card')?.append(hint);
   }
   if(pending){q('.member-auth-card')?.insertAdjacentHTML('beforeend','<button type="button" class="member-text-button" id="member-cancel-pending-auth">Kaydı eklemekten vazgeç</button>');on('#member-cancel-pending-auth','click',()=>{pending=null;renderAuth();});}
  }
