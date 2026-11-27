@@ -1,0 +1,9 @@
+/* [codex] 01a20fd9 · Member account security. */
+.email-verification{max-width:54rem;margin:auto;color:#25392f}
+.email-verification h1{font-size:clamp(2.4rem,6vw,5rem);line-height:1;letter-spacing:-.045em;margin:1rem 0}
+.ev-lead,.ev-status{line-height:1.5}.ev-status:empty{display:none}
+.ev-summary{padding:1rem 0 1.2rem;border-block:1px solid #b2bcad;margin-block:1.5rem}.ev-summary h2,.ev-form legend{font-size:clamp(1.2rem,3vw,1.65rem);font-weight:650}.ev-address{overflow-wrap:anywhere}
+.ev-form{max-width:37rem;margin:1.4rem 0}.ev-form fieldset{border:0;padding:0;display:grid;gap:.8rem;margin:0;min-width:0}.ev-form legend{padding:0;margin-bottom:.4rem}.ev-form p{margin:0;line-height:1.5}
+.ev-form label{display:grid;gap:.35rem}.ev-form input{min-height:46px;border:1px solid #7d8a7d;border-radius:4px;padding:.6rem .75rem;font:inherit;width:100%;box-sizing:border-box}
+.ev-button{font:inherit;font-weight:600;min-height:44px;padding:.6rem 1rem;border:1px solid #697d70;background:transparent;color:#24392e;cursor:pointer;border-radius:4px;margin:.3rem .55rem .3rem 0}
+.ev-form .ev-button{justify-self:start;background:#304c36;color:white}.ev-button:disabled{opacity:.65;cursor:wait}.ev-button:focus-visible,.ev-form input:focus-visible{outline:3px solid #815a36;outline-offset:2px}

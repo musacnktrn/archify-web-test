@@ -3,6 +3,8 @@ import {apiURL,isPreviewDeployment} from './core.mjs';
 import {setupNavigation} from './navigation.mjs';
 
 const screens={
+ 'account-recovery-workspace':{recovery:true,title:'Hesabını kurtar'},
+ 'email-verification-workspace':{private:true,memberView:'eposta-dogrulama',title:'E-posta doğrulaması',module:'./member-email-verification.mjs',mount:'mountEmailVerification'},
  'sponsor-portal-workspace':{private:true,memberView:'sponsor-paneli',title:'Sponsor panelim',module:'./member-partner-portal.mjs',mount:'mountPartnerPortal'},
  'community-applications-workspace':{private:true,memberView:'topluluk-basvurularim',title:'Topluluk başvurularım',module:'./member-community-applications.mjs',mount:'mountCommunityApplications'},
  'academy-interests-workspace':{private:true,memberView:'egitim-ilgilerim',title:'Eğitim ilgilerim',module:'./member-academy-interests.mjs',mount:'mountAcademyInterests'},
@@ -34,6 +36,7 @@ async function publicRead(scope,route,body,query={}){
 
 export function startWorkspace(host,screen){
  let turn=0,dispose=null,activeSession=null;
+ const recoveryState={step:'request',requestId:null};
  const preview=isPreviewDeployment(document,location);
  let member=null,parseMember=null;
  function reset(){
@@ -70,6 +73,7 @@ export function startWorkspace(host,screen){
  }
  async function open(){
   reset();const epoch=turn,current=()=>turn===epoch;
+  if(screen.recovery && preview){notice('Hesap kurtarma bu önizlemede kapalı.', 'hesabim.html', 'Archify hesabına dön');return;}
   if(screen.private&&preview){locked('member_unavailable');return;}
   const requested=screen.param?new URLSearchParams(location.search).getAll(screen.param):[];
   if(requested.length&&(requested.length!==1||!idPattern.test(requested[0]))){
@@ -96,6 +100,14 @@ export function startWorkspace(host,screen){
   }
   const privateRequest=(route,body,query)=>guarded(()=>member.request(route,body,query));
   try{
+   if(screen.recovery){
+    const [account,leaf]=await Promise.all([import('./member.mjs'),import('./member-account-recovery.mjs')]);
+    if(!current())return;
+    member=account.createMemberClient({fetch:window.fetch.bind(window),location,preview});
+    const cleanup=await leaf.mountAccountRecovery({host,client:member,state:recoveryState,isCurrent:current});
+    if(current())dispose=cleanup;else cleanup?.();
+    return;
+   }
    if(screen.catalogOnly){
     const leaf=await import(screen.module);
     if(!current())return;
@@ -158,7 +170,7 @@ export function startWorkspace(host,screen){
   }
  }
  document.addEventListener('visibilitychange',async()=>{
-  if(screen.memberView){
+  if(screen.memberView||screen.recovery){
    if(document.hidden){reset();host.hidden=true;}else{void open();}return;
   }
   if(document.hidden){if(screen.private)host.hidden=true;return;}

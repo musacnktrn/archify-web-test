@@ -8,13 +8,15 @@ const textValid=(value,max)=>typeof value==='string'&&[...value.trim()].length>=
 export {memberPreview};
 // [codex] 01a20fd9 · Exact same-origin routes for the private member workspaces.
 const baseMemberRoute = /^member\/(?:session|register|login|logout|profile|password|dashboard|event-history|academy-interests|community-applications|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/;
+const recoveryMemberRoute=/^member\/account-recovery(?:\/(?:request|confirm|cancel))?$/;
+const verificationMemberRoute=/^member\/email-verification(?:\/(?:request|confirm|cancel))?$/;
 const partnerMemberRoute=/^member\/partner-portal(?:\/(?:identity|consent|[a-f0-9]{32}))?$/;
 const companyMemberRoute = /^member\/companies(?:\/request|\/[a-f0-9]{32}\/vacancies(?:\/[a-f0-9]{32}(?:\/(?:save|submit|close))?)?)?$/;
 const applicantRoute = /^member\/vacancy-applications(?:\/(?:options|preview|[a-f0-9]{32}(?:\/withdraw)?))?$/;
 const employerIntakeRoute = /^member\/companies\/[a-f0-9]{32}\/vacancies\/[a-f0-9]{32}\/applications(?:\/[a-f0-9]{32}(?:\/status)?)?$/;
 const profileMemberRoute = /^member\/network-profile(?:\/(?:save|submit|withdraw))?$/;
 export function memberAPIURL(route,href,query={}) {
- if(typeof route!=='string'||route.trim()!==route||![baseMemberRoute,partnerMemberRoute,companyMemberRoute,profileMemberRoute,applicantRoute,employerIntakeRoute].some(pattern=>pattern.test(route))) throw fail('invalid_route');
+ if(typeof route!=='string'||route.trim()!==route||![baseMemberRoute,recoveryMemberRoute,verificationMemberRoute,partnerMemberRoute,companyMemberRoute,profileMemberRoute,applicantRoute,employerIntakeRoute].some(pattern=>pattern.test(route))) throw fail('invalid_route');
  const url=new URL('api/member.php',new URL('./',href));
  url.searchParams.set('r',route);
  for(const [key,value] of Object.entries(query)){
@@ -27,7 +29,7 @@ export function memberAPIURL(route,href,query={}) {
 }
 export function careerContinuation(search){
  const params=new URLSearchParams(search||''),name=params.get('devam');
- if(['etkinlik-gecmisim','egitim-ilgilerim','topluluk-basvurularim','sponsor-paneli'].includes(name))return params.size===1?name+'.html':null;
+ if(['etkinlik-gecmisim','egitim-ilgilerim','topluluk-basvurularim','sponsor-paneli','eposta-dogrulama'].includes(name))return params.size===1?name+'.html':null;
  if(!['ilan-basvurusu','firma-adaylari'].includes(name)||params.getAll('devam').length!==1||[...params.keys()].some(key=>!['devam','ilan'].includes(key)))return null;
  const jobs=params.getAll('ilan');
  if(jobs.length>1||jobs.length===1&&!/^[a-f0-9]{32}$/.test(jobs[0]))return null;

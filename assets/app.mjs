@@ -291,8 +291,9 @@ function archiveProgram(edit) {
 async function renderDetail(data) {
   const slug = params.get('slug');
   let event = data.events.find(e => e.slug === slug);
+  let calendarObservation=null;
   if (slug && !preview) {
-    try { const response = await request('events/'+encodeURIComponent(slug)); event = response.event; }
+    try { const response = await request('events/'+encodeURIComponent(slug)); event = response.event; calendarObservation=response; }
     catch(error) {
       if (error.status === 404 || error.status === 403) event = null;
       else {
@@ -335,6 +336,15 @@ async function renderDetail(data) {
   if(related.length)$('#event-detail').insertAdjacentHTML('beforeend',`<section class="section detail-related"><div class="section-heading"><h2>Bu etkinliğin videoları</h2><a class="text-link" href="medya.html">Tüm içerikler</a></div><div class="video-grid">${related.map(videoCard).join('')}</div></section>`);
   const relatedEvents=data.events.filter(other=>other.slug!==event.slug && (edit.series ? data.editorial.events[other.slug]?.series===edit.series : other.category===event.category)).slice(-3).reverse();
   if(relatedEvents.length)$('#event-detail').insertAdjacentHTML('beforeend',`<section class="section detail-related"><div class="section-heading"><h2>İlgili buluşmalar</h2></div><div class="editorial-grid">${relatedEvents.map(other=>card(other,data.editorial)).join('')}</div></section>`);
+  if (!preview && event.archived===false && typeof calendarObservation?.serverNow==='string') {
+    const aside=$('#event-detail .detail-aside');
+    if(aside){
+      const host=document.createElement('div');
+      host.className='detail-calendar-action';aside.append(host);
+      const {mountEventCalendar}=await import('./event-calendar-action.mjs');
+      if(host.isConnected)mountEventCalendar({host,initial:calendarObservation,slug,read:()=>request('events/'+encodeURIComponent(slug))});
+    }
+  }
   setupVideoPlayers();
   await trackNavigation(event.slug);
   try{await setupEventProgram({document,preview,request,eventSlug:event.slug});}catch{/* program unavailable never replaces other event content */}
