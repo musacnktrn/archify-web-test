@@ -1,0 +1,20 @@
+{
+  "title": "Archify",
+  "bio": "Mimarlık topluluğunun etkinlikleri, başvuruları ve yayınları.",
+  "theme": "paper",
+  "cover": "model",
+  "layout": "cards",
+  "featuredId": "events",
+  "links": [
+    {"id":"events","label":"Etkinlikleri keşfet","description":"Yaklaşan programlar ve katılım yolları","url":"etkinlikler.html","icon":"calendar","section":"Keşfet","visible":true},
+    {"id":"community","label":"Topluluğunu bul","description":"Şehrine ve ilgi alanına uygun gruplar","url":"topluluk.html","icon":"community","section":"Keşfet","visible":true},
+    {"id":"media","label":"YouTube ve içerikler","description":"Söyleşiler ve etkinlik günlükleri","url":"medya.html","icon":"video","section":"Keşfet","visible":true},
+    {"id":"archive","label":"Etkinlik arşivi","description":"Geçmiş programlar, fotoğraflar ve kaynaklar","url":"arsiv.html","icon":"archive","section":"Keşfet","visible":true},
+    {"id":"career","label":"Kariyer ve staj","description":"Aday ve şirket başvuruları","url":"kariyer.html","icon":"career","section":"Birlikte üret","visible":true},
+    {"id":"team","label":"Ekibe başvur","description":"Archify çalışmalarına katıl","url":"ekibe-katil.html","icon":"studio","section":"Birlikte üret","visible":true},
+    {"id":"partner","label":"İş birliği","description":"Kurumsal önerini paylaş","url":"is-birligi.html","icon":"partner","section":"Birlikte üret","visible":true},
+    {"id":"contact","label":"İletişim","description":"Soruna uygun iletişim yolunu seç","url":"iletisim.html","icon":"contact","section":"Birlikte üret","visible":true},
+    {"id":"instagram","label":"Instagram","description":"@archifycom","url":"https://www.instagram.com/archifycom/","icon":"instagram","section":"Sosyal kanallar","visible":true},
+    {"id":"youtube","label":"YouTube","description":"@archifycom","url":"https://www.youtube.com/@archifycom","icon":"video","section":"Sosyal kanallar","visible":true}
+  ]
+}

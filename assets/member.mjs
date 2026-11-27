@@ -9,6 +9,7 @@ export {memberPreview};
 // [codex] 01a20fd9 · Exact same-origin routes for the private member workspaces.
 const baseMemberRoute = /^member\/(?:session|register|login|logout|profile|password|dashboard|event-history|academy-interests|community-applications|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/;
 const recoveryMemberRoute=/^member\/account-recovery(?:\/(?:request|confirm|cancel))?$/;
+const certificateMemberRoute=/^member\/certificates(?:\/(?:reconcile|phone\/(?:request|confirm|cancel)))?$/;
 const verificationMemberRoute=/^member\/email-verification(?:\/(?:request|confirm|cancel))?$/;
 const partnerMemberRoute=/^member\/partner-portal(?:\/(?:identity|consent|[a-f0-9]{32}))?$/;
 const companyMemberRoute = /^member\/companies(?:\/request|\/[a-f0-9]{32}\/vacancies(?:\/[a-f0-9]{32}(?:\/(?:save|submit|close))?)?)?$/;
@@ -16,7 +17,7 @@ const applicantRoute = /^member\/vacancy-applications(?:\/(?:options|preview|[a-
 const employerIntakeRoute = /^member\/companies\/[a-f0-9]{32}\/vacancies\/[a-f0-9]{32}\/applications(?:\/[a-f0-9]{32}(?:\/status)?)?$/;
 const profileMemberRoute = /^member\/network-profile(?:\/(?:save|submit|withdraw))?$/;
 export function memberAPIURL(route,href,query={}) {
- if(typeof route!=='string'||route.trim()!==route||![baseMemberRoute,recoveryMemberRoute,verificationMemberRoute,partnerMemberRoute,companyMemberRoute,profileMemberRoute,applicantRoute,employerIntakeRoute].some(pattern=>pattern.test(route))) throw fail('invalid_route');
+ if(typeof route!=='string'||route.trim()!==route||![baseMemberRoute,certificateMemberRoute,recoveryMemberRoute,verificationMemberRoute,partnerMemberRoute,companyMemberRoute,profileMemberRoute,applicantRoute,employerIntakeRoute].some(pattern=>pattern.test(route))) throw fail('invalid_route');
  const url=new URL('api/member.php',new URL('./',href));
  url.searchParams.set('r',route);
  for(const [key,value] of Object.entries(query)){
@@ -67,9 +68,23 @@ export function privateDashboard(value){
 export function createMemberClient({fetch,location,preview=false,timeout=12000}={}){
  let csrfToken='';
  return {setCSRF(value){if(typeof value!=='string'||!value||value.length>512)throw fail('invalid_session_response');csrfToken=value;},clear(){csrfToken='';},
- async applicationPdf(body){
+ async applicationPdf(body){return this.privateDocument('ilan-basvuru-belgesi.php',body);},
+ async certificatePdf(body,expectedMemberId){
+  const bound=csrfToken;
+  const confirmSession=async()=>{
+   const latest=await this.request('member/session');
+   if(!bound||csrfToken!==bound||latest?.csrfToken!==bound||latest?.member?.id!==expectedMemberId)
+    throw fail('member_authentication_required',401);
+  };
+  await confirmSession();
+  const blob=await this.privateDocument('member-sertifika.php',body);
+  await confirmSession();
+  return blob;
+ },
+ async privateDocument(filename,body){
+  if(!['ilan-basvuru-belgesi.php','member-sertifika.php'].includes(filename))throw fail('document_unavailable');
   if(preview||!csrfToken)throw fail('member_unavailable');
-  const response=await fetch(new URL('api/ilan-basvuru-belgesi.php',new URL('./',location.href)),{method:'POST',credentials:'same-origin',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},body:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});
+  const response=await fetch(new URL('api/'+filename,new URL('./',location.href)),{method:'POST',credentials:'same-origin',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},body:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});
   if(!response.ok){const value=await response.json().catch(()=>({}));throw fail(value?.error||'document_unavailable',response.status);}
   const bytes=Number(response.headers.get('Content-Length'));
   if(!Number.isSafeInteger(bytes)||bytes<5||bytes>10*1024*1024||response.headers.get('Content-Type')?.split(';')[0]!=='application/pdf')throw fail('document_unavailable');
@@ -84,6 +99,7 @@ export function createMemberClient({fetch,location,preview=false,timeout=12000}=
 export function setupMember({document,window=globalThis.window,location=window?.location,history=window?.history,fetch=globalThis.fetch,preview=memberPreview(document,location),navigate=url=>location.assign(url),client=createMemberClient({fetch,location,preview})}={}){
  const host=document.querySelector('#member-root');if(!host)return null;
  let pending=consumeMemberHandoff(location,history),member=null,dashboard=null,available=false,registrationAvailable=false,mode=document.body.dataset.memberRoute==='register'?'register':'login',epoch=0,busy=false,catalogPromise=null;
+ let walletCleanup=null;
  let continuation=pending?null:careerContinuation(location.search);
  // The host is not a live region: only concise operation status is announced.
  host.setAttribute('aria-live','off');
@@ -91,7 +107,7 @@ export function setupMember({document,window=globalThis.window,location=window?.
  const status=(id,text,error=false)=>{const node=q(id);if(node){node.textContent=text;node.className='member-status'+(error?' member-status-error':'');}};
  const clearSecrets=()=>{for(const input of host.querySelectorAll('input[type="password"]'))input.value='';};
  const protectedError=error=>{if(error.code==='member_authentication_required'){epoch++;member=null;dashboard=null;client.clear();renderAuth();status('#member-auth-status',message(error),true);void establish();return true;}return false;};
- function renderAuth(loading=false){host.innerHTML=authMarkup({register:mode==='register',preview,available,registrationAvailable,pending:!!pending,loading});
+ function renderAuth(loading=false){walletCleanup?.();walletCleanup=null;host.innerHTML=authMarkup({register:mode==='register',preview,available,registrationAvailable,pending:!!pending,loading});
   on('#member-auth-form','submit',event=>{event.preventDefault();void authenticate();});
   for(const toggle of host.querySelectorAll('[data-member-auth-mode]'))toggle.addEventListener('click',()=>{if(busy)return;clearSecrets();mode=toggle.dataset.memberAuthMode;renderAuth();q('#member-username')?.focus();});
   if(continuation&&!preview){
@@ -135,7 +151,21 @@ export function setupMember({document,window=globalThis.window,location=window?.
   finally{body=null;if(generation===epoch){busy=false;controls.forEach(button=>button.disabled=false);}}
  }
  function renderDashboard(){
+  walletCleanup?.();walletCleanup=null;
   host.innerHTML=dashboardMarkup(dashboard,{pending});bindCommon();
+  const target=document.createElement('section');target.id='member-certificates';const ticketSection=host.querySelector('#member-tickets');if(ticketSection)ticketSection.after(target);else host.append(target);
+  const account=member.id, stamp=epoch;
+  const current=()=>epoch===stamp && member?.id===account && target.isConnected;
+  import('./certificate-wallet.mjs').then(async ({mountCertificateWallet})=>{
+    if(!current())return;
+    const cleanup=await mountCertificateWallet({host:target,memberId:account,api:(route,body)=>client.request(route,body),isCurrent:current,
+     onOpen:async ({kind,id})=>{
+       if(!current()||document.hidden)return;
+       const blob=await client.certificatePdf({kind,id},account);if(!current()||document.hidden)return;
+       const temporary=URL.createObjectURL(blob),a=document.createElement('a');a.href=temporary;a.download='archify-sertifika.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(temporary),1000);
+     }});
+    if(current())walletCleanup=typeof cleanup==='function'?cleanup:null;else if(typeof cleanup==='function')cleanup();
+  }).catch(()=>{if(current())target.textContent='Sertifika cüzdanı yüklenemedi. Tekrar denemek için hesabını yenile.';});
   for(const button of host.querySelectorAll('[data-member-open-ticket]'))button.addEventListener('click',()=>{if(button.disabled)return;void action('member/tickets/open',{ticketId:button.dataset.memberOpenTicket},{after:value=>{if(!tokenValid(value.token)||!safeSlug(value.eventSlug))throw fail('invalid_ticket_response');navigate('bilet.html#token='+value.token);}});});
   for(const button of host.querySelectorAll('[data-member-open-order]'))button.addEventListener('click',()=>{if(button.disabled)return;void action('member/orders/open',{orderId:button.dataset.memberOpenOrder},{after:value=>{if(!tokenValid(value.token)||!safeId(value.orderId))throw fail('invalid_order_response');navigate('odeme.html#orderId='+value.orderId+'&token='+value.token);}});});
   for(const button of host.querySelectorAll('[data-member-favorite]'))button.addEventListener('click',()=>void action('member/favorites',{eventSlug:button.dataset.memberFavorite,active:button.dataset.memberActive==='true'},{reload:true}));
