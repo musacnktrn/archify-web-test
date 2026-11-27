@@ -307,7 +307,13 @@ async function renderDetail(data) {
   let event = data.events.find(e => e.slug === slug);
   if (slug && !preview) {
     try { const response = await request('events/'+encodeURIComponent(slug)); event = response.event; }
-    catch(error) { if (error.status === 404 || error.status === 403) event = null; else if (event) event = {...event,gallery:[]}; }
+    catch(error) {
+      if (error.status === 404 || error.status === 403) event = null;
+      else {
+        $('#event-detail').innerHTML='<section class="section page-intro"><h1>Etkinlik kaydı yüklenemedi.</h1><p class="lead">Güncel kayda erişmek için yeniden dene.</p><a class="button" href="etkinlik.html?slug='+encodeURIComponent(slug)+'">Yeniden dene</a> <a class="text-link" href="arsiv.html">Arşive dön</a></section>';
+        return;
+      }
+    }
   }
   if (!event || event.status === 'draft') {
     $('#event-detail').innerHTML = '<section class="section page-intro"><p class="eyebrow">Etkinlik bulunamadı</p><h1>Başka bir<br><em>hikâyeye bakalım.</em></h1><p class="lead">Bu etkinlik yayımlanmamış, kaldırılmış veya bağlantısı eksik olabilir.</p><a class="button" href="arsiv.html">Arşive dön</a></section>'; return;
@@ -390,16 +396,87 @@ export function loadMediaData(){
  return mediaPromise;
 }
 function mediaEmbedURL(id){return typeof id==='string'&&/^[A-Za-z0-9_-]{11}$/.test(id)&&publishedVideoIds.has(id)?'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0':'';}
+function videoLinks(video) {
+ const url=safeURL(video.url);
+ return `<a class="text-link" href="medya.html?video=${encodeURIComponent(video.id)}">Yayın dosyasını aç</a><a class="text-link video-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">YouTube’da aç</a>${video.eventSlug?`<a class="text-link" href="etkinlik.html?slug=${encodeURIComponent(video.eventSlug)}">Buluşmanın hikâyesi</a>`:''}`;
+}
 function videoCard(video){
  const url=safeURL(video.url);if(!url||!mediaEmbedURL(video.id))return '';
- return `<article class="video-card" data-video-id="${esc(video.id)}"><div class="video-player" id="video-player-${esc(video.id)}"><button class="video-cover video-trigger" type="button" data-video-trigger="${esc(video.id)}" data-video-title="${esc(video.title)}" aria-label="${esc(video.title)} — bu sayfada oynat"><span>${esc(video.kind)}</span><strong>${esc(video.title)}</strong><span class="video-play">Videoyu oynat</span></button></div><h3>${esc(video.subtitle)}</h3><p>${esc(video.description)}</p><div class="video-links"><a class="text-link video-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">YouTube’da aç</a>${video.eventSlug?`<a class="text-link" href="etkinlik.html?slug=${encodeURIComponent(video.eventSlug)}">Buluşmanın hikâyesi</a>`:''}</div></article>`;
+ return `<article class="video-card" data-video-id="${esc(video.id)}"><div class="video-player" id="video-player-${esc(video.id)}"><button class="video-cover video-trigger" type="button" data-video-trigger="${esc(video.id)}" data-video-title="${esc(video.title)}" aria-label="${esc(video.title)} — bu sayfada oynat"><span>${esc(video.kind)}</span><strong>${esc(video.title)}</strong><span class="video-play">Videoyu oynat</span></button></div><h3>${esc(video.subtitle)}</h3><p>${esc(video.description)}</p><div class="video-links">${videoLinks(video)}</div></article>`;
 }
-function setupVideoPlayers(){
- document.querySelectorAll('[data-video-trigger]').forEach(button=>button.addEventListener('click',()=>{
-  const id=button.dataset.videoTrigger,url=mediaEmbedURL(id);if(!url)return;
-  const host=$('#video-player-'+id);if(!host)return;
-  host.innerHTML=`<iframe src="${esc(url)}" title="YouTube: ${esc(button.dataset.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
- }));
+const wiredVideoButtons = new WeakSet();
+function setupVideoPlayers() {
+ for (const button of document.querySelectorAll('[data-video-trigger]')) {
+  if (wiredVideoButtons.has(button)) continue;
+  wiredVideoButtons.add(button);
+  button.addEventListener('click',async () => {
+   const id=button.dataset.videoTrigger, host=$('#video-player-'+id);
+   if (button.disabled || !mediaEmbedURL(id) || !host?.contains(button)) return;
+   const card=host.parentElement;
+   button.disabled=true;
+   host.setAttribute('aria-busy','true');
+   try {
+    const {videos}=await freshMediaPublication();
+    if (!document.body.contains(button)) return;
+    const video=videos.find(item=>item.id===id);
+    if (!video || (page==='detail' && video.eventSlug!==params.get('slug'))) {
+     card.innerHTML='<p role="status">Bu yayın burada artık yer almıyor.</p><a class="text-link" href="medya.html">Tüm yayınlar</a>';
+     return;
+    }
+    card.querySelector('h3').textContent=video.subtitle;
+    card.querySelector('p').textContent=video.description;
+    card.querySelector('.video-links').innerHTML=videoLinks(video);
+    host.innerHTML=`<iframe src="${esc(mediaEmbedURL(id))}" title="YouTube: ${esc(video.title)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+   } catch {
+    if (document.body.contains(button)) card.innerHTML='<p role="status">Güncel yayın bilgisi alınamadı.</p><a class="text-link" href="medya.html?video='+encodeURIComponent(id)+'">Yayın dosyasını aç</a>';
+   } finally { host.setAttribute('aria-busy','false'); }
+  });
+ }
+}
+// [codex] A video page reads the publication view again before connecting to YouTube.
+async function freshMediaPublication() {
+  const raw = preview ? await staticJSON('data/media.json') : await request('site-media');
+  return normaliseMediaData(raw);
+}
+async function mediaEventDetails(slug) {
+  if (typeof slug !== 'string' || slug.length > 160 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null;
+  let event;
+  if (preview) {
+    event = (await catalogPromise).events.find(record => record.slug === slug);
+  } else {
+    try {
+      event = (await request('events/'+encodeURIComponent(slug))).event;
+    } catch (error) {
+      if (error.status === 404 || error.status === 403) return null;
+      throw error;
+    }
+  }
+  if (!event || event.slug !== slug || (!preview && !['published','closed'].includes(event.status))) return null;
+  const editorial = await editorialPromise.catch(() => ({}));
+  const gallery = archiveGallery(event, editorial.events?.[slug] || {}).map(photo => ({
+    src: photo.src, thumbnail: photo.thumbnailSrc, alt: photo.alt, caption: photo.caption
+  }));
+  return {slug, title:event.title, year:event.year??null, city:event.city??null, gallery};
+}
+async function renderVideoDetail() {
+  const list = $('#media-index'), host = $('#media-feature');
+  list.hidden = true; host.hidden = false;
+  try {
+    const {mountMediaFeature} = await import('./media-feature.mjs');
+    const ids = params.getAll('video');
+    await mountMediaFeature({
+      host, videoId:ids.length===1 ? ids[0] : '', loadMedia:freshMediaPublication, loadEvent:mediaEventDetails,
+      verifyPlayback:async id => {
+        const {videos} = await freshMediaPublication();
+        const video = videos.find(item => item.id === id);
+        if (!video) return null;
+        const event = video.eventSlug ? await mediaEventDetails(video.eventSlug).catch(() => null) : null;
+        return {url:'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0', eventSlug:video.eventSlug, event};
+      }
+    });
+  } catch {
+    host.innerHTML='<section class="section"><h1>Yayın dosyası yüklenemedi.</h1><p role="status">Bağlantını kontrol edip yeniden deneyebilirsin.</p><a class="text-link" href="medya.html">Tüm yayınlara dön</a></section>';
+  }
 }
 async function renderMedia(selector='#media-list'){
  const data=await loadMediaData();
@@ -416,6 +493,31 @@ function categoryPlate(id,events){
  if(photo){const stem='assets/images/ux/'+photo.stem;if(events.some(event=>(event.gallery||[]).some(image=>image.src===stem+'-1600.webp')))return `<figure class="ux-category-plate ux-category-plate--photo"><img src="${stem}-800.webp" srcset="${stem}-800.webp ${photo.small}w, ${stem}-1600.webp ${photo.width}w" sizes="(max-width: 760px) 92vw, 52vw" width="${photo.width}" height="${photo.height}" alt="${esc(photo.alt)}"><figcaption>${esc(photo.caption)}</figcaption></figure>`;}
  return `<div class="ux-category-plate ux-category-plate--diagram premium-category-plate" aria-hidden="true">${categoryIcon(id)}</div>`;
 }
+// [codex] A live catalog reload carries publication authority for these archive views.
+async function loadPublishedArchive() {
+  const edit = editorialPromise.catch(() => staticJSON('data/editorial.json'));
+  const records = preview ? catalogPromise.catch(() => staticJSON('data/catalog.json')) : request('events');
+  const [editorial, catalog] = await Promise.all([edit, records]);
+  if (!Array.isArray(catalog.events)) throw new Error('catalog_unavailable');
+  return {events:preview ? catalog.events.map(archiveEvent) : catalog.events, editorial, preview};
+}
+
+async function renderCategoryArchive(category) {
+  const travel = category === 'yurt-disi-tur';
+  const host = $(travel ? '#travel-archive' : '#academy-library');
+  $('#category-standard').hidden = true;
+  host.hidden = false;
+  document.title = travel ? 'Yurt dışı turları · Archify' : 'Atölye kitaplığı · Archify';
+  document.body.dataset.categoryPage = category;
+  try {
+    const mount = travel ? (await import('./travel-archive.mjs')).mountTravelArchive
+                         : (await import('./academy-library.mjs')).mountAcademyLibrary;
+    await mount({host, loadArchive:loadPublishedArchive});
+  } catch {
+    host.innerHTML='<section class="section"><h1>'+ (travel?'Tur arşivi':'Atölye kitaplığı') +' yüklenemedi.</h1><p>Bağlantını kontrol edip yeniden deneyebilirsin.</p><a class="button" href="kategori.html?tur='+category+'">Yeniden dene</a></section>';
+  }
+}
+
 function renderCategory(data){
  const spec=categoryPage(params.get('tur'));
  const setSection=(selector,content)=>{const host=$(selector);host.innerHTML=content;let section=host;while(section&&!section.classList.contains('section'))section=section.parentElement;if(section)section.hidden=!content;else host.hidden=!content;};
@@ -591,8 +693,9 @@ async function main(){
   if(['application','team-application'].includes(page)){await setupForm();return;}
   if(page==='community-application'){await setupCommunityFlow();return;}
   if(page==='community'){await renderCommunity();return;}
-  if(page==='media'){await renderMedia();return;}
+  if(page==='media'){if(params.has('video'))await renderVideoDetail();else await renderMedia();return;}
   if(!['home','archive','events','series','detail','sources','category'].includes(page))return;
+  if(page==='category' && ['yurt-disi-tur','atolye'].includes(params.get('tur'))){await renderCategoryArchive(params.get('tur'));return;}
   const data=await loadData();
   const renderers={home:renderHome,archive:renderArchive,events:renderEvents,series:renderSeries,detail:renderDetail,sources:renderSources,category:renderCategory};
   await renderers[page](data);

@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Archify",
+  "short_name": "Archify",
+  "description": "Archify etkinlikleri ve topluluğu. Hesap ve işlem bilgileri internet bağlantısı gerektirir.",
+  "lang": "tr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f0e9",
+  "theme_color": "#12140f",
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "assets/pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "assets/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "assets/pwa/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
