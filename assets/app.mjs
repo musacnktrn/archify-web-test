@@ -2,6 +2,8 @@
 // [codex] UX revision · 01a20fe8-62df-78c3-a20e-1c904d040938 · archify-web-ozgun-ux-01a20fd9
 import { escapeHTML as esc, safeURL, filterEvents, registrationState, archiveEvent, apiURL, errorMessage, normalizePhone, groupEventsByYear, sourceMarkup } from './core.mjs';
 import { CATEGORY_PAGES, GROUP_TYPES, categoryPage } from './information.mjs';
+import {archiveGallery,createPhotoViewer} from './archive-photos.mjs';
+export {archiveGallery};
 import { setupNavigation } from './navigation.mjs';
 import { setupAnalytics, analyticsRequestHeaders, advertisingRequestHeaders } from './analytics.mjs';
 import { setupCommunityEligibility } from './community-eligibility.mjs';
@@ -21,8 +23,8 @@ let csrfToken;
 let analytics=null;
 let providers=null;
 let gallery = [];
-let galleryIndex = 0;
-let returnFocus = null;
+const photoViewer = createPhotoViewer(document);
+function openGallery(index,trigger){photoViewer.open(gallery,index,trigger);}
 document.documentElement.classList.add('js');
 if (preview) $('#deployment-notice').hidden = false;
 
@@ -262,22 +264,6 @@ async function trackNavigation(slug) {
   try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key,'attempted'); } catch { /* Browser storage is optional. One call per page invocation. */ }
   try { await session(); await request('links/view',{navigationId,eventSlug:slug}); } catch { /* Read-only detail remains available; never manufacture a visit or retry automatically. */ }
 }
-// [codex] R11: publication decides which photographs exist; editorial metadata only describes an exact published src.
-export function archiveGallery(event, editorial = {}) {
-  const metadata = new Map((Array.isArray(editorial.photoMetadata) ? editorial.photoMetadata : []).filter(item => item && typeof item.src === 'string').map(item => [item.src,item]));
-  const seen = new Set();
-  const localImage = value => typeof value === 'string' && /^(?:assets|media)\//.test(value) ? safeURL(value,{image:true}) : '';
-  return (Array.isArray(event.gallery) ? event.gallery : []).flatMap(item => {
-    if (!item || !safeURL(item.src,{image:true}) || seen.has(item.src)) return [];
-    seen.add(item.src);
-    const meta = metadata.get(item.src) || {};
-    const text = value => typeof value === 'string' && value.trim() ? value.trim() : '';
-    const width = Number.isInteger(meta.width) && meta.width > 0 && meta.width <= 20000 ? meta.width : 1200;
-    const height = Number.isInteger(meta.height) && meta.height > 0 && meta.height <= 20000 ? meta.height : 800;
-    const variants = (Array.isArray(meta.variants) ? meta.variants : []).filter(v => v && localImage(v.src) && Number.isInteger(v.width) && v.width > 0 && v.width <= width);
-    return [{src:safeURL(item.src,{image:true}),alt:text(item.alt) || event.title || 'Etkinlik fotoğrafı',caption:text(meta.caption) || text(item.alt) || event.title || 'Etkinlik fotoğrafı',sourceLabel:text(meta.sourceLabel),sourceUrl:safeURL(meta.sourceUrl),thumbnailSrc:localImage(meta.thumbnailSrc) || safeURL(item.src,{image:true}),width,height,variants}];
-  });
-}
 function archivePhotoCaption(item) {
   return `<span class="archive-photo-caption">${esc(item.caption)}</span>${item.sourceLabel ? `<span class="archive-photo-source">${item.sourceUrl ? `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(item.sourceLabel)}</a>` : esc(item.sourceLabel)}</span>` : ''}`;
 }
@@ -334,7 +320,7 @@ async function renderDetail(data) {
   <div class="section detail-body ux-event-dossier"><div class="detail-story ux-event-story"><p class="eyebrow">${esc(edit.series || 'Etkinlik kaydı')}</p><h2>Bu buluşmada</h2><div class="prose">${story.filter(Boolean).map(p => `<p>${esc(p)}</p>`).join('')}</div>${archiveProgram(edit)}${!edit.publishedProgram?.length && programs.length ? `<div class="detail-program"><h3>Programdan</h3><ul>${programs.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>` : ''}${edit.workshops?.length ? `<div class="detail-program archive-workshops" id="atolyeler"><h3>Atölyeler</h3><ul>${edit.workshops.map(title=>`<li>${esc(title)}</li>`).join('')}</ul>${sourceMarkup(edit.workshopSource,'Atölye kaynağı: ')}</div>` : ''}${!edit.workshops?.length && edit.subprograms?.length ? `<div class="detail-program" id="atolyeler"><h3>Etkinlik içindeki atölyeler</h3>${edit.subprograms.map(item=>`<article><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><p class="card-meta">${esc(item.dateLabel)}</p></article>`).join('')}</div>` : ''}${sources.length ? `<div class="detail-source"><p class="eyebrow">Kaynaklar</p>${sources.map(item=>sourceMarkup(item)).join('')}</div>` : ''}</div><aside class="detail-aside"><dl class="ux-event-facts">${facts.map(([key,value])=>`<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl><p class="eyebrow">${esc(state.label)}</p><p>${esc(state.detail)}</p>${state.open ? `<a class="button" href="basvuru.html?slug=${encodeURIComponent(event.slug)}">Etkinliğe başvur</a>` : '<a class="button" href="topluluk.html">Yeni buluşmaları takip et</a>'}</aside></div>
   ${edit.routeHighlights?.length ? `<section class="section archive-route" aria-labelledby="archive-route-title"><div><p class="eyebrow">Yerinde keşif</p><h2 id="archive-route-title">Rotadan duraklar</h2><p>Program kaydında yer alan kentler.</p></div><ol>${edit.routeHighlights.map(city=>`<li>${esc(city)}</li>`).join('')}</ol></section>` : ''}
   ${archivePosters(edit)}
-  ${gallery.length ? `<section class="section gallery-section ux-event-gallery archive-gallery" aria-labelledby="archive-gallery-title" data-gallery-total="${gallery.length}"><div class="section-heading"><div><p class="eyebrow">Buluşmadan kalanlar</p><h2 id="archive-gallery-title">Fotoğraf seçkisi</h2></div><p class="archive-gallery-count">${gallery.length} fotoğraf</p></div><div class="gallery-grid" id="archive-gallery-grid">${gallery.slice(0,6).map(archivePhotoTile).join('')}</div>${gallery.length > 6 ? `<div class="archive-gallery-more"><p id="archive-gallery-progress" role="status">${gallery.length} fotoğrafın 6 tanesi gösteriliyor.</p><button type="button" class="button" id="archive-gallery-more" aria-controls="archive-gallery-grid">Diğer fotoğrafları göster</button></div>` : ''}<p class="gallery-note">${esc(edit.imageCredit || 'Bu etkinliğe ait yayımlanan galeri seçkisi.')}</p></section>` : ''}`;
+  ${gallery.length ? `<section class="section gallery-section ux-event-gallery archive-gallery" aria-labelledby="archive-gallery-title" data-gallery-total="${gallery.length}"><div class="section-heading"><div><p class="eyebrow">Buluşmadan kalanlar</p><h2 id="archive-gallery-title">Fotoğraf seçkisi</h2></div><p class="archive-gallery-count">${gallery.length} fotoğraf</p></div><div class="gallery-grid" id="archive-gallery-grid">${gallery.slice(0,6).map(archivePhotoTile).join('')}</div>${gallery.length > 6 ? `<div class="archive-gallery-more"><p id="archive-gallery-progress" role="status">${gallery.length} fotoğrafın 6 tanesi gösteriliyor.</p><button type="button" class="button" id="archive-gallery-more" aria-controls="archive-gallery-grid">Diğer fotoğrafları göster</button></div>` : ''}<a class="text-link" href="albumler.html?etkinlik=${encodeURIComponent(event.slug)}">Etkinliğin albümünü aç</a><p class="gallery-note">${esc(edit.imageCredit || 'Bu etkinliğe ait yayımlanan galeri seçkisi.')}</p></section>` : ''}`;
   bindGalleryButtons($('#event-detail'));
   let shownPhotos=Math.min(6,gallery.length);
   $('#archive-gallery-more')?.addEventListener('click',()=>{
@@ -353,29 +339,6 @@ async function renderDetail(data) {
   await trackNavigation(event.slug);
   try{await setupEventProgram({document,preview,request,eventSlug:event.slug});}catch{/* program unavailable never replaces other event content */}
 }
-function paintGallery() {
-  const item = gallery[galleryIndex]; if (!item) return;
-  $('#lightbox-image').src = safeURL(item.src,{image:true}); $('#lightbox-image').alt = item.alt || 'Etkinlik fotoğrafı';
-  $('#gallery-caption').textContent = `${galleryIndex+1} / ${gallery.length} · ${item.caption || item.alt || 'Etkinlik fotoğrafı'}${item.sourceLabel ? ' · '+item.sourceLabel : ''}`;
-  $('#gallery-prev').disabled = gallery.length < 2; $('#gallery-next').disabled = gallery.length < 2;
-  const thumbnails=$('#gallery-thumbnails');
-  if(thumbnails){
-    const restoreThumbFocus=thumbnails.contains(document.activeElement);
-    const start=Math.max(0,Math.min(galleryIndex-3,gallery.length-7));
-    thumbnails.innerHTML=gallery.slice(start,start+7).map((photo,i)=>`<button type="button" data-lightbox-index="${start+i}" aria-label="Fotoğraf ${start+i+1} / ${gallery.length}" aria-pressed="${start+i===galleryIndex}"><img src="${esc(photo.thumbnailSrc)}" alt="" loading="lazy" width="96" height="64"><span>${start+i+1}</span></button>`).join('');
-    thumbnails.querySelectorAll('[data-lightbox-index]').forEach(button=>button.addEventListener('click',()=>{galleryIndex=Number(button.dataset.lightboxIndex);paintGallery();thumbnails.querySelectorAll('[data-lightbox-index]').forEach(next=>{if(Number(next.dataset.lightboxIndex)===galleryIndex)next.focus();});}));
-    if(restoreThumbFocus)thumbnails.querySelectorAll('[data-lightbox-index]').forEach(button=>{if(Number(button.dataset.lightboxIndex)===galleryIndex)button.focus();});
-  }
-}
-function openGallery(index,trigger) { if(!Number.isInteger(index)||!gallery[index])return; galleryIndex = index; returnFocus = trigger; paintGallery(); $('#gallery-dialog').showModal(); document.body.classList.add('gallery-open'); $('.lightbox-close').focus(); }
-function closeGallery() { $('#gallery-dialog').close(); }
-$('#gallery-dialog').addEventListener('close', () => { document.body.classList.remove('gallery-open'); returnFocus?.focus(); });
-$('.lightbox-close').addEventListener('click',closeGallery);
-$('#gallery-prev').addEventListener('click', () => { galleryIndex=(galleryIndex-1+gallery.length)%gallery.length; paintGallery(); });
-$('#gallery-next').addEventListener('click', () => { galleryIndex=(galleryIndex+1)%gallery.length; paintGallery(); });
-$('#gallery-dialog').addEventListener('keydown',event => { if (gallery.length > 1 && ['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); galleryIndex=(galleryIndex+(event.key==='ArrowLeft'?-1:1)+gallery.length)%gallery.length; paintGallery(); } });
-$('#gallery-dialog').addEventListener('click',event => { if (event.target === $('#gallery-dialog')) { const rect = event.target.getBoundingClientRect(); if(event.clientX<rect.left || event.clientX>rect.right || event.clientY<rect.top || event.clientY>rect.bottom) closeGallery(); } });
-
 // The live publication catalogue is authoritative: a hidden video is never restored from static data.
 const MEDIA_FALLBACK=Object.freeze({channel:{name:'Archify',handle:'@archifycom',url:'https://www.youtube.com/@archifycom'},social:[{name:'Instagram',label:'@archifycom',url:'https://www.instagram.com/archifycom/'},{name:'YouTube',label:'@archifycom',url:'https://www.youtube.com/@archifycom'}]});
 let mediaPromise=null;
