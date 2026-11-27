@@ -1,0 +1,12 @@
+/* [codex] 01a20fd9-f999-7b90-8b1b-b8cd977d4517 · Member attendance history. */
+.member-history{max-width:68rem;margin-inline:auto;color:#233c32;padding:clamp(1rem,4vw,4rem) 0 5rem}
+.mh-heading{display:grid;grid-template-columns:1fr auto;align-items:end;gap:.5rem 2rem;padding-bottom:2rem;border-bottom:1px solid #bfcabf}
+.mh-heading h1{grid-column:1/-1;font-size:clamp(2.4rem,6vw,5.7rem);letter-spacing:-.06em;line-height:1.01;margin:0}
+.mh-heading p,.mh-place{color:#46594e;line-height:1.5}.mh-heading p{max-width:40rem;margin:.4rem 0}
+.mh-list{list-style:none;margin:0;padding:0}.mh-card{display:grid;grid-template-columns:minmax(9rem,.32fr) 1fr;gap:clamp(.8rem,4vw,4rem);padding:2rem 0;border-bottom:1px solid #cbd1c7}
+.mh-date{display:grid;gap:.35rem;align-content:start;font-variant-numeric:tabular-nums}.mh-date span{font-size:.85rem}.mh-date time{font-weight:650}
+.mh-content{min-width:0}.mh-content h2{margin:0;font-size:clamp(1.6rem,3vw,2.7rem);line-height:1.12;letter-spacing:-.04em;overflow-wrap:anywhere}.mh-content h2 a{text-decoration:none}
+.mh-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem 1.25rem;margin-top:1rem}.mh-link,.mh-button{color:inherit}.mh-actions a,.mh-button{display:inline-flex;min-height:44px;align-items:center}
+.mh-button{border:1px solid #5f7466;border-radius:4px;background:transparent;padding:.5rem .95rem;font:inherit;font-weight:600;cursor:pointer}.mh-button:focus-visible,.mh-link:focus-visible{outline:3px solid #245641;outline-offset:3px}
+.mh-feedback,.mh-status{line-height:1.5}.mh-status:empty{display:none}.mh-empty{margin-top:2rem}
+@media(max-width:640px){.mh-heading,.mh-card{grid-template-columns:1fr}.mh-heading .mh-button{justify-self:start}.mh-date{display:flex;gap:.6rem}.mh-heading{padding-bottom:1.5rem}.mh-card{padding:1.4rem 0}}

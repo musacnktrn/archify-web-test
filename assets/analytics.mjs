@@ -1,6 +1,8 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · R12 first-party, consent-gated measurement
 export const CONSENT_VERSION='r12-1';
-export const ANALYTICS_PAGES=Object.freeze(['home','archive','events','category','series','detail','community','community-application','application','team-application','media','about','contact','partnership','links','privacy','sources','not-found','career','career-application','company-application','ticket','checkout']);
+export const ANALYTICS_PAGES=Object.freeze(['home','archive','events','category','series','detail','community','community-application','application','team-application','media','about','contact','partnership','links','privacy','sources','not-found','career','career-application','company-application','ticket','checkout','albums']);
+// [codex] 01a20fe2-64d6-75c3-b882-47be7173d5eb · P22 root-owned verified album interactions only.
+export const ALBUM_ANALYTICS_TARGETS=Object.freeze(['album-open','album-photo-open','album-filter','album-search','album-more','album-refresh']);
 export const ANALYTICS_TARGETS=Object.freeze(['nav-home','nav-events','nav-archive','nav-community','nav-media','nav-about','nav-contact','nav-partnership','nav-links','nav-privacy','nav-sources','nav-team','nav-career','category-open','series-open','event-detail','event-apply','archive-filter','archive-search','community-profile-check','community-group-select','community-apply','gallery-open','gallery-next','gallery-previous','gallery-more','gallery-close','poster-open','video-play','video-external','social-external','source-open','contact-open','partnership-open','form-retry','menu-toggle','nav-disclosure','career-open','career-apply','company-apply','career-submit','company-submit','event-application','team-application','community-application','career-application','company-application']);
 const SOURCE_VALUES=['direct','instagram','facebook','linkedin','youtube','tiktok','google','bing','newsletter','partner','whatsapp','other'];
 const MEDIUM_VALUES=['direct','organic','social','paid-social','cpc','email','referral','qr','offline','other'];
@@ -56,6 +58,7 @@ function formTarget(form,page){const id=form?.getAttribute?.('id');if(id==='care
 export function setupAnalytics({document,window,location,preview,request,session,now=()=>Date.now(),crypto=globalThis.crypto,setTimer=setTimeout,clearTimer=clearTimeout,storage,sessionStorage,onConsent=()=>{},onEvent=()=>{}}={}){
  activeConsent=false;activeAdvertising=false;
  const page=ANALYTICS_PAGES.includes(document.body.dataset.page)?document.body.dataset.page:'not-found';
+ const albums=page==='albums';let albumContext=null;
  const publicSlugs=new Set();let preference=null,consented=false,ready=false,pageReady=false,pageSent=false,visitorId=null,visitId=null,queue=[],timer=null,inFlight=new Set(),generation=0,lastScroll=0,returnFocus=null,disposed=false;
  let local=storage,visitStorage=sessionStorage;
  if(!preview){try{local??=window.localStorage;visitStorage??=window.sessionStorage;}catch{}}
@@ -63,7 +66,7 @@ export function setupAnalytics({document,window,location,preview,request,session
  const randomId=()=>{if(!crypto?.getRandomValues)throw new Error('secure_random_unavailable');return [...crypto.getRandomValues(new Uint8Array(16))].map(n=>n.toString(16).padStart(2,'0')).join('');};
  const q=s=>document.querySelector(s);
  const clearOptional=()=>{visitorId=null;visitId=null;remove(local,CONSENT_KEYS.visitor);remove(visitStorage,CONSENT_KEYS.visit);};
- const halt=()=>{ready=false;consented=false;activeConsent=false;pageSent=false;lastScroll=0;queue=[];if(timer!==null){clearTimer(timer);timer=null;}clearOptional();};
+ const halt=()=>{ready=false;consented=false;activeConsent=false;if(!albums)pageSent=false;lastScroll=0;queue=[];if(timer!==null){clearTimer(timer);timer=null;}clearOptional();};
  const ensureIds=()=>{
   const stored=readJSON(local,CONSENT_KEYS.visitor);const valid=stored&&/^[a-f0-9]{32}$/.test(stored.id)&&Number.isFinite(stored.expiresAt)&&stored.expiresAt>now()&&stored.expiresAt<=now()+LIFE;
   visitorId=valid?stored.id:randomId();if(!valid){writeJSON(local,CONSENT_KEYS.visitor,{id:visitorId,expiresAt:now()+LIFE});remove(visitStorage,CONSENT_KEYS.visit);}
@@ -72,10 +75,11 @@ export function setupAnalytics({document,window,location,preview,request,session
  const pageSlug=()=>{const slug=new URLSearchParams(location.search).get('slug');return publicSlugs.has(slug)?slug:null;};
  const emit=(type,target,slug)=>{
   if(preview||!consented||!ready||disposed)return false;
+  if(albums&&(!albumContext||document.visibilityState==='hidden'||!['page_view','click'].includes(type)))return false;
   if(!['page_view','click','form_start','form_submit','scroll'].includes(type))return false;
-  if(target&&!(type==='scroll'?['25','50','75','100'].includes(target):ANALYTICS_TARGETS.includes(target)))return false;
-  const event={id:randomId(),type,page};const known=publicSlugs.has(slug)?slug:pageSlug();if(known)event.eventSlug=known;if(target)event.target=target;
-  if(queue.length>=20){if(type!=='form_submit')return false;queue.shift();}queue.push(event);try{onEvent(event);}catch{}if(timer===null)timer=setTimer(()=>{timer=null;void flush();},800);return true;
+  if(target&&!(albums?ALBUM_ANALYTICS_TARGETS.includes(target):type==='scroll'?['25','50','75','100'].includes(target):ANALYTICS_TARGETS.includes(target)))return false;
+  const event={id:randomId(),type,page};const known=albums?(slug??(albumContext.kind==='event'?albumContext.slug:null)):publicSlugs.has(slug)?slug:pageSlug();if(known)event.eventSlug=known;if(target)event.target=target;
+  if(queue.length>=20){if(type!=='form_submit')return false;queue.shift();}queue.push(event);if(!albums)try{onEvent(event);}catch{}if(timer===null)timer=setTimer(()=>{timer=null;void flush();},800);return true;
  };
  async function flush({urgent=false}={}){
   if(preview||!consented||!ready||disposed)return;
@@ -88,13 +92,38 @@ export function setupAnalytics({document,window,location,preview,request,session
   inFlight.add(sending);
   try{await sending;}finally{inFlight.delete(sending);if(queue.length&&consented&&ready&&!disposed&&timer===null)timer=setTimer(()=>{timer=null;void flush();},800);}
  }
- const pageView=()=>{pageReady=true;if(!pageSent&&ready&&consented){pageSent=emit('page_view');}};
+ const pageView=()=>{pageReady=true;if(!pageSent&&ready&&consented){pageSent=emit('page_view');if(albums&&pageSent)void flush({urgent:true});}};
+ const albumSlug=value=>typeof value==='string'&&value.length<=100&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+ function replaceAlbumContext(value){
+  if(!albums||disposed)return false;
+  albumContext=null;queue=[];if(timer!==null){clearTimer(timer);timer=null;}
+  if(value===null)return true;
+  if(!value||typeof value!=='object'||Array.isArray(value)||document.visibilityState==='hidden')return false;
+  const keys=Object.keys(value);
+  if(value.kind==='directory'&&keys.length===2&&keys.includes('slugs')&&Array.isArray(value.slugs)&&value.slugs.length<=500&&value.slugs.every(albumSlug)&&new Set(value.slugs).size===value.slugs.length){albumContext={kind:'directory',slugs:new Set(value.slugs)};}
+  else if(value.kind==='event'&&keys.length===2&&keys.includes('slug')&&albumSlug(value.slug)){albumContext={kind:'event',slug:value.slug};}
+  else return false;
+  pageView();return true;
+ }
+ function recordAlbumAction(target,indexItemSlug){
+  if(!albums||!albumContext||!ALBUM_ANALYTICS_TARGETS.includes(target))return false;
+  let slug;
+  if(target==='album-open'){
+   if(albumContext.kind!=='directory'||!albumContext.slugs.has(indexItemSlug))return false;slug=indexItemSlug;
+  }else{
+   if(indexItemSlug!==undefined)return false;
+   if(target==='album-photo-open'&&albumContext.kind!=='event')return false;
+   if(['album-filter','album-search'].includes(target)&&albumContext.kind!=='directory')return false;
+  }
+  const accepted=emit('click',target,slug);if(accepted)void flush({urgent:true});return accepted;
+ }
  const status=text=>{const host=q('#consent-status');if(host)host.textContent=text;};
  const reflect=()=>{q('#consent-banner').hidden=!!preference||preview;q('#consent-analytics').checked=preference?.analytics===true;q('#consent-advertising').checked=preference?.advertising===true;};
  async function choose(choice,{restore=false}={}){
+  if(disposed)return false;
   if(preview){status('Test yayınında ölçüm veya reklam kaydı yapılmaz.');return false;}
   const next=consentValue({version:CONSENT_VERSION,...choice});if(!next)return false;
-  const current=++generation;activeAdvertising=false;try{onConsent({analytics:false,advertising:false});}catch{}preference=next;if(!writeJSON(local,CONSENT_KEYS.preference,next))remove(local,CONSENT_KEYS.preference);reflect();ready=false;activeConsent=false;queue=[];if(timer!==null){clearTimer(timer);timer=null;}
+  const current=++generation;activeAdvertising=false;if(!albums)try{onConsent({analytics:false,advertising:false});}catch{}preference=next;if(!writeJSON(local,CONSENT_KEYS.preference,next))remove(local,CONSENT_KEYS.preference);reflect();ready=false;activeConsent=false;queue=[];if(timer!==null){clearTimer(timer);timer=null;}
   if(!next.analytics)halt();else consented=true;
   status('Tercihlerin kaydediliyor…');
   try{
@@ -104,12 +133,13 @@ export function setupAnalytics({document,window,location,preview,request,session
    let payload={...next,...(next.analytics?{visitorId,visitId,source:analyticsSource(location.search,document.referrer||'',deviceType(window))}:{})};
    let result;
    try{result=await request('analytics/consent',payload);}catch(error){
+    if(albums&&(current!==generation||disposed))return false;
     if(next.analytics&&error.code==='analytics_identifier_expired'){clearOptional();ensureIds();payload={...payload,visitorId,visitId};result=await request('analytics/consent',payload);}
-    else if(['request_verification','csrf_invalid','invalid_csrf'].includes(error.code)){await session();result=await request('analytics/consent',payload);}else throw error;
+    else if(['request_verification','csrf_invalid','invalid_csrf'].includes(error.code)){await session();if(albums&&(current!==generation||disposed))return false;result=await request('analytics/consent',payload);}else throw error;
    }
    if(current!==generation)return false;
    const accepted=consentValue(result);if(!accepted||accepted.analytics!==next.analytics||accepted.advertising!==next.advertising)throw new Error('consent_not_confirmed');
-   ready=next.analytics;consented=next.analytics;activeConsent=ready;activeAdvertising=next.advertising;try{onConsent({analytics:ready,advertising:activeAdvertising});}catch{}status('Tercihlerin kaydedildi. İstediğin zaman değiştirebilirsin.');
+   ready=next.analytics;consented=next.analytics;activeConsent=ready;activeAdvertising=albums?false:next.advertising;if(!albums)try{onConsent({analytics:ready,advertising:activeAdvertising});}catch{}status('Tercihlerin kaydedildi. İstediğin zaman değiştirebilirsin.');
    if(pageReady)pageView();return true;
   }catch{if(current===generation){ready=false;activeConsent=false;status('Tercih sunucuda doğrulanamadı. Ölçüm kapalı; aşağıdan yeniden kaydedebilirsin.');if(!restore)q('#consent-dialog').showModal?.();}return false;}
  }
@@ -123,6 +153,7 @@ export function setupAnalytics({document,window,location,preview,request,session
  if(preview){for(const id of ['consent-analytics','consent-advertising','consent-save','consent-dialog-reject'])q('#'+id).disabled=true;}
  reflect();
  const started=new Set();let searched=false;
+ if(!albums){
  document.addEventListener('click',event=>{const target=knownTarget(event.target,location);if(!target)return;const link=ancestor(event.target,e=>e.tagName==='A');let slug;try{slug=new URL(link?.getAttribute('href'),location.href).searchParams.get('slug');}catch{}emit('click',target,slug);});
  document.addEventListener('focusin',event=>{const form=ancestor(event.target,e=>e.tagName==='FORM'),target=formTarget(form,page);if(target&&!started.has(target)&&!event.target.disabled&&!ancestor(event.target,e=>e.tagName==='FIELDSET'&&e.disabled)&&emit('form_start',target))started.add(target);});
  // Capture observes the enabled form before its own submit handler disables controls.
@@ -130,7 +161,11 @@ export function setupAnalytics({document,window,location,preview,request,session
  document.addEventListener('change',event=>{if(['category','year'].includes(event.target.getAttribute?.('id')))emit('click','archive-filter');});
  document.addEventListener('input',event=>{if(event.target.getAttribute?.('id')==='search'&&!searched&&emit('click','archive-search'))searched=true;});
  window.addEventListener('scroll',()=>{if(!ready||!consented)return;const height=Math.max(document.documentElement.scrollHeight||0,document.body.scrollHeight||0),viewport=window.innerHeight||0;if(height<=viewport)return;const percent=Math.min(100,Math.floor(((window.scrollY||0)+viewport)/height*100));for(const threshold of [25,50,75,100])if(threshold>lastScroll&&percent>=threshold){emit('scroll',String(threshold));lastScroll=threshold;}},{passive:true});
- window.addEventListener('pagehide',()=>{void flush({urgent:true});});
+ }
+ const albumHidden=()=>{if(document.visibilityState==='hidden')replaceAlbumContext(null);};
+ const pagehide=()=>{if(albums)replaceAlbumContext(null);else void flush({urgent:true});};
+ if(albums)document.addEventListener('visibilitychange',albumHidden);
+ window.addEventListener('pagehide',pagehide);
  if((preference?.analytics||preference?.advertising)&&!preview)void choose(preference,{restore:true});
- return {pageView,flush,choose,showPreferences,record:emit,allowEvents(events){for(const e of events||[])if(e&&e.status!=='draft'&&typeof e.slug==='string'&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(e.slug)&&e.slug.length<=160)publicSlugs.add(e.slug);},get state(){return {analytics:consented&&ready,advertising:activeAdvertising,preview};},dispose(){disposed=true;ready=false;activeConsent=false;activeAdvertising=false;try{onConsent({analytics:false,advertising:false});}catch{}queue=[];if(timer!==null)clearTimer(timer);}};
+ return {pageView,flush,choose,showPreferences,replaceAlbumContext,recordAlbumAction,record:(...args)=>albums?false:emit(...args),allowEvents(events){if(albums)return;for(const e of events||[])if(e&&e.status!=='draft'&&typeof e.slug==='string'&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(e.slug)&&e.slug.length<=160)publicSlugs.add(e.slug);},get state(){return {analytics:consented&&ready,advertising:activeAdvertising,preview};},dispose(){disposed=true;ready=false;activeConsent=false;activeAdvertising=false;if(albums){generation++;albumContext=null;document.removeEventListener?.('visibilitychange',albumHidden);window.removeEventListener?.('pagehide',pagehide);}else try{onConsent({analytics:false,advertising:false});}catch{}queue=[];if(timer!==null)clearTimer(timer);}};
 }

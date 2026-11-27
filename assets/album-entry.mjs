@@ -3,6 +3,7 @@ import {apiURL,archiveEvent,isPreviewDeployment} from './core.mjs';
 import {archiveGallery,createPhotoViewer} from './archive-photos.mjs';
 import {setupNavigation} from './navigation.mjs';
 import {mountPhotoAlbums} from './photo-albums.mjs';
+import {mountAlbumMeasurement} from './album-measurement.mjs';
 
 const preview = isPreviewDeployment(document,location);
 const base = new URL('./',location.href);
@@ -43,9 +44,13 @@ async function loadEvent(slug) {
 document.documentElement.classList.add('js');
 setupNavigation();
 document.querySelector('#deployment-notice').hidden = !preview;
-for (const button of document.querySelectorAll('[data-consent-preferences]')) button.hidden = true;
 const selected = new URLSearchParams(location.search).getAll('etkinlik');
 const slug = selected.length === 0 ? null : selected.length === 1 && validSlug(selected[0]) ? selected[0] : '!';
+const host = document.querySelector('#photo-albums');
 const viewer = createPhotoViewer(document);
-void mountPhotoAlbums({host:document.querySelector('#photo-albums'),selectedSlug:slug,loadArchive,loadEvent,
-  resolvePhotos:archiveGallery,openGallery:({photos,index,trigger}) => viewer.open(photos,index,trigger),closeGallery:viewer.close});
+const measurement = mountAlbumMeasurement({document,window,host,selectedSlug:slug,preview});
+void mountPhotoAlbums({host,selectedSlug:slug,loadArchive,loadEvent,
+  resolvePhotos:archiveGallery,openGallery:({photos,index,trigger}) => {
+    viewer.open(photos,index,trigger);
+    if(document.querySelector('#gallery-dialog').open)measurement.openedPhoto();
+  },closeGallery:viewer.close});

@@ -3,6 +3,7 @@ import {apiURL,isPreviewDeployment} from './core.mjs';
 import {setupNavigation} from './navigation.mjs';
 
 const screens={
+ 'event-history-workspace':{private:true,history:true,title:'Etkinlik geçmişim',module:'./member-event-history.mjs',mount:'mountEventHistory'},
  'campus-directory':{catalogOnly:true,title:'Kampüs rehberi',module:'./campus-directory.mjs',mount:'mountCampusDirectory'},
  'vacancy-apply':{private:true,param:'ilan',mode:'apply',title:'İlan başvurularım',module:'./vacancy-applications.mjs',mount:'mountVacancyApplications'},
  'vacancy-intake':{private:true,param:'ilan',mode:'intake',title:'İlanlarıma gelen başvurular',module:'./vacancy-applications.mjs',mount:'mountVacancyApplications'},
@@ -55,6 +56,7 @@ export function startWorkspace(host,screen){
  }
  function locked(code){
   let login='hesabim.html';
+  if(screen.history&&!preview&&code!=='member_unavailable')login+='?devam=etkinlik-gecmisim';
   if(screen.mode&&!preview&&code!=='member_unavailable'){
    const params=new URLSearchParams({devam:screen.mode==='intake'?'firma-adaylari':'ilan-basvurusu'});
    const jobs=new URLSearchParams(location.search).getAll('ilan');
@@ -112,6 +114,13 @@ export function startWorkspace(host,screen){
     parseMember=account.publicMember;
     await checkSession(epoch,true);
    }
+   if(screen.history){
+    const leaf=await import(screen.module);
+    if(!current())return;
+    const cleanup=await leaf.mountEventHistory({host,memberId:activeSession,api:privateRequest,isCurrent:current});
+    if(current())dispose=cleanup;else cleanup?.();
+    return;
+   }
    const [leaf,catalog]=await Promise.all([
     import(screen.module),
     fetch(new URL('data/community-profiles.json',new URL('./',location.href)),{credentials:'omit',redirect:'error',signal:AbortSignal.timeout(8000)}).then(r=>r.ok?r.json():{}).catch(()=>({}))
@@ -146,6 +155,9 @@ export function startWorkspace(host,screen){
   }
  }
  document.addEventListener('visibilitychange',async()=>{
+  if(screen.history){
+   if(document.hidden){reset();host.hidden=true;}else{void open();}return;
+  }
   if(document.hidden){if(screen.private)host.hidden=true;return;}
   // The directory refreshes its current page and filters in its own visibility handler.
   if(!screen.private)return;
