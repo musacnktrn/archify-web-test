@@ -1,0 +1,79 @@
+/* [codex] 01a20fd9-f999-7b90-8b1b-b8cd977d4517 · Common wayfinding for the four publication screens. */
+.publication-shell {
+  --publication-rule: #b7beb1;
+  width: min(100% - clamp(32px, 8vw, 128px), 1264px);
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 42px) 0 clamp(36px, 6vw, 84px);
+}
+.publication-rail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 clamp(16px, 3vw, 36px);
+  border-bottom: 1px solid var(--publication-rule);
+}
+.publication-rail a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #223c32;
+  font-size: .91rem;
+  text-decoration: none;
+}
+.publication-rail a:hover, .publication-rail a:focus-visible { text-decoration: underline; text-underline-offset: .25em; }
+.publication-shell #workspace-root { padding: 0; width: 100%; margin: 0; max-width: none; }
+.publication-shell #workspace-root > h1 { margin: .75em 0 .35em; }
+.publication-shell #workspace-root > [role="status"] { max-width: 48ch; line-height: 1.6; }
+.publication-shell #workspace-root > .button { margin-top: 12px; }
+/* The public index shares the site's editorial typography. Private forms keep their workspace layout. */
+body[data-page="vacancy-directory"] .vacancy-directory {
+  color: #203e35;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: clamp(12px, 2.2vw, 28px) 0;
+}
+body[data-page="vacancy-directory"] .cw-header {
+  border-top: 3px solid #426556;
+  border-bottom: 0;
+  padding-top: clamp(12px, 2vw, 25px);
+  align-items: flex-start;
+}
+body[data-page="vacancy-directory"] .cw-header h1 {
+  font-size: clamp(2.45rem, 5.5vw, 5rem);
+  letter-spacing: -.055em;
+  line-height: .98;
+  max-width: 19ch;
+}
+body[data-page="vacancy-directory"] .cw-surface[aria-busy="false"] .cw-status:not(.is-error) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+body[data-page="vacancy-directory"] .cw-filters {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  border: 0;
+  border-block: 1px solid #b8c3b8;
+  border-radius: 0;
+  padding: clamp(12px,2vw,22px) 0;
+  background: transparent;
+}
+body[data-page="vacancy-directory"] .cw-grid { gap: clamp(12px,2vw,24px); }
+body[data-page="vacancy-directory"] .cw-card {
+  border-radius: 0;
+  border: 0;
+  border-top: 2px solid #8fa694;
+  background: #fffefa;
+}
+@media(max-width: 620px) {
+  body[data-page="vacancy-directory"] .cw-header { display: flex; flex-direction: row; gap: 12px; }
+  body[data-page="vacancy-directory"] .cw-header .cw-tools { align-self: start; width: auto; }
+  body[data-page="vacancy-directory"] .cw-filters { display: grid; gap: 12px; }
+  body[data-page="vacancy-directory"] .cw-filters select { min-width: 0; width: 100%; }
+}

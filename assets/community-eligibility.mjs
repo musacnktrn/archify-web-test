@@ -44,6 +44,10 @@ export async function setupCommunityEligibility({document,preview,profiles,group
  const formMessage=(text,kind='',focus=false)=>{status.textContent=text;status.className='form-status '+kind;if(focus)status.focus();};
  const selectMarkup=(items,key='label')=>'<option value="">Seç</option>'+items.map(item=>`<option value="${esc(item.id)}">${esc(item[key])}</option>`).join('');
  q('#profile-status').innerHTML=selectMarkup(profiles.statuses);q('#profile-field').innerHTML=selectMarkup(profiles.fields);q('#profile-city').innerHTML=selectMarkup(profiles.cities);q('#profile-school').innerHTML=selectMarkup(profiles.schools,'name')+'<option value="manual">Okulum listede yok</option>';
+ // [codex] 01a20fd9 · A public school link preselects only its canonical school.
+ const schoolHints=params.getAll('okul');
+ const hintedSchool=!preview&&schoolHints.length===1?profiles.schools.find(s=>s.id===schoolHints[0]):null;
+ if(hintedSchool)q('#profile-school').value=hintedSchool.id;
  fields.disabled=true;profileFields.disabled=preview;retry.hidden=true;
  const readProfile=()=>({status:q('#profile-status').value,field:q('#profile-field').value,cityId:q('#profile-city').value,schoolId:q('#profile-school').value,schoolName:q('#profile-school-name').value});
  const conditionalFields=()=>{const needed=['student','graduate'].includes(q('#profile-status').value),manual=needed&&q('#profile-school').value==='manual';q('#profile-school-section').hidden=!needed;q('#profile-school-manual').hidden=!manual;q('#profile-school').required=needed;q('#profile-school-name').required=manual;};
@@ -101,6 +105,6 @@ export async function setupCommunityEligibility({document,preview,profiles,group
    const runDemo=manual=>{const school=profiles.schools.find(s=>s.cityId==='istanbul');const sample={status:'student',field:'architecture',cityId:'istanbul',...(manual?{schoolName:'Sentetik Örnek Okul'}:{schoolId:school.id})};const result=previewCommunityRecommendations(sample,profiles,groups);profile=result.profile;eligible=result.groups;requiresReview=result.requiresReview;selected=null;cards();profileMessage(manual?'Örnek: okul inceleme gerektirir; şehir ve bölge önerilmez.':'Örnek: genel duyuru, mimarlık ve İstanbul toplulukları. Kişisel bilgi ve gönderim kapalı.');const wanted=params.get('grup');if(wanted&&eligible.some(g=>g.id===wanted))selectGroup(wanted);};
    q('#profile-demo-student').addEventListener('click',()=>runDemo(false));q('#profile-demo-manual').addEventListener('click',()=>runDemo(true));
   }
- }else profileMessage('Durumunu ve alanını seç. Öğrenciysen eğitim aldığın şehri, diğer durumlarda bulunduğun şehri belirt.');
+ }else profileMessage((hintedSchool?hintedSchool.name+' rehberden seçildi. ':'')+'Durumunu ve alanını seç. Öğrenciysen eğitim aldığın şehri, diğer durumlarda bulunduğun şehri belirt.');
  return {selectGroup,check:eligibility,get state(){return {eligible:eligible.map(g=>g.id),selected:selected?.id||null,requiresReview,preview,completed,uncertain};}};
 }

@@ -87,3 +87,6 @@ export function sourceMarkup(source,prefix='') {
   const label=escapeHTML(prefix+source.title),url=safeURL(source.url);
   return url?`<a class="source-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<span class="source-link ux-source-text">${label}</span>`;
 }
+
+// [codex] 01a20fd9 · Shared deployment boundary for public pages and private accounts.
+export function isPreviewDeployment(document,location){return document.querySelector('meta[name="deployment"]')?.content!=='server'||location.protocol==='file:'||location.hostname.endsWith('.github.io');}

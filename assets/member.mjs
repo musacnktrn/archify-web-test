@@ -1,12 +1,36 @@
 // [codex] 01a20fe8-199e-7631-8910-07e7d27b753d · R16 isolated Archify ID. No storage, logging, analytics, or automatic bearer claim.
 import {authMarkup,dashboardMarkup,dashboardFailureMarkup,MEMBER_ERRORS,MEMBER_INTERESTS,safeSlug,safeId,tokenValid} from './member-ui.mjs';
 import {normalizeCommunityProfile,COMMUNITY_ERRORS} from './community-eligibility.mjs';
-import {escapeHTML as esc} from './core.mjs';
+import {escapeHTML as esc,isPreviewDeployment as memberPreview} from './core.mjs';
 const fail=(code,status=0)=>Object.assign(new Error(code),{code,status});
 const message=error=>MEMBER_ERRORS[error?.code]||COMMUNITY_ERRORS[error?.code]||'İşlem tamamlanamadı. Bilgilerini kontrol edip yeniden dene.';
 const textValid=(value,max)=>typeof value==='string'&&[...value.trim()].length>=1&&[...value.trim()].length<=max&&!/[\u0000-\u001f\u007f]/.test(value);
-export function memberPreview(document,location){return document.querySelector('meta[name="deployment"]')?.content!=='server'||location.protocol==='file:'||location.hostname.endsWith('.github.io');}
-export function memberAPIURL(route,href){if(!/^member\/(?:session|register|login|logout|profile|password|dashboard|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/.test(route))throw fail('invalid_route');const url=new URL('api/member.php',new URL('./',href));url.searchParams.set('r',route);return url;}
+export {memberPreview};
+// [codex] 01a20fd9 · Exact same-origin routes for the private member workspaces.
+const baseMemberRoute = /^member\/(?:session|register|login|logout|profile|password|dashboard|favorites|career\/(?:candidates|companies)|(?:tickets|orders)\/(?:claim|open))$/;
+const companyMemberRoute = /^member\/companies(?:\/request|\/[a-f0-9]{32}\/vacancies(?:\/[a-f0-9]{32}(?:\/(?:save|submit|close))?)?)?$/;
+const applicantRoute = /^member\/vacancy-applications(?:\/(?:options|preview|[a-f0-9]{32}(?:\/withdraw)?))?$/;
+const employerIntakeRoute = /^member\/companies\/[a-f0-9]{32}\/vacancies\/[a-f0-9]{32}\/applications(?:\/[a-f0-9]{32}(?:\/status)?)?$/;
+const profileMemberRoute = /^member\/network-profile(?:\/(?:save|submit|withdraw))?$/;
+export function memberAPIURL(route,href,query={}) {
+ if(typeof route!=='string'||route.trim()!==route||![baseMemberRoute,companyMemberRoute,profileMemberRoute,applicantRoute,employerIntakeRoute].some(pattern=>pattern.test(route))) throw fail('invalid_route');
+ const url=new URL('api/member.php',new URL('./',href));
+ url.searchParams.set('r',route);
+ for(const [key,value] of Object.entries(query)){
+  const cursor=key==='after'&&(companyMemberRoute.test(route)||applicantRoute.test(route)||employerIntakeRoute.test(route));
+  const vacancy=key==='vacancyId'&&route==='member/vacancy-applications/options';
+  if(!(cursor||vacancy)||typeof value!=='string'||!/^[a-f0-9]{32}$/.test(value))throw fail('invalid_query');
+  url.searchParams.set(key,value);
+ }
+ return url;
+}
+export function careerContinuation(search){
+ const params=new URLSearchParams(search||''),name=params.get('devam');
+ if(!['ilan-basvurusu','firma-adaylari'].includes(name)||params.getAll('devam').length!==1||[...params.keys()].some(key=>!['devam','ilan'].includes(key)))return null;
+ const jobs=params.getAll('ilan');
+ if(jobs.length>1||jobs.length===1&&!/^[a-f0-9]{32}$/.test(jobs[0]))return null;
+ return name+'.html'+(jobs.length?'?ilan='+jobs[0]:'');
+}
 export function consumeMemberHandoff(location,history){
  const raw=location.hash||'';if(!raw)return null;
  // Remove the fragment before any session request. Never retain the full URL.
@@ -38,14 +62,25 @@ export function privateDashboard(value){
 }
 export function createMemberClient({fetch,location,preview=false,timeout=12000}={}){
  let csrfToken='';
- return {setCSRF(value){if(typeof value!=='string'||!value||value.length>512)throw fail('invalid_session_response');csrfToken=value;},clear(){csrfToken='';},async request(route,body){
+ return {setCSRF(value){if(typeof value!=='string'||!value||value.length>512)throw fail('invalid_session_response');csrfToken=value;},clear(){csrfToken='';},
+ async applicationPdf(body){
+  if(preview||!csrfToken)throw fail('member_unavailable');
+  const response=await fetch(new URL('api/ilan-basvuru-belgesi.php',new URL('./',location.href)),{method:'POST',credentials:'same-origin',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},body:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});
+  if(!response.ok){const value=await response.json().catch(()=>({}));throw fail(value?.error||'document_unavailable',response.status);}
+  const bytes=Number(response.headers.get('Content-Length'));
+  if(!Number.isSafeInteger(bytes)||bytes<5||bytes>10*1024*1024||response.headers.get('Content-Type')?.split(';')[0]!=='application/pdf')throw fail('document_unavailable');
+  const blob=await response.blob();
+  if(blob.size!==bytes||await blob.slice(0,5).text()!=='%PDF-')throw fail('document_unavailable');
+  return blob;
+ },async request(route,body,query={}){
   if(preview)throw fail('preview');const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
-  try{const response=await fetch(memberAPIURL(route,location.href),{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',redirect:'error',signal:controller.signal,headers:body===undefined?{'Accept':'application/json'}:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},...(body===undefined?{}:{body:JSON.stringify(body)})});let value;try{value=await response.json();}catch{throw fail('network',response.status>=500?response.status:0);}if(!response.ok)throw fail(typeof value?.error==='string'?value.error:'network',response.status);return value;}catch(error){if(error.code)throw error;throw fail('network');}finally{clearTimeout(timer);}
+  try{const response=await fetch(memberAPIURL(route,location.href,query),{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',redirect:'error',signal:controller.signal,headers:body===undefined?{'Accept':'application/json'}:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},...(body===undefined?{}:{body:JSON.stringify(body)})});let value;try{value=await response.json();}catch{throw fail('network',response.status>=500?response.status:0);}if(!response.ok)throw fail(typeof value?.error==='string'?value.error:'network',response.status);return value;}catch(error){if(error.code)throw error;throw fail('network');}finally{clearTimeout(timer);}
  }};
 }
 export function setupMember({document,window=globalThis.window,location=window?.location,history=window?.history,fetch=globalThis.fetch,preview=memberPreview(document,location),navigate=url=>location.assign(url),client=createMemberClient({fetch,location,preview})}={}){
  const host=document.querySelector('#member-root');if(!host)return null;
  let pending=consumeMemberHandoff(location,history),member=null,dashboard=null,available=false,registrationAvailable=false,mode=document.body.dataset.memberRoute==='register'?'register':'login',epoch=0,busy=false,catalogPromise=null;
+ let continuation=pending?null:careerContinuation(location.search);
  // The host is not a live region: only concise operation status is announced.
  host.setAttribute('aria-live','off');
  const q=selector=>host.querySelector(selector),on=(selector,type,callback)=>q(selector)?.addEventListener(type,callback);
@@ -55,6 +90,9 @@ export function setupMember({document,window=globalThis.window,location=window?.
  function renderAuth(loading=false){host.innerHTML=authMarkup({register:mode==='register',preview,available,registrationAvailable,pending:!!pending,loading});
   on('#member-auth-form','submit',event=>{event.preventDefault();void authenticate();});
   for(const toggle of host.querySelectorAll('[data-member-auth-mode]'))toggle.addEventListener('click',()=>{if(busy)return;clearSecrets();mode=toggle.dataset.memberAuthMode;renderAuth();q('#member-username')?.focus();});
+  if(continuation&&!preview){
+   const hint=document.createElement('p');hint.className='member-notice';hint.textContent='Giriş yaptıktan sonra seçtiğin kariyer ekranına döneceksin.';q('.member-auth-card')?.append(hint);
+  }
   if(pending){q('.member-auth-card')?.insertAdjacentHTML('beforeend','<button type="button" class="member-text-button" id="member-cancel-pending-auth">Kaydı eklemekten vazgeç</button>');on('#member-cancel-pending-auth','click',()=>{pending=null;renderAuth();});}
  }
  async function establish(){
@@ -72,7 +110,9 @@ export function setupMember({document,window=globalThis.window,location=window?.
   finally{body=null;if(generation===epoch)busy=false;}
  }
  async function loadDashboard(){
-  if(preview||!member)return;const generation=epoch,expectedId=member.id;
+  if(preview||!member)return;
+  if(continuation){const path=continuation;continuation=null;navigate(path);return;}
+  const generation=epoch,expectedId=member.id;
   try{const result=privateDashboard(await client.request('member/dashboard'));if(generation!==epoch||member?.id!==expectedId)return;if(result.member.id!==expectedId)throw fail('member_authentication_required',401);dashboard=result;member=result.member;renderDashboard();}
   catch(error){if(generation!==epoch)return;if(protectedError(error))return;dashboard=null;host.innerHTML=dashboardFailureMarkup(member);bindCommon();}
  }

@@ -669,7 +669,7 @@ async function setupForm() {
 setupNavigation();
 enhanceCategoryIdentity(document,location);
 // [codex] R16 private account pages never initialize analytics or provider scripts.
-if(page==='member-dashboard'||page==='member-register'){
+if(['member-dashboard','member-register','company-workspace','network-workspace','vacancy-directory','network-directory'].includes(page)){
   document.querySelectorAll('[data-consent-preferences]').forEach(control=>{control.hidden=true;});
 }else{
   providers=setupProviders({document,window,preview,request,session,page});
@@ -703,7 +703,7 @@ async function main(){
 }
 // Avoid unhandled fetch failures on pages that do not need the catalogue.
 catalogPromise.catch(()=>{});editorialPromise.catch(()=>{});
-main().finally(()=>analytics.pageView()).catch(()=>{
+main().finally(()=>analytics?.pageView()).catch(()=>{
   const host=(page==='series'&&params.get('seri')?$('#series-events'):null)||$('#home-events')||$('#event-list')||$('#upcoming-events')||$('#series-list')||$('#event-detail')||$('#source-list')||$('#group-list')||$('#media-list')||$('#category-upcoming');
   if(host){host.hidden=false;host.innerHTML='<div class="empty-state"><h2>Bağlantıya kısa bir ara.</h2><p>İçerik şu anda yüklenemedi. Sayfayı yenileyebilir veya iletişim sayfasından devam edebilirsin.</p><a class="button" href="iletisim.html">İletişim</a></div>';}
 });
