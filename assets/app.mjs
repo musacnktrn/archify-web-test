@@ -96,11 +96,26 @@ function showCatalogOutage(page){
   for(const selector of extra[page]||[]){const part=document.querySelector(selector);if(part){part.replaceChildren();part.hidden=true;}}
 }
 function eventURL(event) { return 'etkinlik.html?slug=' + encodeURIComponent(event.slug); }
-function photo(event) { return (Array.isArray(event.gallery) ? event.gallery : []).find(item => item&&typeof item==='object'&&safeURL(item.src, { image: true })); }
 function categoryClass(category) { return ({'Festival':'festival','Zirve':'zirve','Buluşma':'sosyal','Sempozyum':'sempozyum','Atölye':'atolye','Teknik gezi':'teknik-gezi','Yurt dışı tur':'yurt-disi-tur'})[category] || 'bulusma'; }
-function cover(event, editorial) {
-  const image = photo(event);
-  if (image) return `<div class="cover cover-photo"><img src="${esc(safeURL(image.src, { image:true }))}" alt="${esc(image.alt || event.title)}" loading="lazy" width="1200" height="800"></div>`;
+function cover(event, editorial, {compact = false} = {}) {
+  const edit = editorial?.events?.[event.slug] || {};
+  const image = archiveGallery(event, edit)[0];
+  if (image) {
+    // [codex] P41: exact published src joins metadata; small rows never guess a rendition name.
+    const meta = (Array.isArray(edit.photoMetadata) ? edit.photoMetadata : []).find(item => item?.src === image.src);
+    const dimensions = item => Number.isInteger(item?.width) && item.width > 0 && item.width <= 20000 && Number.isInteger(item?.height) && item.height > 0 && item.height <= 20000;
+    const known = dimensions(meta);
+    const src = known ? image.thumbnailSrc : image.src;
+    const rendition = src === image.src ? meta : image.variants.find(item => item.src === src);
+    const size = dimensions(rendition) ? ` width="${rendition.width}" height="${rendition.height}"` : '';
+    // Lazy-image auto sizing follows the actual row/card CSS width, including high-density screens.
+    const sizes = compact
+      ? 'auto, (max-width: 359px) calc(100vw - 36px), (max-width: 620px) calc(100vw - 44px), (max-width: 1100px) 30vw, 25vw'
+      : 'auto, (max-width: 359px) calc(100vw - 36px), (max-width: 620px) calc(100vw - 44px), (max-width: 800px) calc((100vw - 78px) / 2), (max-width: 1600px) 50vw, 800px';
+    const responsive = known && image.variants.length > 1
+      ? ` srcset="${image.variants.map(item => `${esc(item.src)} ${item.width}w`).join(', ')}" sizes="${sizes}"` : '';
+    return `<div class="cover cover-photo"><img src="${esc(src)}"${responsive} alt="${esc(image.alt)}" loading="lazy"${size} decoding="async"></div>`;
+  }
   const route=editorial?.events[event.slug]?.routeHighlights || [];
   return `<div class="cover cover-document cover-${categoryClass(event.category)}" data-category="${categoryClass(event.category)}" aria-hidden="true"><span class="cover-category">${esc(event.category)}</span><span class="cover-word">${esc(event.title)}</span>${event.category==='Yurt dışı tur'?`<span class="cover-route">${esc(route.length?route.join(' · '):event.city || 'Avrupa')}</span>`:''}<span class="cover-year">${esc(event.year || 'Arşiv')}</span></div>`;
 }
@@ -109,7 +124,7 @@ function card(event, editorial) {
   return `<article class="editorial-card"><a href="${eventURL(event)}">${cover(event,editorial)}<p class="card-meta">${esc([event.category,event.city,event.year].filter(Boolean).join(' · '))}</p><h3>${esc(event.title)}</h3></a>${source(event, editorial)}</article>`;
 }
 function row(event, editorial) {
-  return `<article class="archive-row" data-category="${categoryClass(event.category)}"><a href="${eventURL(event)}" tabindex="-1" aria-hidden="true">${cover(event,editorial)}</a><div class="ux-archive-copy"><p class="card-meta">${esc([event.category,event.city].filter(Boolean).join(' · '))}</p><h3><a href="${eventURL(event)}">${esc(event.title)}</a></h3><p>${esc(event.summary)}</p>${source(event,editorial)}</div></article>`;
+  return `<article class="archive-row" data-category="${categoryClass(event.category)}"><a href="${eventURL(event)}" tabindex="-1" aria-hidden="true">${cover(event,editorial,{compact:true})}</a><div class="ux-archive-copy"><p class="card-meta">${esc([event.category,event.city].filter(Boolean).join(' · '))}</p><h3><a href="${eventURL(event)}">${esc(event.title)}</a></h3><p>${esc(event.summary)}</p>${source(event,editorial)}</div></article>`;
 }
 function archiveRows(events, editorial) {
   return groupEventsByYear(events).map(group=>`<section class="ux-year-section" aria-label="${esc(group.label)}"><h2 class="ux-year-label">${esc(group.label)}</h2><div class="ux-year-events">${group.events.map(event=>row(event,editorial)).join('')}</div></section>`).join('');
