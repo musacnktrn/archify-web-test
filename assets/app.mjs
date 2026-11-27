@@ -5,6 +5,7 @@ import { CATEGORY_PAGES, GROUP_TYPES, categoryPage } from './information.mjs';
 import {archiveGallery,createPhotoViewer} from './archive-photos.mjs';
 export {archiveGallery};
 import { setupNavigation } from './navigation.mjs';
+import {loadPublishedCatalog} from './published-catalog.mjs';
 import { setupAnalytics, analyticsRequestHeaders, advertisingRequestHeaders } from './analytics.mjs';
 import { setupCommunityEligibility } from './community-eligibility.mjs';
 import { setupProviders } from './providers.mjs';
@@ -61,19 +62,38 @@ async function staticJSON(file) {
   if (!response.ok) throw new Error('catalog_unavailable');
   return response.json();
 }
-const catalogPromise = staticJSON('data/catalog.json');
-const editorialPromise = staticJSON('data/editorial.json');
+function staticSource(file){
+  let pending=null;
+  return ()=>pending??=(staticJSON(file).catch(error=>{pending=null;throw error;}));
+}
+const readArchive=staticSource('data/catalog.json');
+const readEditorial=staticSource('data/editorial.json');
 // Static editorial sources never confer current registration permission.
 async function loadData() {
-  const [catalog, editorial] = await Promise.all([catalogPromise, editorialPromise]);
-  if (preview) return { events: catalog.events.map(archiveEvent), editorial, live: false };
-  try {
-    const data = await request('events');
-    if (!Array.isArray(data.events)) throw new Error('invalid_response');
-    return { events: data.events.filter(e => e.status !== 'draft'), editorial, live: true };
-  } catch {
-    return { events: catalog.events.map(event=>({...archiveEvent(event),gallery:[]})), editorial, live: false };
+  return loadPublishedCatalog({
+    preview,
+    readArchive,
+    readEditorial,
+    readCurrent:()=>request('events')
+  });
+}
+// [codex] 01a20fd9-f999-7b90-8b1b-b8cd977d4517 · Keep independent parts of the page usable during a catalogue outage.
+function showCatalogOutage(page){
+  const hosts={archive:'#event-list',events:'#upcoming-events',series:params.has('seri')?'#series-events':'#series-list',category:'#category-upcoming',sources:'#source-list'};
+  const host=document.querySelector(hosts[page]);
+  if(!host)return;
+  const section=document.createElement('section');section.className='empty-state';section.dataset.catalogOutage='';
+  const heading=document.createElement('h2');heading.textContent='Etkinlik kayıtlarına şu anda ulaşılamıyor.';
+  const message=document.createElement('p');message.textContent='Bağlantı geri geldiğinde güncel kayıtları yeniden yükleyebilirsin.';message.setAttribute('role','status');
+  const retry=document.createElement('button');retry.type='button';retry.className='button';retry.textContent='Yeniden dene';
+  retry.onclick=()=>location.reload();
+  section.append(heading,message,retry);host.hidden=false;host.replaceChildren(section);
+  if(page==='archive'){
+    const count=document.querySelector('#result-count');if(count)count.textContent='Liste yüklenemedi';
+    for(const control of document.querySelectorAll('#event-filters input,#event-filters select,#event-filters button'))control.disabled=true;
   }
+  const extra={events:['#series-list'],series:[params.has('seri')?'#series-list':'#series-events'],category:['#category-past','#category-series']};
+  for(const selector of extra[page]||[]){const part=document.querySelector(selector);if(part){part.replaceChildren();part.hidden=true;}}
 }
 function eventURL(event) { return 'etkinlik.html?slug=' + encodeURIComponent(event.slug); }
 function photo(event) { return (Array.isArray(event.gallery) ? event.gallery : []).find(item => item&&typeof item==='object'&&safeURL(item.src, { image: true })); }
@@ -200,7 +220,7 @@ function setupHomeExperience(){
   const eventTask=request('events').then(value=>{
    if(!Array.isArray(value.events))throw new Error('invalid_events');
    events=value.events;paintUpcoming();const revision=++portfolioRevision;
-   void editorialPromise.then(editorial=>{if(revision===portfolioRevision)renderHome({events,editorial,live:true});}).catch(()=>{if(revision===portfolioRevision)renderHome({events:[],editorial:{events:{}},live:false});});
+   void readEditorial().then(editorial=>{if(revision===portfolioRevision)renderHome({events,editorial,live:true});}).catch(()=>{if(revision===portfolioRevision)renderHome({events:[],editorial:{events:{}},live:false});});
   }).catch(()=>{events=[];portfolioRevision++;paintUpcoming();renderHome({events:[],editorial:{events:{}},live:false});});
   await Promise.allSettled([featureTask,contentTask,eventTask]);inFlight=false;
   if(paused)return;if(refreshQueued){refreshQueued=false;void refresh();}else schedule();
@@ -415,7 +435,7 @@ async function mediaEventDetails(slug) {
   if (typeof slug !== 'string' || slug.length > 160 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null;
   let event;
   if (preview) {
-    event = (await catalogPromise).events.find(record => record.slug === slug);
+    event = (await readArchive()).events.find(record => record.slug === slug);
   } else {
     try {
       event = (await request('events/'+encodeURIComponent(slug))).event;
@@ -425,7 +445,7 @@ async function mediaEventDetails(slug) {
     }
   }
   if (!event || event.slug !== slug || (!preview && !['published','closed'].includes(event.status))) return null;
-  const editorial = await editorialPromise.catch(() => ({}));
+  const editorial = await readEditorial().catch(() => ({}));
   const gallery = archiveGallery(event, editorial.events?.[slug] || {}).map(photo => ({
     src: photo.src, thumbnail: photo.thumbnailSrc, alt: photo.alt, caption: photo.caption
   }));
@@ -468,11 +488,9 @@ function categoryPlate(id,events){
 }
 // [codex] A live catalog reload carries publication authority for these archive views.
 async function loadPublishedArchive() {
-  const edit = editorialPromise.catch(() => staticJSON('data/editorial.json'));
-  const records = preview ? catalogPromise.catch(() => staticJSON('data/catalog.json')) : request('events');
-  const [editorial, catalog] = await Promise.all([edit, records]);
-  if (!Array.isArray(catalog.events)) throw new Error('catalog_unavailable');
-  return {events:preview ? catalog.events.map(archiveEvent) : catalog.events, editorial, preview};
+  const data=await loadData();
+  if(data.availability!=='available')throw new Error('catalog_unavailable');
+  return {events:data.events,editorial:data.editorial,preview};
 }
 
 // [codex] 01a20fd9 · Each edition is resolved against the published event catalog on each refresh.
@@ -671,7 +689,7 @@ if(['member-dashboard','member-register','company-workspace','network-workspace'
 }else{
   providers=setupProviders({document,window,preview,request,session,page});
   analytics=setupAnalytics({document,window,location,preview,request,session,onConsent:choice=>void providers.setConsent(choice),onEvent:event=>providers.measure(event)});
-  catalogPromise.then(data=>analytics.allowEvents(data.events)).catch(()=>{});
+  if(preview)readArchive().then(data=>analytics.allowEvents(data.events)).catch(()=>{});
 }
 
 async function downloadCertificate(token){
@@ -686,7 +704,7 @@ async function downloadCertificate(token){
 }
 async function main(){
   if(['ticket','checkout'].includes(page)){const badge=$('#r14-badge-button');const clearTicket=()=>{if(badge)badge.disabled=true;window.dispatchEvent(new Event('archify:ticket-clear'));void setupTicketSurvey({document,preview,request,session,token:null});};const verifiedTicket=token=>{if(badge)badge.disabled=false;window.dispatchEvent(new Event('archify:ticket-verified'));void setupTicketSurvey({document,preview,request,session,token}).catch(()=>{});};setupTickets({document,window,location,preview,request,session,certificateDownload:downloadCertificate,onAccepted:()=>void providers.pullConversions(),onTicketLookupStart:clearTicket,onTicketVerified:verifiedTicket});return;}
-  if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([catalogPromise,editorialPromise]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
+  if(page==='home'){setupHomeExperience();void renderMedia('#home-media');if(preview){const [catalog,editorial]=await Promise.all([readArchive(),readEditorial()]);renderHome({events:catalog.events.map(archiveEvent),editorial,live:false});}return;}
   if(['application','team-application'].includes(page)){await setupForm();return;}
   if(page==='community-application'){await setupCommunityFlow();return;}
   if(page==='community'){await renderCommunity();return;}
@@ -695,12 +713,11 @@ async function main(){
   if(page==='category' && ['festival','zirve'].includes(params.get('tur'))){await renderFestivalSummit(params.get('tur'));return;}
   if(page==='category' && ['yurt-disi-tur','atolye'].includes(params.get('tur'))){await renderCategoryArchive(params.get('tur'));return;}
   const data=await loadData();
+  if(data.availability==='unavailable'&&page!=='detail'){showCatalogOutage(page);return;}
   const renderers={home:renderHome,archive:renderArchive,events:renderEvents,series:renderSeries,detail:renderDetail,sources:renderSources,category:renderCategory};
   await renderers[page](data);
   enhanceCategoryIdentity(document,location);
 }
-// Avoid unhandled fetch failures on pages that do not need the catalogue.
-catalogPromise.catch(()=>{});editorialPromise.catch(()=>{});
 main().finally(()=>analytics?.pageView()).catch(()=>{
   const host=(page==='series'&&params.get('seri')?$('#series-events'):null)||$('#home-events')||$('#event-list')||$('#upcoming-events')||$('#series-list')||$('#event-detail')||$('#source-list')||$('#group-list')||$('#media-list')||$('#category-upcoming');
   if(host){host.hidden=false;host.innerHTML='<div class="empty-state"><h2>Bağlantıya kısa bir ara.</h2><p>İçerik şu anda yüklenemedi. Sayfayı yenileyebilir veya iletişim sayfasından devam edebilirsin.</p><a class="button" href="iletisim.html">İletişim</a></div>';}
