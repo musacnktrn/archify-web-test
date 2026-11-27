@@ -114,6 +114,14 @@ export function startWorkspace(host,screen){
     const qs=new URLSearchParams(location.search),single=key=>qs.getAll(key).length>1?'!':qs.get(key);
     const content=document.createElement('div');host.replaceChildren(content);
     const cleanup=await leaf[screen.mount]({host:content,schoolId:single('okul'),initialCity:single('sehir'),initialQuery:single('q'),
+     readSchoolEvents:preview?null:async(school,after)=>{
+      if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(school)||school.length>100)throw failure('invalid_school');
+      const url=apiURL('campus-events/'+school,new URL('./',location.href));
+      if(after!=null)url.searchParams.set('after',after);
+      const response=await fetch(url,{credentials:'omit',cache:'no-store',redirect:'error',headers:{Accept:'application/json'},signal:AbortSignal.timeout(9000)});
+      if(!response.ok)throw failure('school_events_unavailable',response.status);
+      return response.json();
+     },
      readCatalog:async()=>{
       const response=await fetch(new URL('data/community-profiles.json',new URL('./',location.href)),{credentials:'omit',cache:'no-cache',redirect:'error',signal:AbortSignal.timeout(8000)});
       if(!response.ok)throw failure('catalog_unavailable',response.status);

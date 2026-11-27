@@ -19,7 +19,7 @@ export function campusResults(catalog,{query='',city='',page=1}={}){
  const pages=Math.max(1,Math.ceil(matches.length/PAGE_SIZE)),current=Math.min(Math.max(1,page),pages);return {total:matches.length,page:current,pages,rows:matches.slice((current-1)*PAGE_SIZE,current*PAGE_SIZE)};
 }
 
-export async function mountCampusDirectory({host,readCatalog,schoolId,initialCity,initialQuery}={}){
+export async function mountCampusDirectory({host,readCatalog,readSchoolEvents,schoolId,initialCity,initialQuery}={}){
  if(!host?.ownerDocument||typeof readCatalog!=='function')throw TypeError('campus_mount_invalid');mounts.get(host)?.();
  const doc=host.ownerDocument,win=doc.defaultView,originalTitle=doc.title;let ownedTitle=null;
  const el=(tag,cls='',value)=>{const node=doc.createElement(tag);if(cls)node.className=cls;if(value!==undefined)node.textContent=value;return node;};
@@ -72,6 +72,18 @@ export async function mountCampusDirectory({host,readCatalog,schoolId,initialCit
   setState('ready');title(s.name);body.replaceChildren();const back=routeLink('← Üniversite listesine dön',{sehir:state.city,q:state.query,sayfa:state.page},'back');body.append(back);const head=heading(s.name);head.classList.add('cd-detail-header');head.dataset.campusDetail=s.id;head.append(el('p','cd-detail-city',s.city||'Şehir bilgisi belirtilmemiş'),toolbar());body.append(head);
   const grid=el('div','cd-detail-grid'),record=el('section','cd-record');record.append(el('p','cd-eyebrow','KATALOG KAYDI'),el('h2','','Okul bilgisi'));const facts=el('dl');for(const [label,value]of [['Üniversite',s.name],['Katalogdaki şehir',s.city||'Henüz belirtilmemiş']])facts.append(el('dt','',label),el('dd','',value));record.append(facts);if(!s.city)record.append(el('p','cd-note','Başvuruda okulunu ve eğitim aldığın şehri belirt. Bilgi eşleşmesi ekip incelemesi gerektirebilir.'));grid.append(record);
   const invitation=el('section','cd-invitation');invitation.append(el('p','cd-eyebrow','SONRAKİ ADIM'),el('h2','','Uygun grubunu bul'),el('p','','Durumunu, bölümünü / mesleğini ve şehrini seçerek katılabileceğin toplulukları kontrol et.'));const apply=el('a','cd-button cd-primary','Topluluklara başvur');apply.href='grup-basvuru.html?okul='+encodeURIComponent(s.id);apply.dataset.campusApply='';invitation.append(apply,el('p','cd-note','Bu bağlantı yalnız okul seçimini taşır. Başvuru için bilgilerini kontrol edip onaylaman gerekir.'));grid.append(invitation);body.append(grid);
+  if(readSchoolEvents!==undefined){
+   const slot=el('section','cd-school-events');
+   slot.dataset.schoolEvents=s.id;
+   slot.append(el('h2','','Kampüsle bağlantılı etkinlikler'));
+   const content=el('div');slot.append(content);body.append(slot);
+   const active=()=>live()&&slot.isConnected&&state.school===s.id&&!doc.hidden;
+   if(typeof readSchoolEvents==='function'){
+    void import('./campus-event-list.mjs').then(module=>{
+     if(active())return module.mountSchoolEvents({host:content,school:s,read:readSchoolEvents,active});
+    }).catch(()=>{if(active())content.textContent='Etkinlik bölümü açılamadı. Sayfayı yenileyebilirsin.';});
+   } else content.textContent='Güncel kampüs bağlantıları sunuculu sitede görüntülenir.';
+  }
   if(s.cityId){const related=data.schools.filter(row=>row.id!==s.id&&row.cityId===s.cityId).slice(0,6);if(related.length){const section=el('section','cd-related');section.append(el('h2','',s.city+' içindeki diğer kayıtlar'));const list=el('ul');for(const row of related){const li=el('li');li.append(routeLink(row.name,{okul:row.id},'related'));list.append(li);}section.append(list,routeLink('Şehirdeki tüm üniversiteler',{sehir:s.cityId},'city-link'));body.append(section);}}
   body.append(faq());say('Okul kaydı yüklendi.');
  }
