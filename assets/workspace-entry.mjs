@@ -3,6 +3,7 @@ import {apiURL,isPreviewDeployment} from './core.mjs';
 import {setupNavigation} from './navigation.mjs';
 
 const screens={
+ 'sponsor-portal-workspace':{private:true,memberView:'sponsor-paneli',title:'Sponsor panelim',module:'./member-partner-portal.mjs',mount:'mountPartnerPortal'},
  'community-applications-workspace':{private:true,memberView:'topluluk-basvurularim',title:'Topluluk başvurularım',module:'./member-community-applications.mjs',mount:'mountCommunityApplications'},
  'academy-interests-workspace':{private:true,memberView:'egitim-ilgilerim',title:'Eğitim ilgilerim',module:'./member-academy-interests.mjs',mount:'mountAcademyInterests'},
  'event-history-workspace':{private:true,memberView:'etkinlik-gecmisim',title:'Etkinlik geçmişim',module:'./member-event-history.mjs',mount:'mountEventHistory'},

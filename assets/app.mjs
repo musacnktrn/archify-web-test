@@ -465,6 +465,24 @@ async function loadPublishedArchive() {
   return {events:preview ? catalog.events.map(archiveEvent) : catalog.events, editorial, preview};
 }
 
+// [codex] 01a20fd9 · Each edition is resolved against the published event catalog on each refresh.
+async function renderFestivalSummit(category) {
+  const host=$('#festival-summit');
+  $('#category-standard').hidden=true;
+  host.hidden=false;
+  document.body.dataset.categoryPage=category;
+  document.title=(category==='festival'?'Festivaller':'Mimarlık zirveleri')+' · Archify';
+  try {
+    const {mountFestivalSummit}=await import('./festival-summit.mjs');
+    await mountFestivalSummit({host,category,loadArchive:loadPublishedArchive});
+  } catch {
+    const title=document.createElement('h1'),retry=document.createElement('a');
+    title.textContent='Etkinlik arşivi şu anda açılamıyor.';
+    retry.className='button';retry.href=location.href;retry.textContent='Yeniden dene';
+    host.replaceChildren(title,retry);
+  }
+}
+
 async function renderCategoryArchive(category) {
   const travel = category === 'yurt-disi-tur';
   const host = $(travel ? '#travel-archive' : '#academy-library');
@@ -664,6 +682,7 @@ async function main(){
   if(page==='community'){await renderCommunity();return;}
   if(page==='media'){if(params.has('video'))await renderVideoDetail();else await renderMedia();return;}
   if(!['home','archive','events','series','detail','sources','category'].includes(page))return;
+  if(page==='category' && ['festival','zirve'].includes(params.get('tur'))){await renderFestivalSummit(params.get('tur'));return;}
   if(page==='category' && ['yurt-disi-tur','atolye'].includes(params.get('tur'))){await renderCategoryArchive(params.get('tur'));return;}
   const data=await loadData();
   const renderers={home:renderHome,archive:renderArchive,events:renderEvents,series:renderSeries,detail:renderDetail,sources:renderSources,category:renderCategory};
